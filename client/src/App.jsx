@@ -1,29 +1,17 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import UserDashboard from './pages/UserDashboard';
+import AgentDashboard from './pages/AgentDashboard';
+import InsuranceDashboard from './pages/InsuranceDashboard';
 import './App.css';
-import axios from "axios";
+import './index.css';
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:3000/") 
-      .then((res) => {
-        setMessage(res.data);
-      })
-
-  }, []);
-
   return (
-    <>
-      <h1>EthSure</h1>
-      <div className="card">
-        <h1>{message}</h1>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+    <h1 className="text-2xl font-bold border-2 text-purple-800">
+      Hello world!
+    </h1>
+  )
 }
 
 export default App;
