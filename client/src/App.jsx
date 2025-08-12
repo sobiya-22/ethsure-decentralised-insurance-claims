@@ -1,17 +1,30 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import UserDashboard from './pages/UserDashboard';
-import AgentDashboard from './pages/AgentDashboard';
-import InsuranceDashboard from './pages/InsuranceDashboard';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
 import './App.css';
-import './index.css';
 
 function App() {
   return (
-    <h1 className="text-2xl font-bold border-2 text-purple-800">
-      Hello world!
-    </h1>
-  )
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;
