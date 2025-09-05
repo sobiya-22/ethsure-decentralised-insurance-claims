@@ -9,22 +9,22 @@ import WalletConnect from '@/components/WalletConnect';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState('');
+  // const [isWalletConnected, setIsWalletConnected] = useState(false);
+  // const [walletAddress, setWalletAddress] = useState('');
   const navigate = useNavigate();
 
   const handleEmailLogin = (e) => {
     e.preventDefault();
     // Handle email login logic
-    console.log('Email login:', { email, password });
+    // console.log('Email login:', { email, password });
     // Redirect to dashboard after successful login
     navigate('/dashboard');
   };
 
   const handleWalletConnect = (address) => {
-    setIsWalletConnected(true);
-    setWalletAddress(address);
-    console.log('Wallet connected:', address);
+    // setIsWalletConnected(true);
+    // setWalletAddress(address);
+    // console.log('Wallet connected:', address);
     
     // Auto-redirect to dashboard after wallet connection
     setTimeout(() => {
@@ -53,14 +53,14 @@ const Login = () => {
         </div>
 
         {/* Wallet Connection Section */}
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <WalletConnect
             onConnect={handleWalletConnect}
             onDisconnect={handleWalletDisconnect}
-            isConnected={isWalletConnected}
+            // isConnected={isWalletConnected}
             walletAddress={walletAddress}
           />
-        </div>
+        </div> */}
 
         <div className="flex items-center mb-6">
           <Separator className="flex-1" />
@@ -69,7 +69,7 @@ const Login = () => {
         </div>
 
         {/* Email Login Form */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
+        {/* <form onSubmit={handleEmailLogin} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm text-gray-300">Email</Label>
             <Input
@@ -113,7 +113,7 @@ const Login = () => {
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 h-12">
             Sign In with Email
           </Button>
-        </form>
+        </form> */}
 
         {/* Sign Up Link */}
         <div className="mt-6 text-center">

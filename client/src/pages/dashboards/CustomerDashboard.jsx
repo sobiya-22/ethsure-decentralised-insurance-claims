@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserDashboard = () => (
+const CustomerDashboard = () => (
   <div className="min-h-screen flex bg-gray-50">
     <aside className="w-64 bg-white shadow-md p-6 hidden md:block">
       <h2 className="text-xl font-bold mb-8">User Menu</h2>
@@ -71,4 +71,4 @@ const UserDashboard = () => (
   </div>
 );
 
-export default UserDashboard; 
+export default CustomerDashboard; 
