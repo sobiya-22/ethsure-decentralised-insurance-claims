@@ -12,10 +12,10 @@ const web3AuthContextConfig= {
         [WALLET_CONNECTORS.AUTH]: {
           label: "auth",
           loginMethods: {
-            // google: {
-            //   name: "google login",
-            //   authConnectionId: "w3a-google-demo",
-            // },
+            google: {
+              name: "google login",
+              // authConnectionId: "w3a-google-demo",
+            },
             // facebook: {
             //   name: "facebook login",
             //   authConnectionId: "w3a-facebook-demo",
@@ -33,14 +33,14 @@ const web3AuthContextConfig= {
             //   // it will hide the twitter option from the Web3Auth modal.
             //   showOnModal: false,
             // },
-            // email_passwordless: {
-            //   name: "email passwordless login",
-            //   authConnectionId: "w3a-email_passwordless-demo"
-            // },
-            // sms_passwordless: {
-            //   name: "sms passwordless login",
-            //   authConnectionId: "w3a-sms_passwordless-demo"
-            // }
+            email_passwordless: {
+              name: "email passwordless login",
+              // authConnectionId: "w3a-email_passwordless-demo"
+            },
+            sms_passwordless: {
+              name: "sms passwordless login",
+              // authConnectionId: "w3a-sms_passwordless-demo"
+            }
           },
           // setting it to false will hide all social login methods from modal.
           showOnModal: true,

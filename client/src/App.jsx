@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
+import RoleSelect from './components/RoleSelect';
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/role-select" element={<RoleSelect/> } />
         </Routes>
       </div>
     </Router>
