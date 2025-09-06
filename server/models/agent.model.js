@@ -9,8 +9,9 @@ const AgentSchema = new mongoose.Schema({
   },
   agent_name: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: "",
   },
   agent_email: {
     type: String,
@@ -21,23 +22,29 @@ const AgentSchema = new mongoose.Schema({
   },
   agent_phone: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: "",
   },
   license_number: {
     type: String,
+    required: false,
+    trim: true,
+    default: "",
+  },
+  wallet_address: {
+    type: String,
     required: true,
-    unique: true,
     trim: true,
   },
   registration_date: {
     type: Date,
     default: Date.now,
   },
-  wallet_address: {
+  kyc_status: {
     type: String,
-    required: true,
-    trim: true,
+    enum: ["pending", "verified", "rejected"],
+    default: "pending",
   },
   is_approved: {
     type: Boolean,
@@ -46,9 +53,9 @@ const AgentSchema = new mongoose.Schema({
   profile_photo_url: {
     type: String,
     default: null,
-  }
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 export default mongoose.model("Agent", AgentSchema);

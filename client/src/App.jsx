@@ -1,18 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-
 import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
-import './App.css';
-import RoleSelection from './pages/RoleSelection';
+import RoleSelect from './components/RoleSelect';
+import CustomerKYC from './pages/CustomerKYC';
+import AgentKYC from './pages/AgentKYC';
 import AgentDashboard from './pages/dashboards/AgentDashboard';
 import CustomerDashboard from './pages/dashboards/CustomerDashboard';
-import SignupAgent from './pages/SignupAgent';
-import SignupCustomer from './pages/SignupCustomer';
+import AdminDashboard from './pages/dashboards/AdminDashboard';
+import './App.css';
 
 function App() {
   return (
@@ -21,15 +21,16 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup-agent" element={<SignupAgent/>}/>
-          <Route path="/signup-customer" element={<SignupCustomer/>}/>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/role-selection" element={<RoleSelection/>} />
-          <Route path="/agent-dashboard" element={<AgentDashboard/>}/>
-          <Route path="/customer-dashboard" element={<CustomerDashboard/>}/>
+          <Route path="/role-select" element={<RoleSelect/> } />
+          <Route path="/customer-kyc" element={<CustomerKYC/> } />
+          <Route path="/agent-kyc" element={<AgentKYC/> } />
+          <Route path="/agent-dashboard" element={<AgentDashboard/> } />
+          <Route path="/customer-dashboard" element={<CustomerDashboard/> } />
+          <Route path="/admin-dashboard" element={<AdminDashboard/> } />
         </Routes>
       </div>
     </Router>

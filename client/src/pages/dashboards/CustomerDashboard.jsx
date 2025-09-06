@@ -1,74 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
-const CustomerDashboard = () => (
-  <div className="min-h-screen flex bg-gray-50">
-    <aside className="w-64 bg-white shadow-md p-6 hidden md:block">
-      <h2 className="text-xl font-bold mb-8">User Menu</h2>
-      <ul className="space-y-4">
-        <li><a href="#" className="text-gray-700 hover:text-blue-600">My Policies</a></li>
-        <li><a href="#" className="text-gray-700 hover:text-blue-600">Claims</a></li>
-        <li><a href="#" className="text-gray-700 hover:text-blue-600">Submit Claim</a></li>
-      </ul>
-    </aside>
-    <main className="flex-1 p-8">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Welcome, Policyholder</h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Logout</button>
-      </header>
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="font-semibold text-lg mb-2">Active Policies</h3>
-          <p className="text-2xl font-bold text-blue-600">3</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="font-semibold text-lg mb-2">Open Claims</h3>
-          <p className="text-2xl font-bold text-yellow-500">1</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="font-semibold text-lg mb-2">Total Paid</h3>
-          <p className="text-2xl font-bold text-green-600">Ξ0.75</p>
-        </div>
-      </section>
-      <section className="bg-white p-6 rounded-lg shadow mb-8">
-        <h2 className="text-xl font-bold mb-4">Recent Claims</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead>
-              <tr>
-                <th className="py-2 px-4">Claim ID</th>
-                <th className="py-2 px-4">Status</th>
-                <th className="py-2 px-4">Amount</th>
-                <th className="py-2 px-4">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="py-2 px-4">#12345</td>
-                <td className="py-2 px-4 text-yellow-600">Pending</td>
-                <td className="py-2 px-4">Ξ0.25</td>
-                <td className="py-2 px-4">2024-07-25</td>
-              </tr>
-              <tr>
-                <td className="py-2 px-4">#12344</td>
-                <td className="py-2 px-4 text-green-600">Approved</td>
-                <td className="py-2 px-4">Ξ0.5</td>
-                <td className="py-2 px-4">2024-06-10</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-      <section className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">Submit New Claim</h2>
-        <form className="space-y-4">
-          <input type="text" placeholder="Policy Number" className="w-full border rounded px-3 py-2" />
-          <input type="number" placeholder="Amount (ETH)" className="w-full border rounded px-3 py-2" />
-          <textarea placeholder="Description" className="w-full border rounded px-3 py-2" />
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Submit Claim</button>
-        </form>
-      </section>
-    </main>
-  </div>
-);
+const CustomerDashboard = () => {
+  const [customer, setCustomer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-export default CustomerDashboard; 
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      try {
+        const email = localStorage.getItem("userEmail");
+        const response = await fetch(`http://localhost:5000/api/users/${email}`);
+        const data = await response.json();
+        setCustomer(data);
+
+        const customerRole = data.roles?.find((r) => r.role_type === "customer");
+        if (customerRole?.kyc_status !== "verified") {
+          navigate("/customer-kyc");
+        }
+      } catch (err) {
+        console.error("Error fetching customer:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCustomer();
+  }, [navigate]);
+
+  if (loading) return <p className="text-center mt-20">Loading...</p>;
+
+  return (
+    <>
+      <Navbar />
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-6">Customer Dashboard</h1>
+        <Card>
+          <CardHeader>
+            <CardTitle>Welcome, {customer?.name || "Customer"}!</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>You can now explore policies, manage claims, and more.</p>
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  );
+};
+
+export default CustomerDashboard;

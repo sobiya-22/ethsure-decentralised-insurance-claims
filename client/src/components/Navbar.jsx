@@ -1,26 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useWeb3AuthConnect,useWeb3AuthDisconnect,useWeb3AuthUser } from "@web3auth/modal/react";
+import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
+import { useWalletAddress } from '@/hooks/useWalletAddress';
+
 const Navbar = () => {
     const { connect } = useWeb3AuthConnect();
     const { disconnect } = useWeb3AuthDisconnect();
     const { userInfo } = useWeb3AuthUser();
-    console.log(userInfo);
-    const handlewallet =async () => {
-        // const provider = MMSDK.getProvider()
-
-        // const accounts = await MMSDK.connect()
-        // console.log("Connected account:", accounts[0])
-
-        // const result = await provider.request({
-        //     method: "eth_accounts",
-        //     params: [],
-        // })
-        // console.log("eth_accounts result:", result)
-        // console.log("Wallet Connect Clicked");
-        
-        
+    const { walletAddress, isConnecting } = useWalletAddress();
+    const navigate = useNavigate();
+    
+    console.log('User Info:', userInfo);
+    console.log('Wallet Address:', walletAddress);
+    const connectUser = async () => {
+        try {
+            const res = await connect();
+            if(res){
+                navigate('role-select')
+            }
+        } catch (error) {
+            console.error("Connection failed:", error);
+        }
     };
     return (
         <nav className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-50">
@@ -37,7 +38,7 @@ const Navbar = () => {
                         <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link>
                     </div>
                     <div className="flex items-center space-x-4">
-                        <Link to="/" onClick={()=>connect()}>
+                        <Link to="/" onClick={()=>connectUser()}>
                             <Button variant="ghost" className="text-gray-300 hover:text-white">
                                 Login
                             </Button>

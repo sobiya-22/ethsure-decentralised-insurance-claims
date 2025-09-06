@@ -11,7 +11,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
- define: {
-        global: 'globalThis',
+  define: {
+    global: 'globalThis',
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
       },
+    },
+  },
 })
