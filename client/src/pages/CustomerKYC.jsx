@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { customerAPI } from "@/services/api";
+import { completeCustomerKYC } from "@/services/customerAPI"; // ✅ import correct API
 
 const CustomerKYC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { walletAddress, isConnecting } = useWalletAddress();
+  const { walletAddress } = useWalletAddress();
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_email: "",
@@ -24,27 +24,17 @@ const CustomerKYC = () => {
   });
 
   useEffect(() => {
-    if (!walletAddress) {
-      navigate("/");
-    }
-  }, [navigate, walletAddress]);
+    if (!walletAddress) navigate("/");
+  }, [walletAddress, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileUpload = async (file, type) => {
-    // In a real implementation, you would upload to IPFS or a file storage service
-    // For now, we'll simulate with a placeholder URL
     const mockUrl = `https://mock-storage.com/${type}/${Date.now()}-${file.name}`;
-    setFormData(prev => ({
-      ...prev,
-      [type]: mockUrl
-    }));
+    setFormData(prev => ({ ...prev, [type]: mockUrl }));
   };
 
   const handleSubmit = async (e) => {
@@ -52,20 +42,16 @@ const CustomerKYC = () => {
     setLoading(true);
 
     try {
-      if (!walletAddress) {
-        throw new Error('Wallet address not found');
-      }
+      if (!walletAddress) throw new Error("Wallet address not found");
 
-      const response = await customerAPI.submitKYC({
-        wallet_address: walletAddress,
-        ...formData
-      });
+      // ✅ call API
+      const response = await completeCustomerKYC({ wallet_address: walletAddress, ...formData });
 
-      console.log('KYC submitted successfully:', response.data);
-      navigate('/customer-dashboard');
+      console.log("KYC submitted successfully:", response.data);
+      navigate("/customer-dashboard");
     } catch (error) {
-      console.error('Error submitting KYC:', error);
-      alert('Failed to submit KYC. Please try again.');
+      console.error("Error submitting KYC:", error);
+      alert("Failed to submit KYC. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,19 +60,18 @@ const CustomerKYC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full">
       <Navbar />
-      
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-2xl text-center text-white">
-              Complete Your KYC
-            </CardTitle>
+            <CardTitle className="text-2xl text-center text-white">Complete Your KYC</CardTitle>
             <CardDescription className="text-center text-gray-300">
               Please provide the following information to complete your verification
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Form inputs remain unchanged */}
+              {/* Name & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="customer_name" className="text-white">Full Name *</Label>
@@ -99,7 +84,6 @@ const CustomerKYC = () => {
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
-                
                 <div>
                   <Label htmlFor="customer_email" className="text-white">Email *</Label>
                   <Input
@@ -113,7 +97,7 @@ const CustomerKYC = () => {
                   />
                 </div>
               </div>
-
+              {/* Phone & DOB */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="customer_phone" className="text-white">Phone Number *</Label>
@@ -126,7 +110,6 @@ const CustomerKYC = () => {
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
-                
                 <div>
                   <Label htmlFor="date_of_birth" className="text-white">Date of Birth *</Label>
                   <Input
@@ -140,7 +123,7 @@ const CustomerKYC = () => {
                   />
                 </div>
               </div>
-
+              {/* Address */}
               <div>
                 <Label htmlFor="customer_address" className="text-white">Address *</Label>
                 <Textarea
@@ -153,37 +136,29 @@ const CustomerKYC = () => {
                   rows={3}
                 />
               </div>
-
+              {/* Profile Photo */}
               <div>
                 <Label htmlFor="profile_photo" className="text-white">Profile Photo</Label>
                 <Input
                   id="profile_photo"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files[0]) {
-                      handleFileUpload(e.target.files[0], 'profile_photo_url');
-                    }
-                  }}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'profile_photo_url')}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
-
+              {/* ID Document */}
               <div>
                 <Label htmlFor="id_document" className="text-white">Identity Document</Label>
                 <Input
                   id="id_document"
                   type="file"
                   accept="image/*,.pdf"
-                  onChange={(e) => {
-                    if (e.target.files[0]) {
-                      handleFileUpload(e.target.files[0], 'id_document_url');
-                    }
-                  }}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'id_document_url')}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
-
+              {/* Buttons */}
               <div className="flex gap-4 pt-4">
                 <Button
                   type="button"

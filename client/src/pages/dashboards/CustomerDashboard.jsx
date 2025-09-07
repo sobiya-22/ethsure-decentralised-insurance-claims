@@ -2,22 +2,27 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { getCustomer } from "@/services/customerAPI"; // ✅ use customerAPI
+import { useWalletAddress } from "@/hooks/useWalletAddress";
 
 const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { walletAddress } = useWalletAddress();
 
   useEffect(() => {
-    const fetchCustomer = async () => {
+    const fetchCustomerData = async () => {
+      if (!walletAddress) {
+        navigate("/");
+        return;
+      }
       try {
-        const email = localStorage.getItem("userEmail");
-        const response = await fetch(`http://localhost:5000/api/users/${email}`);
-        const data = await response.json();
+        const response = await getCustomer(walletAddress);
+        const data = response.data;
         setCustomer(data);
 
-        const customerRole = data.roles?.find((r) => r.role_type === "customer");
-        if (customerRole?.kyc_status !== "verified") {
+        if (data?.kyc_status !== "verified") {
           navigate("/customer-kyc");
         }
       } catch (err) {
@@ -26,8 +31,9 @@ const CustomerDashboard = () => {
         setLoading(false);
       }
     };
-    fetchCustomer();
-  }, [navigate]);
+
+    fetchCustomerData();
+  }, [walletAddress, navigate]);
 
   if (loading) return <p className="text-center mt-20">Loading...</p>;
 
@@ -38,7 +44,7 @@ const CustomerDashboard = () => {
         <h1 className="text-2xl font-bold mb-6">Customer Dashboard</h1>
         <Card>
           <CardHeader>
-            <CardTitle>Welcome, {customer?.name || "Customer"}!</CardTitle>
+            <CardTitle>Welcome, {customer?.customer_name || "Customer"}!</CardTitle>
           </CardHeader>
           <CardContent>
             <p>You can now explore policies, manage claims, and more.</p>

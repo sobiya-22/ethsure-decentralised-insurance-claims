@@ -33,44 +33,6 @@ api.interceptors.response.use(
   }
 );
 
-// Customer API functions
-export const customerAPI = {
-  // Register new customer
-  register: (data) => api.post('/customers/register', data),
-  
-  // Submit KYC
-  submitKYC: (data) => api.post('/customers/kyc', data),
-  
-  // Get customer profile
-  getProfile: (walletAddress) => api.get(`/customers/profile/${walletAddress}`),
-  
-  // Get all customers
-  getAll: () => api.get('/customers'),
-  
-  // Update KYC status
-  updateKYCStatus: (walletAddress, status) => 
-    api.patch(`/customers/kyc/${walletAddress}`, { kyc_status: status }),
-};
-
-// Agent API functions
-export const agentAPI = {
-  // Register new agent
-  register: (data) => api.post('/agents/register', data),
-  
-  // Submit KYC
-  submitKYC: (data) => api.post('/agents/kyc', data),
-  
-  // Get agent profile
-  getProfile: (walletAddress) => api.get(`/agents/profile/${walletAddress}`),
-  
-  // Get all agents
-  getAll: () => api.get('/agents'),
-  
-  // Update approval status
-  updateApproval: (walletAddress, isApproved) => 
-    api.patch(`/agents/approve/${walletAddress}`, { is_approved: isApproved }),
-};
-
 // Test backend connectivity
 export const testConnection = async () => {
   try {
@@ -79,33 +41,6 @@ export const testConnection = async () => {
   } catch (error) {
     return { success: false, error: error.message };
   }
-};
-
-// User API functions
-export const userAPI = {
-  // Register or get user
-  registerOrGet: (data) => api.post('/users/register', data),
-  
-  // Get user profile
-  getProfile: (walletAddress) => api.get(`/users/profile/${walletAddress}`),
-  
-  // Add role to user
-  addRole: (data) => api.post('/users/add-role', data),
-  
-  // Update user profile
-  updateProfile: (data) => api.put('/users/profile', data),
-  
-  // Update role-specific data
-  updateRoleData: (data) => api.put('/users/role-data', data),
-  
-  // Get user's specific role data
-  getRoleData: (walletAddress, roleType) => api.get(`/users/role/${walletAddress}/${roleType}`),
-  
-  // Update KYC status (admin)
-  updateKYCStatus: (data) => api.patch('/users/kyc-status', data),
-  
-  // Get all users
-  getAll: () => api.get('/users'),
 };
 
 // Test API endpoints

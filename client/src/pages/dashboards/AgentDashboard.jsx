@@ -3,27 +3,31 @@ import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { getAgent } from "@/services/agentAPI"; // ✅ use agentAPI
+import { useWalletAddress } from "@/hooks/useWalletAddress";
 
 const AgentDashboard = () => {
   const [agent, setAgent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showKYCPopup, setShowKYCPopup] = useState(false);
   const navigate = useNavigate();
+  const { walletAddress } = useWalletAddress();
 
   useEffect(() => {
-    const fetchAgent = async () => {
+    const fetchAgentData = async () => {
+      if (!walletAddress) {
+        navigate("/");
+        return;
+      }
       try {
-        const email = localStorage.getItem("userEmail");
-        const response = await fetch(`http://localhost:5000/api/users/${email}`);
-        const data = await response.json();
+        const response = await getAgent(walletAddress);
+        const data = response.data;
         setAgent(data);
 
-        const agentRole = data.roles?.find((r) => r.role_type === "agent");
-
         const isProfileIncomplete =
-          !data?.name || !data?.phone || !agentRole?.license_number;
+          !data?.agent_name || !data?.agent_phone || !data?.license_number;
 
-        if (isProfileIncomplete && !agentRole?.is_approved) {
+        if (isProfileIncomplete && !data?.is_approved) {
           setShowKYCPopup(true);
         }
       } catch (err) {
@@ -32,12 +36,11 @@ const AgentDashboard = () => {
         setLoading(false);
       }
     };
-    fetchAgent();
-  }, []);
+
+    fetchAgentData();
+  }, [walletAddress, navigate]);
 
   if (loading) return <p className="text-center mt-20">Loading...</p>;
-
-  const agentRole = agent?.roles?.find((r) => r.role_type === "agent");
 
   return (
     <>
@@ -59,7 +62,7 @@ const AgentDashboard = () => {
           </Card>
         )}
 
-        {!showKYCPopup && agentRole && !agentRole.is_approved && (
+        {!showKYCPopup && agent && !agent.is_approved && (
           <Card className="p-4 bg-blue-50 border border-blue-400">
             <CardHeader>
               <CardTitle>Approval Pending</CardTitle>
@@ -70,7 +73,7 @@ const AgentDashboard = () => {
           </Card>
         )}
 
-        {agentRole?.is_approved && (
+        {agent?.is_approved && (
           <Card className="p-4">
             <CardHeader>
               <CardTitle>Welcome, Agent</CardTitle>

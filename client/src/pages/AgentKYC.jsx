@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { agentAPI } from "@/services/api";
+import { completeAgentKYC } from "@/services/agentAPI"; // ✅ import correct API
 
 const AgentKYC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { walletAddress, isConnecting } = useWalletAddress();
+  const { walletAddress } = useWalletAddress();
   const [formData, setFormData] = useState({
     agent_name: "",
     agent_email: "",
@@ -21,27 +21,17 @@ const AgentKYC = () => {
   });
 
   useEffect(() => {
-    if (!walletAddress) {
-      navigate("/");
-    }
-  }, [navigate, walletAddress]);
+    if (!walletAddress) navigate("/");
+  }, [walletAddress, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileUpload = async (file, type) => {
-    // In a real implementation, you would upload to IPFS or a file storage service
-    // For now, we'll simulate with a placeholder URL
     const mockUrl = `https://mock-storage.com/${type}/${Date.now()}-${file.name}`;
-    setFormData(prev => ({
-      ...prev,
-      [type]: mockUrl
-    }));
+    setFormData(prev => ({ ...prev, [type]: mockUrl }));
   };
 
   const handleSubmit = async (e) => {
@@ -49,20 +39,16 @@ const AgentKYC = () => {
     setLoading(true);
 
     try {
-      if (!walletAddress) {
-        throw new Error('Wallet address not found');
-      }
+      if (!walletAddress) throw new Error("Wallet address not found");
 
-      const response = await agentAPI.submitKYC({
-        wallet_address: walletAddress,
-        ...formData
-      });
+      // ✅ call API
+      const response = await completeAgentKYC({ wallet_address: walletAddress, ...formData });
 
-      console.log('KYC submitted successfully:', response.data);
-      navigate('/agent-dashboard');
+      console.log("KYC submitted successfully:", response.data);
+      navigate("/agent-dashboard");
     } catch (error) {
-      console.error('Error submitting KYC:', error);
-      alert('Failed to submit KYC. Please try again.');
+      console.error("Error submitting KYC:", error);
+      alert("Failed to submit KYC. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -71,19 +57,17 @@ const AgentKYC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full">
       <Navbar />
-      
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <Card className="bg-gray-800/50 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-2xl text-center text-white">
-              Complete Your Agent Profile
-            </CardTitle>
+            <CardTitle className="text-2xl text-center text-white">Complete Your Agent Profile</CardTitle>
             <CardDescription className="text-center text-gray-300">
               Please provide the following information to complete your agent verification
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="agent_name" className="text-white">Full Name *</Label>
@@ -96,7 +80,6 @@ const AgentKYC = () => {
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
-                
                 <div>
                   <Label htmlFor="agent_email" className="text-white">Email *</Label>
                   <Input
@@ -111,6 +94,7 @@ const AgentKYC = () => {
                 </div>
               </div>
 
+              {/* Phone & License */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="agent_phone" className="text-white">Phone Number *</Label>
@@ -123,7 +107,6 @@ const AgentKYC = () => {
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
-                
                 <div>
                   <Label htmlFor="license_number" className="text-white">License Number *</Label>
                   <Input
@@ -137,21 +120,19 @@ const AgentKYC = () => {
                 </div>
               </div>
 
+              {/* Profile Photo */}
               <div>
                 <Label htmlFor="profile_photo" className="text-white">Profile Photo</Label>
                 <Input
                   id="profile_photo"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files[0]) {
-                      handleFileUpload(e.target.files[0], 'profile_photo_url');
-                    }
-                  }}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'profile_photo_url')}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
 
+              {/* Buttons */}
               <div className="flex gap-4 pt-4">
                 <Button
                   type="button"
