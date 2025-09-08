@@ -53,7 +53,7 @@ const RoleSelect = () => {
                 {selectedRole && (
           <div className="mt-8 text-center">
             <button
-            //   onClick={() => handleRoleSelect(role.id)}
+               onClick={handleContinue}
               className="px-8 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200"
             >
               Continue

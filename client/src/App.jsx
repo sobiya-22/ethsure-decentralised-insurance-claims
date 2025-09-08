@@ -4,6 +4,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import CustomerDashboard from './pages/dashboards/CustomerDashboard';
+import AgentDashboard from './pages/dashboards/AgentDashboard';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+           <Route path="/agent-dashboard" element={<AgentDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
