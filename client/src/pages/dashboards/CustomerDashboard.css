@@ -1,0 +1,162 @@
+/* Container */
+.app-container {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #000000 100%);
+  color: #f3f4f6;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #0f172a; /* dark navy */
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #3b82f6; /* primary blue */
+}
+
+.sidebar button {
+  background: #1e293b;
+  color: #f3f4f6;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.sidebar button:hover {
+  background: #3b82f6; /* blue highlight */
+}
+
+.logout-btn {
+  margin-top: auto;
+  background: #ef4444;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+  height: 60px;
+  background: #1f2937;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #e5e7eb;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.navbar a:hover {
+  color: #10b981; /* green hover */
+}
+
+/* Content Area */
+.content-area {
+  padding: 20px;
+  background: transparent;
+  color: #f3f4f6;
+}
+
+/* Verify Banner */
+.verify-banner {
+  background: #fef3c7; /* soft yellow background */
+  color: #92400e; /* dark amber text */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  border: 1px solid #facc15;
+}
+
+.verify-banner button {
+  margin-left: 20px;
+  background: #facc15;
+  color: #111827;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.verify-banner button:hover {
+  background: #eab308;
+}
+
+/* Welcome Box */
+.welcome-box {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.welcome-box h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #8b5cf6; /* purple accent */
+}
+
+.welcome-box p {
+  font-size: 16px;
+  color: #22c55e; /* green accent for wallet address */
+}
+/* Policy List Cards */
+.policy-card {
+  background: #f3f4f6; /* light gray card background */
+  color: #111827; /* dark text for visibility */
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.policy-card:hover {
+  background: #3b82f6; /* blue highlight on hover */
+  color: #f3f4f6; /* white text when hovered */
+}
+
+/* Policy Name inside the card */
+.policy-card h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.policy-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #374151; /* slightly darker gray for subtitle */
+}
