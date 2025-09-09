@@ -16,8 +16,7 @@ const AgentSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-
-    // Optional, filled during KYC
+    //filled during KYC
     agent_name: { type: String,
        default: "", 
        trim: true },

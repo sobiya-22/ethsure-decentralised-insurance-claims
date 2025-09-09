@@ -14,6 +14,7 @@ import CustomerDashboard from './pages/dashboards/CustomerDashboard';
 import AdminDashboard from './pages/dashboards/AdminDashboard';
 import './App.css';
 import AdminLogin from './components/AdminLogin';
+import KYCPopup from './components/KYCPopup';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/customer-dashboard" element={<CustomerDashboard/> } />
           <Route path="/admin-dashboard" element={<AdminDashboard/> } />
           <Route path = "/admin-login" element={<AdminLogin/>}/>
+          <Route path = "/kyc-popup" element={<KYCPopup/>}/>
         </Routes>
       </div>
     </Router>

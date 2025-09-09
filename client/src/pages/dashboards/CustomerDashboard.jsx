@@ -9,17 +9,17 @@ const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { walletAddress } = useWalletAddress();
+  const { walletAddress , isConnecting } = useWalletAddress();
 
   useEffect(() => {
     const fetchCustomerData = async () => {
-      if (!walletAddress) {
+      if (isConnecting  && !walletAddress) {
         navigate("/");
         return;
       }
       try {
         const response = await getCustomer(walletAddress);
-        const data = response.data;
+        const data = response.data?.data;;
         setCustomer(data);
 
         if (data?.kyc_status !== "verified") {

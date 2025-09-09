@@ -7,34 +7,35 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { completeCustomerKYC } from "@/services/customerAPI"; // ✅ import correct API
+import { completeCustomerKYC } from "@/services/customerAPI";
 
 const CustomerKYC = () => {
   const navigate = useNavigate();
+  const { walletAddress ,isConnecting } = useWalletAddress();
   const [loading, setLoading] = useState(false);
-  const { walletAddress } = useWalletAddress();
+
   const [formData, setFormData] = useState({
-    customer_name: "",
-    customer_email: "",
-    customer_phone: "",
-    customer_address: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
     date_of_birth: "",
     profile_photo_url: "",
-    id_document_url: ""
+    id_document_url: "",
   });
 
   useEffect(() => {
-    if (!walletAddress) navigate("/");
+    if (isConnecting && !walletAddress) navigate("/");
   }, [walletAddress, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileUpload = async (file, type) => {
     const mockUrl = `https://mock-storage.com/${type}/${Date.now()}-${file.name}`;
-    setFormData(prev => ({ ...prev, [type]: mockUrl }));
+    setFormData((prev) => ({ ...prev, [type]: mockUrl }));
   };
 
   const handleSubmit = async (e) => {
@@ -42,12 +43,7 @@ const CustomerKYC = () => {
     setLoading(true);
 
     try {
-      if (!walletAddress) throw new Error("Wallet address not found");
-
-      // ✅ call API
-      const response = await completeCustomerKYC({ wallet_address: walletAddress, ...formData });
-
-      console.log("KYC submitted successfully:", response.data);
+      await completeCustomerKYC({ wallet_address: walletAddress, ...formData });
       navigate("/customer-dashboard");
     } catch (error) {
       console.error("Error submitting KYC:", error);
@@ -70,41 +66,42 @@ const CustomerKYC = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Form inputs remain unchanged */}
+              {/* Inputs unchanged, mapped to corrected formData */}
               {/* Name & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="customer_name" className="text-white">Full Name *</Label>
+                  <Label htmlFor="name" className="text-white">Full Name *</Label>
                   <Input
-                    id="customer_name"
-                    name="customer_name"
-                    value={formData.customer_name}
+                    id="name"
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
                     required
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="customer_email" className="text-white">Email *</Label>
+                  <Label htmlFor="email" className="text-white">Email *</Label>
                   <Input
-                    id="customer_email"
-                    name="customer_email"
+                    id="email"
+                    name="email"
                     type="email"
-                    value={formData.customer_email}
+                    value={formData.email}
                     onChange={handleInputChange}
                     required
                     className="bg-gray-700 border-gray-600 text-white"
                   />
                 </div>
               </div>
+
               {/* Phone & DOB */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="customer_phone" className="text-white">Phone Number *</Label>
+                  <Label htmlFor="phone" className="text-white">Phone Number *</Label>
                   <Input
-                    id="customer_phone"
-                    name="customer_phone"
-                    value={formData.customer_phone}
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
                     onChange={handleInputChange}
                     required
                     className="bg-gray-700 border-gray-600 text-white"
@@ -123,19 +120,21 @@ const CustomerKYC = () => {
                   />
                 </div>
               </div>
+
               {/* Address */}
               <div>
-                <Label htmlFor="customer_address" className="text-white">Address *</Label>
+                <Label htmlFor="address" className="text-white">Address *</Label>
                 <Textarea
-                  id="customer_address"
-                  name="customer_address"
-                  value={formData.customer_address}
+                  id="address"
+                  name="address"
+                  value={formData.address}
                   onChange={handleInputChange}
                   required
                   className="bg-gray-700 border-gray-600 text-white"
                   rows={3}
                 />
               </div>
+
               {/* Profile Photo */}
               <div>
                 <Label htmlFor="profile_photo" className="text-white">Profile Photo</Label>
@@ -143,10 +142,11 @@ const CustomerKYC = () => {
                   id="profile_photo"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'profile_photo_url')}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], "profile_photo_url")}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
+
               {/* ID Document */}
               <div>
                 <Label htmlFor="id_document" className="text-white">Identity Document</Label>
@@ -154,16 +154,17 @@ const CustomerKYC = () => {
                   id="id_document"
                   type="file"
                   accept="image/*,.pdf"
-                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'id_document_url')}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], "id_document_url")}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
+
               {/* Buttons */}
               <div className="flex gap-4 pt-4">
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate('/customer-dashboard')}
+                  onClick={() => navigate("/customer-dashboard")}
                   className="flex-1 border-gray-600 text-white hover:bg-gray-700"
                 >
                   Cancel

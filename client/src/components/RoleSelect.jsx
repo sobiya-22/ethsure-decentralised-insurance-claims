@@ -21,23 +21,33 @@ import {
 } from "@/services/agentAPI";
 
 // ✅ Helper function to redirect based on role & KYC
-const redirectToDashboard = (roleType, status, navigate) => {
+const redirectToDashboard = (roleType, data, navigate) => {
   switch (roleType) {
     case "customer":
-      if (status === "verified") navigate("/customer-dashboard");
-      else navigate("/customer-kyc");
+      if (data.kyc_status === "verified") {
+        navigate("/customer-dashboard");
+      } else {
+        navigate("/customer-kyc");
+      }
       break;
+
     case "agent":
-      if (status) navigate("/agent-dashboard");
-      else navigate("/agent-kyc");
+      if (data.kyc_status !== "verified") {
+        navigate("/agent-kyc");
+      } else {
+        navigate("/agent-dashboard"); 
+      }
       break;
+
     case "admin":
       navigate("/admin-dashboard");
       break;
+
     default:
       console.warn("Unknown role type:", roleType);
   }
 };
+
 
 const RoleSelect = () => {
   const navigate = useNavigate();
@@ -49,14 +59,19 @@ const RoleSelect = () => {
 
   // Check if customer or agent already exists
   useEffect(() => {
-    if (!walletAddress) return;
+    if (!walletAddress){
+    console.warn("⚠️ Wallet address is null, skipping API call");
+    return;
+  };
+  
+   console.log("✅ Using walletAddress:", walletAddress);
 
     const fetchUser = async () => {
       try {
         const customerRes = await getCustomer(walletAddress);
         if (customerRes.data?.data) {
           setUserData((prev) => ({ ...prev, customer: customerRes.data.data }));
-          redirectToDashboard(customerRes.data.data.kyc_status, "customer", navigate);
+          redirectToDashboard("customer" , customerRes.data.data.kyc_status, navigate);
           return;
         }
       } catch (_) {}
@@ -65,7 +80,7 @@ const RoleSelect = () => {
         const agentRes = await getAgent(walletAddress);
         if (agentRes.data?.data) {
           setUserData((prev) => ({ ...prev, agent: agentRes.data.data }));
-          redirectToDashboard(agentRes.data.data.is_approved, "agent", navigate);
+          redirectToDashboard( "agent", agentRes.data.data.is_approved, navigate);
         }
       } catch (_) {}
     };

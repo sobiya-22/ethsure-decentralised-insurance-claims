@@ -6,32 +6,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { completeAgentKYC } from "@/services/agentAPI"; // ✅ import correct API
+import { completeAgentKYC } from "@/services/agentAPI";
 
 const AgentKYC = () => {
   const navigate = useNavigate();
+  const { walletAddress , isConnecting } = useWalletAddress();
   const [loading, setLoading] = useState(false);
-  const { walletAddress } = useWalletAddress();
+
   const [formData, setFormData] = useState({
     agent_name: "",
     agent_email: "",
     agent_phone: "",
     license_number: "",
-    profile_photo_url: ""
+    profile_photo_url: "",
   });
 
   useEffect(() => {
-    if (!walletAddress) navigate("/");
+    if (isConnecting && !walletAddress) navigate("/");
   }, [walletAddress, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileUpload = async (file, type) => {
     const mockUrl = `https://mock-storage.com/${type}/${Date.now()}-${file.name}`;
-    setFormData(prev => ({ ...prev, [type]: mockUrl }));
+    setFormData((prev) => ({ ...prev, [type]: mockUrl }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,12 +40,7 @@ const AgentKYC = () => {
     setLoading(true);
 
     try {
-      if (!walletAddress) throw new Error("Wallet address not found");
-
-      // ✅ call API
-      const response = await completeAgentKYC({ wallet_address: walletAddress, ...formData });
-
-      console.log("KYC submitted successfully:", response.data);
+      await completeAgentKYC({ wallet_address: walletAddress, ...formData });
       navigate("/agent-dashboard");
     } catch (error) {
       console.error("Error submitting KYC:", error);
@@ -127,7 +123,7 @@ const AgentKYC = () => {
                   id="profile_photo"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], 'profile_photo_url')}
+                  onChange={(e) => e.target.files[0] && handleFileUpload(e.target.files[0], "profile_photo_url")}
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
@@ -137,7 +133,7 @@ const AgentKYC = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate('/agent-dashboard')}
+                  onClick={() => navigate("/agent-dashboard")}
                   className="flex-1 border-gray-600 text-white hover:bg-gray-700"
                 >
                   Cancel

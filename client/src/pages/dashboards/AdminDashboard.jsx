@@ -1,81 +1,143 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { getAllAgents } from "@/services/agentAPI";
+import { getAllCustomers } from "@/services/customerAPI";
 
-const AdminNavbar = () => {
-  const navigate = useNavigate();
+const AdminDashboard = () => {
+  const [agents, setAgents] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    navigate("/admin-login");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [agentsRes, customersRes] = await Promise.all([
+          getAllAgents(),
+          getAllCustomers(),
+        ]);
+        setAgents(agentsRes.data?.data || []);
+        setCustomers(customersRes.data?.data || []);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleAction = async (agentId, action) => {
+    try {
+      // TODO: Replace with backend API to update agent status
+      console.log(`Agent ${agentId} ${action}`);
+      setAgents((prev) =>
+        prev.filter((agent) => agent._id !== agentId) // remove from list after action
+      );
+    } catch (err) {
+      console.error("Error updating agent:", err);
+    }
   };
 
+  if (loading) return <p className="text-center mt-20">Loading...</p>;
+
+  // ✅ Separate pending requests from approved agents
+  const pendingAgents = agents.filter((a) => a.kyc_status !== "verified");
+  const approvedAgents = agents.filter((a) => a.kyc_status === "verified");
+
   return (
-    <nav className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Admin Brand */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
-            <span className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                Admin
-              </span>
-              <span className="text-white ml-2">Dashboard</span>
-            </span>
-          </div>
+    <>
+      <Navbar />
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
-          {/* Admin Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
-            <button className="text-gray-300 hover:text-white transition-colors font-medium">
-              Overview
-            </button>
-            <button className="text-gray-300 hover:text-white transition-colors font-medium">
-              Claims
-            </button>
-            <button className="text-gray-300 hover:text-white transition-colors font-medium">
-              Users
-            </button>
-            <button className="text-gray-300 hover:text-white transition-colors font-medium">
-              Reports
-            </button>
-            <button className="text-gray-300 hover:text-white transition-colors font-medium">
-              Settings
-            </button>
-          </div>
+        {/* ====== Overview Cards ====== */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Total Customers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-blue-600">
+                {customers.length}
+              </p>
+            </CardContent>
+          </Card>
 
-          {/* Admin Actions */}
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-300">
-              Welcome, <span className="text-white font-medium">Admin</span>
-            </div>
-            <Button 
-              onClick={handleLogout}
-              variant="outline" 
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-            >
-              Logout
-            </Button>
-          </div>
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Total Agents</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-green-600">
+                {agents.length}
+              </p>
+            </CardContent>
+          </Card>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="text-gray-300 hover:text-white hover:bg-gray-800"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </Button>
-          </div>
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle>Pending Requests</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-yellow-600">
+                {pendingAgents.length}
+              </p>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* ====== Requested Agents Section ====== */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Requested Agents</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {pendingAgents.length === 0 ? (
+              <p>No pending agent requests.</p>
+            ) : (
+              <div className="space-y-4">
+                {pendingAgents.map((agent) => (
+                  <div
+                    key={agent._id}
+                    className="flex justify-between items-center border p-3 rounded-lg"
+                  >
+                    <div>
+                      <p className="font-semibold">{agent.agent_name}</p>
+                      <p className="text-sm text-gray-500">
+                        Wallet: {agent.wallet_address}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => handleAction(agent._id, "approved")}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => handleAction(agent._id, "rejected")}
+                      >
+                        Reject
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-    </nav>
+    </>
   );
 };
 
-export default AdminNavbar;
+export default AdminDashboard;

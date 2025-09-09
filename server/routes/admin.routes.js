@@ -8,7 +8,11 @@ const router = express.Router();
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
 
-// Protected route
-router.get("/profile", protect, getAdminProfile);
+router.get("/profile", getAdminProfile);
+
+//agent approval
+router.post("/approve/:wallet_address", approveAgent);
+router.post("/reject/:wallet_address", rejectAgent);
+
 
 export default router;
