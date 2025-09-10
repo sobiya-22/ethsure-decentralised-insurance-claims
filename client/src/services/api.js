@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// Create axios instance with base configuration
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'http://localhost:3000/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -45,16 +44,9 @@ export const testConnection = async () => {
 
 // Test API endpoints
 export const testAPI = {
-  // Test GET request
   testGet: () => api.get('/test'),
-  
-  // Test POST request
   testPost: (data) => api.post('/test', data),
-  
-  // Test customer registration
   testCustomerRegister: (data) => api.post('/customers/register', data),
-  
-  // Test agent registration
   testAgentRegister: (data) => api.post('/agents/register', data),
 };
 

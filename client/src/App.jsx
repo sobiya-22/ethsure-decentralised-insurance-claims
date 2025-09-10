@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+//import Signup from './pages/Signup';
 import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
@@ -18,12 +18,10 @@ import KYCPopup from './components/KYCPopup';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
+      <div>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
@@ -36,8 +34,7 @@ function App() {
           <Route path = "/admin-login" element={<AdminLogin/>}/>
           <Route path = "/kyc-popup" element={<KYCPopup/>}/>
         </Routes>
-      </div>
-    </Router>
+      </div> 
   );
 }
 
