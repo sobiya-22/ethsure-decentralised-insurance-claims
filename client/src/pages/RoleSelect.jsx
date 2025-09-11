@@ -20,7 +20,7 @@ import {
   getAgent,
 } from "@/services/agentAPI";
 
-// ✅ Helper function to redirect based on role & KYC
+// ✅ Helper function to redirect based on role & KYC/Approval
 const redirectToDashboard = (roleType, data, navigate) => {
   switch (roleType) {
     case "customer":
@@ -32,7 +32,7 @@ const redirectToDashboard = (roleType, data, navigate) => {
       break;
 
     case "agent":
-      if (data.kyc_status !== "verified") {
+      if (data.is_approved !== "verified") {
         navigate("/agent-kyc");
       } else {
         navigate("/agent-dashboard"); 
@@ -48,7 +48,6 @@ const redirectToDashboard = (roleType, data, navigate) => {
   }
 };
 
-
 const RoleSelect = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState(null);
@@ -59,19 +58,19 @@ const RoleSelect = () => {
 
   // Check if customer or agent already exists
   useEffect(() => {
-    if (!walletAddress){
-    console.warn("⚠️ Wallet address is null, skipping API call");
-    return;
-  };
+    if (!walletAddress) {
+      console.warn("⚠️ Wallet address is null, skipping API call");
+      return;
+    }
   
-   console.log("✅ Using walletAddress:", walletAddress);
+    console.log("✅ Using walletAddress:", walletAddress);
 
     const fetchUser = async () => {
       try {
         const customerRes = await getCustomer(walletAddress);
         if (customerRes.data?.data) {
           setUserData((prev) => ({ ...prev, customer: customerRes.data.data }));
-          redirectToDashboard("customer" , customerRes.data.data.kyc_status, navigate);
+          redirectToDashboard("customer", customerRes.data.data, navigate);
           return;
         }
       } catch (_) {}
@@ -80,7 +79,7 @@ const RoleSelect = () => {
         const agentRes = await getAgent(walletAddress);
         if (agentRes.data?.data) {
           setUserData((prev) => ({ ...prev, agent: agentRes.data.data }));
-          redirectToDashboard( "agent", agentRes.data.data.is_approved, navigate);
+          redirectToDashboard("agent", agentRes.data.data, navigate);
         }
       } catch (_) {}
     };
@@ -100,20 +99,19 @@ const RoleSelect = () => {
         if (!userData.customer) {
           const res = await registerCustomer({ wallet_address: walletAddress, email, name });
           setUserData((prev) => ({ ...prev, customer: res.data.data }));
-          redirectToDashboard("customer", res.data.data.kyc_status, navigate);
+          redirectToDashboard("customer", res.data.data, navigate);
         } else {
-          redirectToDashboard("customer", userData.customer.kyc_status, navigate);
+          redirectToDashboard("customer", userData.customer, navigate);
         }
       } else if (selectedRole === "agent") {
         if (!userData.agent) {
           const res = await registerAgent({ wallet_address: walletAddress, email, name });
           setUserData((prev) => ({ ...prev, agent: res.data.data }));
-          redirectToDashboard("agent", res.data.data.is_approved, navigate);
+          redirectToDashboard("agent", res.data.data, navigate);
         } else {
-          redirectToDashboard("agent", userData.agent.is_approved, navigate);
+          redirectToDashboard("agent", userData.agent, navigate);
         }
       } else if (selectedRole === "admin") {
-        // Admin flow if needed
         navigate("/admin-dashboard");
       }
     } catch (err) {

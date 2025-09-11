@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { getCustomer } from "@/services/customerAPI"; // ✅ use customerAPI
+import { getCustomer } from "@/services/customerAPI"; 
 import { useWalletAddress } from "@/hooks/useWalletAddress";
 
 const CustomerDashboard = () => {
