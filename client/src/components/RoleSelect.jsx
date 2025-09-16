@@ -17,9 +17,11 @@ const RoleSelect = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-            <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700">
-                <h2 className="text-white text-xl font-light text-center mb-8">
+        <div className="min-h-screen text-white w-full relative overflow-hidden flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+            <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+            <div className="glass glow-border rounded-2xl p-8 w-full max-w-md">
+                <h2 className="text-white text-2xl font-semibold text-center mb-8 gradient-text">
                     Select your role:
                 </h2>
 
@@ -28,9 +30,9 @@ const RoleSelect = () => {
                         <button
                             key={role.id}
                             onClick={() => handleRoleSelect(role.id)}
-                            className={`w-full py-4 px-6 rounded-full border-2 transition-all duration-200 text-lg font-light ${selectedRole === role.id
-                                    ? 'border-blue-500 bg-blue-500 bg-opacity-20 text-blue-400'
-                                    : 'border-gray-500 text-gray-300 hover:border-gray-400 hover:text-gray-200'
+                            className={`w-full py-4 px-6 rounded-full border-2 transition-all duration-200 text-lg font-semibold ${selectedRole === role.id
+                                    ? 'border-blue-500 bg-blue-500/20 text-white shadow-[0_0_30px_rgba(59,130,246,0.2)]'
+                                    : 'border-white/20 text-white hover:border-blue-400 hover:text-white'
                                 }`}
                         >
                             {role.name}

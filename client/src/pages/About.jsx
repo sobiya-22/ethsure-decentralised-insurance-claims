@@ -2,43 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Navbar from '@/components/Navbar';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full">
-      {/* Navigation */}
-      <nav className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Link to="/">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg cursor-pointer hover:scale-105 transition-transform"></div>
-              </Link>
-              <span className="text-xl font-bold">EthSure</span>
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
-              <Link to="/about" className="text-white font-medium">About</Link>
-              <Link to="/services" className="text-gray-300 hover:text-white transition-colors">Services</Link>
-              <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link to="/login">
-                <Button variant="ghost" className="text-gray-300 hover:text-white">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen text-white w-full relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <Navbar />
 
-      {/* Hero Section */}
+      {/* Page Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">

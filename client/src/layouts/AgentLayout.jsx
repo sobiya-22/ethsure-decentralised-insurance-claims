@@ -21,13 +21,15 @@ const AgentLayout = ({ agent, profileImage, setProfileImage, activeMenu, setActi
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full flex flex-col">
+    <div className="min-h-screen text-white w-full flex flex-col relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
       {/* Navbar */}
       <Navbar hideAuthButtons />
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-72 bg-gray-800/80 border-r border-gray-700 hidden md:flex flex-col fixed top-0 left-0 h-full pt-20">
+        <aside className="w-72 glass border-r border-white/10 hidden md:flex flex-col fixed top-0 left-0 h-full pt-20">
           <div className="flex flex-col h-full p-6">
             {/* Profile */}
             <div className="text-center relative flex-shrink-0">
@@ -68,30 +70,30 @@ const AgentLayout = ({ agent, profileImage, setProfileImage, activeMenu, setActi
             <nav className="mt-10 flex-1 space-y-3">
               <button
                 onClick={() => scrollToSection(scrollRefs.customers, "customers")}
-                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition ${
+                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition text-white ${
                   activeMenu === "customers"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700/50 hover:bg-blue-600"
+                    ? "bg-blue-600/80 text-white"
+                    : "bg-white/10 hover:bg-blue-600/60"
                 }`}
               >
                 <Users className="w-5 h-5" /> My Customers
               </button>
               <button
                 onClick={() => scrollToSection(scrollRefs.claims, "claims")}
-                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition ${
+                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition text-white ${
                   activeMenu === "claims"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700/50 hover:bg-blue-600"
+                    ? "bg-blue-600/80 text-white"
+                    : "bg-white/10 hover:bg-blue-600/60"
                 }`}
               >
                 <FileText className="w-5 h-5" /> Claims
               </button>
               <button
                 onClick={() => scrollToSection(scrollRefs.users, "users")}
-                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition ${
+                className={`flex items-center gap-3 w-full px-4 py-2 rounded transition text-white ${
                   activeMenu === "users"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700/50 hover:bg-blue-600"
+                    ? "bg-blue-600/80 text-white"
+                    : "bg-white/10 hover:bg-blue-600/60"
                 }`}
               >
                 <Shield className="w-5 h-5" /> User Management
@@ -99,10 +101,10 @@ const AgentLayout = ({ agent, profileImage, setProfileImage, activeMenu, setActi
             </nav>
 
             {/* Logout - Fixed at bottom */}
-            <div className="mt-auto pt-6 border-t border-gray-700 flex-shrink-0">
+            <div className="mt-auto pt-6 border-t border-white/10 flex-shrink-0">
               <button
                 onClick={() => console.log("Logging out...")}
-                className="flex items-center gap-3 w-full px-4 py-2 rounded bg-red-600 hover:bg-red-700 transition"
+                className="flex items-center gap-3 w-full px-4 py-2 rounded bg-red-600/90 hover:bg-red-600 transition"
               >
                 <LogOut className="w-5 h-5" /> Logout
               </button>

@@ -39,8 +39,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen text-white w-full relative overflow-hidden flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <div className="w-full max-w-md glass glow-border p-6 rounded-xl">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/">
