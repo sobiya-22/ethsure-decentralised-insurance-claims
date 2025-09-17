@@ -37,8 +37,8 @@ const About = () => {
               By using blockchain technology, we eliminate the need for intermediaries, reduce costs, 
               and ensure that every transaction is recorded immutably for complete transparency.
             </p>
-            <Link to="/services">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+          <Link to="/services">
+            <Button size="lg" className="button-pill">
                 Learn More About Our Services
               </Button>
             </Link>
@@ -78,9 +78,9 @@ const About = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="bg-gray-800/50 border-gray-700 text-center">
+          <Card className="glass ui-card text-center">
             <CardContent className="p-6">
-              <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-black/10 bg-[#cfe3ff] text-black">
                 <span className="text-2xl font-bold text-white">JD</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">John Doe</h3>
@@ -91,10 +91,10 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800/50 border-gray-700 text-center">
+          <Card className="glass ui-card text-center">
             <CardContent className="p-6">
-              <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">JS</span>
+              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-black/10 bg-[#cfe3ff] text-black">
+                <span className="text-2xl font-bold">JS</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Jane Smith</h3>
               <p className="text-gray-400 mb-2">CTO</p>
@@ -104,10 +104,10 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800/50 border-gray-700 text-center">
+          <Card className="glass ui-card text-center">
             <CardContent className="p-6">
-              <div className="w-24 h-24 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">MJ</span>
+              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-black/10 bg-[#cfe3ff] text-black">
+                <span className="text-2xl font-bold">MJ</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Mike Johnson</h3>
               <p className="text-gray-400 mb-2">Head of Operations</p>
@@ -192,7 +192,7 @@ const About = () => {
           <p className="text-xl text-gray-300 mb-8">Be part of the future of insurance</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4">
+              <Button size="lg" className="button-pill text-lg px-8 py-4">
                 Get Started Today
               </Button>
             </Link>

@@ -125,7 +125,7 @@ const Contact = () => {
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 h-12">
+                <Button type="submit" className="w-full button-pill h-12">
                   Send Message
                 </Button>
               </form>

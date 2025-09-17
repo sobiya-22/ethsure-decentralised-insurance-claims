@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
+// Removed Navbar on dashboards; custom header with logo + actions is used
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Sidebar from "@/components/Sidebar";
+import { Users, FileText, Folder } from "lucide-react";
 import ProfileDrawer from "@/components/ProfileDrawer";
 import { useNavigate } from "react-router-dom";
 
@@ -36,80 +38,105 @@ const CustomerDashboard = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="p-8 text-white relative">
+      <header className="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center space-x-3">
+          <div className="relative">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500" />
+            <div className="absolute inset-0 blur-md opacity-60 bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500 -z-10 rounded-lg" />
+          </div>
+          <span className="text-xl font-bold gradient-text">EthSure</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center">
+            <span className="text-sm font-semibold text-black">CU</span>
+          </button>
+          <span className="text-xs text-gray-300 font-mono">0x742d...d8b6</span>
+        </div>
+      </header>
+      <div className="min-h-screen text-white relative">
         <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
         <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold mb-6 gradient-text">Welcome to EthSure</h1>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" className="button-pill glass" onClick={() => setDrawerOpen(true)}>My Profile</Button>
-            <button onClick={() => window.location.assign('/')} className="button-pill glass nav-link">Logout</button>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="glass ui-card">
-            <CardHeader>
-              <CardTitle>Policy Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>Policy: Health Insurance Plus</p>
-              <p>Agent: Rajesh Sharma</p>
-              <p>Next EMI: 2025-10-15</p>
-              <p>Due Amount: $120</p>
-              <Button size="sm" className="mt-2">Pay EMI</Button>
-            </CardContent>
-          </Card>
+        <div className="flex">
+          {/* Sidebar */}
+          <Sidebar
+            items={[
+              { id: 'agents', icon: Users, label: 'Agents' },
+              { id: 'policies', icon: FileText, label: 'Policies' },
+              { id: 'docvault', icon: Folder, label: 'DocVault' },
+            ]}
+            onLogout={() => window.location.assign('/')}
+            topOffsetClass="top-16"
+            widthClass="w-48"
+          />
 
-          <Card className="glass ui-card">
-            <CardHeader>
-              <CardTitle>Balances</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p>Total Paid: $1,080</p>
-              <p>Remaining: $360</p>
-              <p>Wallet Balance: 2.45 ETH</p>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Main */}
+          <main className="flex-1 p-8 md:ml-48">
+            <div className="flex items-center justify-between">
+              <h1 className="text-3xl font-bold mb-6 gradient-text">Welcome to EthSure</h1>
+              <div className="flex items-center gap-3">
+                
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="glass ui-card">
-            <CardHeader>
-              <CardTitle>Uploaded Documents</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                <li className="flex items-center justify-between bg-white/5 p-3 rounded">
-                  <span>ID Proof.pdf</span>
-                  <Button size="sm" variant="outline">View</Button>
-                </li>
-                <li className="flex items-center justify-between bg-white/5 p-3 rounded">
-                  <span>Medical Report.pdf</span>
-                  <Button size="sm" variant="outline">View</Button>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+            {/* KYC Alert */}
+            <div className="glass ui-card p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="w-2 h-2 rounded-full bg-yellow-400 mt-2" />
+                <div>
+                  <p className="font-semibold">KYC pending</p>
+                  <p className="text-gray-300 text-sm">Please complete your KYC to activate all features.</p>
+                </div>
+                <Button size="sm" className="ml-auto">Complete KYC</Button>
+              </div>
+            </div>
 
-          <Card className="glass ui-card">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                <li className="flex justify-between">
-                  <span>Premium Payment</span>
-                  <span>$120 on 2025-09-15</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Claim Submitted</span>
-                  <span>#CLM-004 on 2025-08-02</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+            {/* Active Policy Section */}
+            <Card className="glass ui-card mb-8">
+              <CardHeader><CardTitle>Active Policy</CardTitle></CardHeader>
+              <CardContent className="space-y-2">
+                <p>Policy: Health Insurance Plus</p>
+                <p>Agent: Rajesh Sharma</p>
+                <p>Next EMI: 2025-10-15 • Due: $120</p>
+                <div className="flex gap-2 pt-2">
+                  <Button size="sm">View Details</Button>
+                  <Button size="sm" variant="outline">Pay EMI</Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="glass ui-card">
+                <CardHeader>
+                  <CardTitle>Uploaded Documents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    <li className="flex items-center justify-between bg-white/5 p-3 rounded">
+                      <span>ID Proof.pdf</span>
+                      <Button size="sm" variant="outline">View</Button>
+                    </li>
+                    <li className="flex items-center justify-between bg-white/5 p-3 rounded">
+                      <span>Medical Report.pdf</span>
+                      <Button size="sm" variant="outline">View</Button>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card className="glass ui-card">
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    <li className="flex justify-between"><span>Premium Payment</span><span>$120 on 2025-09-15</span></li>
+                    <li className="flex justify-between"><span>Claim Submitted</span><span>#CLM-004 on 2025-08-02</span></li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </main>
         </div>
       </div>
       <ProfileDrawer

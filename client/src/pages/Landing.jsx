@@ -29,7 +29,7 @@ const Landing = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/signup">
-                <Button size="lg" className="button-pill bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4 shine">
+                <Button size="lg" className="button-pill text-lg px-8 py-4 shine">
                   Get Started
                 </Button>
               </Link>
@@ -135,7 +135,7 @@ const Landing = () => {
           <p className="text-xl text-gray-300 mb-8">Join thousands of users already using EthSure</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
-              <Button size="lg" className="button-pill bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4 shine">
+              <Button size="lg" className="button-pill text-lg px-8 py-4 shine">
                 Create Account
               </Button>
             </Link>

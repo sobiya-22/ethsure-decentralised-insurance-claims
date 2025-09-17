@@ -86,11 +86,9 @@ const Services = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <Card key={service.id} className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-300 hover:scale-105">
+            <Card key={service.id} className="glass ui-card hover:bg-white/10 transition-all duration-300 hover:scale-105">
               <CardHeader className="text-center">
-                <div className={`w-16 h-16 bg-gradient-to-r ${service.color} rounded-full mx-auto mb-4 flex items-center justify-center text-3xl`}>
-                  {service.icon}
-                </div>
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center border border-black/10 bg-[#cfe3ff] text-black text-3xl">{service.icon}</div>
                 <CardTitle className="text-white text-xl">{service.title}</CardTitle>
                 <CardDescription className="text-gray-300">
                   {service.description}
@@ -100,7 +98,7 @@ const Services = () => {
                 <div className="space-y-2">
                   {service.features.map((feature, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <div className="w-2 h-2 rounded-full border border-black/10 bg-[#cfe3ff]"></div>
                       <span className="text-gray-300 text-sm">{feature}</span>
                     </div>
                   ))}
@@ -108,7 +106,7 @@ const Services = () => {
                 <div className="pt-4 border-t border-gray-700">
                   <p className="text-white font-bold text-lg mb-4">{service.price}</p>
                   <Link to={`/service/${service.id}`}>
-                    <Button className={`w-full bg-gradient-to-r ${service.color} hover:opacity-90`}>
+                    <Button className="w-full button-pill">
                       Learn More
                     </Button>
                   </Link>
@@ -192,7 +190,7 @@ const Services = () => {
           <p className="text-xl text-gray-300 mb-8">Choose the perfect insurance plan for your needs</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4">
+              <Button size="lg" className="button-pill text-lg px-8 py-4">
                 Get Coverage Now
               </Button>
             </Link>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
+// Removed Navbar on dashboards; we'll render a compact header with logo + actions
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Sidebar from '@/components/Sidebar';
+import { Users, FileText, Briefcase, Shield } from 'lucide-react';
 import ProfileDrawer from '@/components/ProfileDrawer';
 
 const InsuranceDashboard = () => {
@@ -10,13 +12,41 @@ const InsuranceDashboard = () => {
   <div className="min-h-screen text-white w-full relative overflow-hidden">
     <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
     <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
-    <Navbar hideAuthButtons />
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <header className="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center space-x-3">
+        <div className="relative">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500" />
+          <div className="absolute inset-0 blur-md opacity-60 bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500 -z-10 rounded-lg" />
+        </div>
+        <span className="text-xl font-bold gradient-text">EthSure</span>
+      </div>
+      <div className="flex items-center gap-3">
+        <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center">
+          <span className="text-sm font-semibold text-black">IC</span>
+        </button>
+        <span className="text-xs text-gray-300 font-mono">0x1234...abcd</span>
+      </div>
+    </header>
+    <div className="flex">
+      {/* Sidebar (left) */}
+      <Sidebar
+        items={[
+          { id: 'overview', icon: Shield, label: 'Overview' },
+          { id: 'agents', icon: Users, label: 'Agents' },
+          { id: 'customers', icon: Briefcase, label: 'Customers' },
+          { id: 'policies', icon: FileText, label: 'Policies' },
+          { id: 'claims', icon: FileText, label: 'Claims' },
+        ]}
+        onLogout={() => window.location.assign('/')}
+        topOffsetClass="top-16"
+        widthClass="w-48"
+      />
+
+      {/* Main content */}
+      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8 md:ml-48">
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold gradient-text">Welcome to EthSure</h1>
         <div className="flex items-center gap-3">
-          <Button variant="ghost" className="button-pill glass" onClick={() => setDrawerOpen(true)}>My Profile</Button>
-          <Button variant="ghost" className="button-pill glass" onClick={() => window.location.assign('/')}>Logout</Button>
         </div>
       </header>
 
@@ -80,7 +110,8 @@ const InsuranceDashboard = () => {
           </CardContent>
         </Card>
       </section>
-    </main>
+      </main>
+    </div>
     <ProfileDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} profile={{ name: 'Insurance Admin', role: 'Company', email: 'company@ethsure.com', wallet: '0x1234...abcd' }} />
   </div>
   );
