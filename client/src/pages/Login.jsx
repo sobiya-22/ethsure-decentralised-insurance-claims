@@ -42,16 +42,16 @@ const Login = () => {
     <div className="min-h-screen text-white w-full relative overflow-hidden flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
-      <div className="w-full max-w-md glass glow-border p-6 rounded-xl">
+      <div className="w-full max-w-md glass glow-border p-8 rounded-2xl shadow-2xl">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-2xl mx-auto mb-4 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500 rounded-2xl mx-auto mb-4 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-lg">
               <span className="text-2xl font-bold text-white">ES</span>
             </div>
           </Link>
-          <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
-          <p className="text-gray-400 mt-2">Sign in to your EthSure account</p>
+          <h1 className="text-3xl font-bold gradient-text">Welcome Back</h1>
+          <p className="text-gray-300 mt-2">Sign in to your EthSure account</p>
         </div>
 
         {/* Wallet Connection Section */}
@@ -65,9 +65,9 @@ const Login = () => {
         </div> */}
 
         <div className="flex items-center mb-6">
-          <Separator className="flex-1" />
-          <span className="px-4 text-gray-400 text-sm">OR</span>
-          <Separator className="flex-1" />
+          <Separator className="flex-1 bg-white/20" />
+          <span className="px-4 text-gray-300 text-sm font-medium">OR</span>
+          <Separator className="flex-1 bg-white/20" />
         </div>
 
         {/* Email Login Form */}
@@ -118,10 +118,10 @@ const Login = () => {
         </form> */}
 
         {/* Sign Up Link */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-400">
+        <div className="mt-8 text-center">
+          <p className="text-gray-300">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium">
+            <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
               Sign up
             </Link>
           </p>
@@ -129,8 +129,8 @@ const Login = () => {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-            ← Back to Home
+          <Link to="/" className="text-gray-300 hover:text-white transition-colors flex items-center justify-center gap-2">
+            <span>←</span> Back to Home
           </Link>
         </div>
       </div>

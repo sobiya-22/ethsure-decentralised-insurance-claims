@@ -38,9 +38,10 @@ const AgentDashboard = () => {
   return (
     <div className="min-h-screen text-white w-full relative overflow-hidden">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/30 via-emerald-400/20 to-purple-500/30 blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-purple-500/25 via-pink-400/20 to-blue-500/25 blur-3xl" />
       {/* Header bar: logo + actions (no Navbar) */}
-      <header className="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 glass border-b border-white/10">
         <div className="flex items-center space-x-3">
           <div className="relative">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500" />
@@ -48,8 +49,8 @@ const AgentDashboard = () => {
           </div>
           <span className="text-xl font-bold gradient-text">EthSure</span>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center">
+        <div className="flex flex-col items-end gap-1">
+          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center hover:scale-105 transition-transform">
             <span className="text-sm font-semibold text-black">AG</span>
           </button>
           <span className="text-xs text-gray-300 font-mono">{agent.wallet.slice(0,6)}...{agent.wallet.slice(-4)}</span>
@@ -69,7 +70,7 @@ const AgentDashboard = () => {
       />
 
       {/* Main content (right) shifted using margin so it never sits under the sidebar */}
-      <div className="md:ml-48">
+      <div className="md:ml-48 pt-16">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8 flex items-center justify-between">
             <div>
@@ -79,22 +80,6 @@ const AgentDashboard = () => {
               <p className="text-gray-400 mt-1">
                 Overview of your assignments and workload.
               </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                className="button-pill glass"
-                onClick={() => setDrawerOpen(true)}
-              >
-                My Profile
-              </Button>
-              <Button
-                variant="ghost"
-                className="button-pill glass"
-                onClick={() => window.location.assign("/")}
-              >
-                Logout
-              </Button>
             </div>
           </div>
 

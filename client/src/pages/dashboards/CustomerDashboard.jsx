@@ -37,8 +37,15 @@ const CustomerDashboard = () => {
   if (loading) return <p className="text-center mt-20">Loading...</p>;
 
   return (
-    <>
-      <header className="h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen text-white w-full relative overflow-hidden">
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+      
+      {/* Gradient Orbs */}
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/30 via-emerald-400/20 to-purple-500/30 blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-purple-500/25 via-pink-400/20 to-blue-500/25 blur-3xl" />
+      
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 glass border-b border-white/10">
         <div className="flex items-center space-x-3">
           <div className="relative">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500" />
@@ -46,16 +53,14 @@ const CustomerDashboard = () => {
           </div>
           <span className="text-xl font-bold gradient-text">EthSure</span>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center">
+        <div className="flex flex-col items-end gap-1">
+          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center hover:scale-105 transition-transform">
             <span className="text-sm font-semibold text-black">CU</span>
           </button>
           <span className="text-xs text-gray-300 font-mono">0x742d...d8b6</span>
         </div>
       </header>
-      <div className="min-h-screen text-white relative">
-        <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
-        <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <div className="min-h-screen text-white relative pt-16">
 
         <div className="flex">
           {/* Sidebar */}
@@ -125,17 +130,17 @@ const CustomerDashboard = () => {
               </Card>
 
               <Card className="glass ui-card">
-                <CardHeader>
+          <CardHeader>
                   <CardTitle>Recent Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
+          </CardHeader>
+          <CardContent>
                   <ul className="space-y-2">
                     <li className="flex justify-between"><span>Premium Payment</span><span>$120 on 2025-09-15</span></li>
                     <li className="flex justify-between"><span>Claim Submitted</span><span>#CLM-004 on 2025-08-02</span></li>
                   </ul>
-                </CardContent>
-              </Card>
-            </div>
+          </CardContent>
+        </Card>
+      </div>
           </main>
         </div>
       </div>
@@ -144,7 +149,7 @@ const CustomerDashboard = () => {
         onClose={() => setDrawerOpen(false)}
         profile={{ name: customer?.name || 'Customer', role: 'Customer', email: customer?.email || 'john@example.com', wallet: '0x742d...d8b6' }}
       />
-    </>
+    </div>
   );
 };
 
