@@ -10,21 +10,12 @@ const Navbar = () => {
   const { disconnect } = useWeb3AuthDisconnect();
   const { userInfo } = useWeb3AuthUser();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (isConnected) {
-      navigate("/role-select");
-    }
-  });
   const connectUser = async () => {
     try {
       await connect(); 
-      // if (isConnected) {
-        
-      // }
-      // else {
-      //   alert('Please login first');
-      //   navigate('./');
-      // }
+      if (isConnected) {
+      navigate("/role-select");
+    }
     } catch (error) {
       console.error("Connection failed:", error);
     }
