@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import CustomerContent from "@/components/Customer/CustomerContent";
 import PayEMIContent from "@/components/Customer/PayEMIContent";
+import PoliciesContent from "@/components/Customer/PoliciesContent";
 import KYCForm from "@/components/KYCForm";
 import DocVault from "@/components/DocVault";
 import { Users, FileText, Folder, CreditCard } from "lucide-react";
@@ -54,7 +55,7 @@ const CustomerDashboard = () => {
       case 'pay-emi':
         return <PayEMIContent />;
       case 'policies':
-        return <div className="text-white"><h2 className="text-2xl font-bold mb-4">Policies</h2><p>Policies content coming soon...</p></div>;
+        return <PoliciesContent />;
       case 'docvault':
         return <DocVault user={user} />;
       case 'kyc':
@@ -64,7 +65,7 @@ const CustomerDashboard = () => {
     }
   };
 
-  const isFullPageView = ['kyc'].includes(currentView);
+  const isFullPageView = ['kyc', 'policies'].includes(currentView);
 
   return (
     <DashboardLayout 

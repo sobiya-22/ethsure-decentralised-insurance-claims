@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DollarSign, Calendar, ShieldCheck, AlertCircle, CreditCard, Clock, Wallet, TrendingUp, CheckCircle, History } from "lucide-react";
+import PaymentMethodContent from './PaymentMethodContent';
 
 const PayEMIContent = () => {
+  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const customer = { name: "John Doe", wallet: "0x742d...d8b6", verified: false };
   const stats = [
     { title: "Amount Due", value: "₹2,500", icon: DollarSign, change: "Monthly Premium", color: "from-gray-600 to-gray-500" },
@@ -15,6 +17,10 @@ const PayEMIContent = () => {
     { id: "PAY-002", type: "Premium Payment", amount: "₹2,500", date: "Nov 15, 2023", status: "Completed", policy: "POL-2024-001" },
     { id: "PAY-003", type: "Premium Payment", amount: "₹2,500", date: "Oct 15, 2023", status: "Completed", policy: "POL-2024-001" },
   ];
+
+  if (showPaymentMethods) {
+    return <PaymentMethodContent onBack={() => setShowPaymentMethods(false)} />;
+  }
 
   return (
     <div className="min-h-screen text-white w-full relative overflow-hidden">
@@ -50,7 +56,12 @@ const PayEMIContent = () => {
                 <h3 className="font-semibold text-gray-400 mb-1">Payment Due Soon</h3>
                 <p className="text-white/80 text-sm mb-3">Your monthly premium payment of ₹2,500 is due in 5 days. Make your payment to avoid any service interruptions.</p>
               </div>
-              <Button className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600">Pay Now</Button>
+              <Button 
+                className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600"
+                onClick={() => setShowPaymentMethods(true)}
+              >
+                Pay Now
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -91,7 +102,10 @@ const PayEMIContent = () => {
                       <p className="text-white/70">Monthly Premium Payment</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button className="h-12 bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-medium">
+                      <Button 
+                        className="h-12 bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-medium"
+                        onClick={() => setShowPaymentMethods(true)}
+                      >
                         <CreditCard className="w-5 h-5 mr-2" />Pay Now
                       </Button>
                       <Button variant="outline" className="h-12 border-white/20 text-white hover:bg-white/10">
