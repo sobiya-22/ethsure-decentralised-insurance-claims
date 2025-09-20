@@ -1,44 +1,10 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import WalletConnect from '@/components/WalletConnect';
+import { useAccount } from "wagmi";
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  // const [isWalletConnected, setIsWalletConnected] = useState(false);
-  // const [walletAddress, setWalletAddress] = useState('');
-  const navigate = useNavigate();
-
-  const handleEmailLogin = (e) => {
-    e.preventDefault();
-    // Handle email login logic
-    // console.log('Email login:', { email, password });
-    // Redirect to dashboard after successful login
-    navigate('/dashboard');
-  };
-
-  const handleWalletConnect = (address) => {
-    // setIsWalletConnected(true);
-    // setWalletAddress(address);
-    // console.log('Wallet connected:', address);
-    
-    // Auto-redirect to dashboard after wallet connection
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 1500);
-  };
-
-  const handleWalletDisconnect = () => {
-    setIsWalletConnected(false);
-    setWalletAddress('');
-    console.log('Wallet disconnected');
-  };
+ const Login = () => {
+  const { address, isConnected } = useAccount();
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen text-white w-full relative overflow-hidden flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
@@ -134,8 +100,11 @@ const Login = () => {
           </Link>
         </div>
       </div>
+=======
+    <div>
+      {isConnected ? <p className="text-white">Connected: {address}</p> : <p>Not connected</p>}
+>>>>>>> 730b35bb0a950153a4d89b1b219642cecec22a5b
     </div>
   );
 };
-
 export default Login;

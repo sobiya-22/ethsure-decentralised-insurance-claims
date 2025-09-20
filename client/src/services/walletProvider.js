@@ -1,5 +1,5 @@
-import evmProvider from "./evmProvider";
+// import evmProvider from "./evmProvider";
 
-export const getWalletProvider = (provider, uiConsole) => {
-  return evmProvider(provider, uiConsole);
-};
+// export const getWalletProvider = (provider, uiConsole) => {
+//   return evmProvider(provider, uiConsole);
+// };

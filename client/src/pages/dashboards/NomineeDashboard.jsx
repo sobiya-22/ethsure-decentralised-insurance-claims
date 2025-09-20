@@ -57,15 +57,6 @@ const NomineeDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="glass ui-card">
-            <CardHeader><CardTitle>Your Profile</CardTitle></CardHeader>
-            <CardContent className="space-y-2">
-              <p>Name: {nominee.name}</p>
-              <p>Email: {nominee.email}</p>
-              <p>Linked Policies: {nominee.linkedPolicies.length}</p>
-            </CardContent>
-          </Card>
-
           <Card className="glass ui-card lg:col-span-2">
             <CardHeader><CardTitle>Policies You Are Nominee For</CardTitle></CardHeader>
             <CardContent>

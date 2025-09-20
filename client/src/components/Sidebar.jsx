@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass = 'w-48' }) => {
+const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass = 'w-76' }) => {
   return (
     <aside className={`hidden md:flex fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-4 shadow-xl`}>
       <nav className="flex flex-col space-y-2 mt-2">
