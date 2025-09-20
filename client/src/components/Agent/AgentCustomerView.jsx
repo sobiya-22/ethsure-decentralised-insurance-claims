@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Users, UserPlus, Clock, CheckCircle, Mail, Phone, MapPin, Calendar, Eye } from "lucide-react";
+import { Users, UserPlus, Clock, CheckCircle, Mail, Phone, MapPin, Calendar, Eye, Home, FileText, Folder } from "lucide-react";
 import CustomerDetailsModal from "./CustomerDetailsModal";
 import AddCustomerModal from "./AddCustomerModal";
+import DashboardLayout from "@/layouts/DashboardLayout";
 
-const AgentCustomerView = () => {
+const AgentCustomerView = ({ withLayout = false }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
@@ -162,22 +166,45 @@ const AgentCustomerView = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Active": return "text-emerald-400 bg-emerald-400/20";
-      case "Pending": return "text-amber-400 bg-amber-400/20";
+      case "Active": return "text-gray-300 bg-gray-700/50";
+      case "Pending": return "text-gray-300 bg-gray-700/50";
       default: return "text-gray-400 bg-gray-700/50";
     }
   };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case "High": return "text-red-400 bg-red-400/20";
-      case "Medium": return "text-amber-400 bg-amber-400/20";
-      case "Low": return "text-green-400 bg-green-400/20";
+      case "High": return "text-gray-300 bg-gray-700/50";
+      case "Medium": return "text-gray-300 bg-gray-700/50";
+      case "Low": return "text-gray-300 bg-gray-700/50";
       default: return "text-gray-400 bg-gray-700/50";
     }
   };
 
-  return (
+  const user = {
+    name: "Rajesh Sharma",
+    role: "Agent",
+    email: "rajesh.sharma@ethsure.com",
+    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
+    company: "EthSure"
+  };
+
+  const sidebarItems = [
+    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
+    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
+    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+  ];
+
+  const getCurrentView = () => {
+    const path = location.pathname;
+    if (path.includes('/customers')) return 'customers';
+    if (path.includes('/claims')) return 'claims';
+    if (path.includes('/docvault')) return 'docvault';
+    return 'overview';
+  };
+
+  const content = (
     <div className="space-y-6">
       {/* Header Section */}
       <div className="flex items-center justify-between">
@@ -395,6 +422,22 @@ const AgentCustomerView = () => {
       />
     </div>
   );
+
+  if (withLayout) {
+    return (
+      <DashboardLayout 
+        sidebarItems={sidebarItems}
+        user={user}
+        widthClass="w-48"
+        currentView={getCurrentView()}
+        fullPageView={false}
+      >
+        {content}
+      </DashboardLayout>
+    );
+  }
+
+  return content;
 };
 
 export default AgentCustomerView;

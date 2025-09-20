@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { X, UserPlus, Mail, Phone, MapPin, Calendar, Shield, FileText } from 'lucide-react';
+import { X, UserPlus, Mail, Phone, MapPin, Calendar, Shield, FileText, Home, Users, Folder } from 'lucide-react';
+import DashboardLayout from '@/layouts/DashboardLayout';
 
-const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded }) => {
+const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '', address: '', dateOfBirth: '', occupation: '', annualIncome: '', emergencyContact: '', emergencyPhone: '', preferredContact: 'email', riskProfile: 'low'
   });
@@ -27,7 +31,30 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded }) => {
 
   if (!isOpen) return null;
 
-  return (
+  const defaultUser = {
+    name: "Rajesh Sharma",
+    role: "Agent",
+    email: "rajesh.sharma@ethsure.com",
+    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
+    company: "EthSure"
+  };
+
+  const sidebarItems = [
+    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
+    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
+    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+  ];
+
+  const getCurrentView = () => {
+    const path = location.pathname;
+    if (path.includes('/customers')) return 'customers';
+    if (path.includes('/claims')) return 'claims';
+    if (path.includes('/docvault')) return 'docvault';
+    return 'overview';
+  };
+
+  const content = (
     <div className="text-white w-full space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
@@ -146,6 +173,22 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded }) => {
       </form>
     </div>
   );
+
+  if (withLayout) {
+    return (
+      <DashboardLayout 
+        sidebarItems={sidebarItems}
+        user={defaultUser}
+        widthClass="w-48"
+        currentView={getCurrentView()}
+        fullPageView={false}
+      >
+        {content}
+      </DashboardLayout>
+    );
+  }
+
+  return content;
 };
 
 export default AddCustomerModal;

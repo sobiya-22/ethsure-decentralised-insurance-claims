@@ -1,16 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import AgentContent from "@/components/Agent/AgentContent";
-import AgentCustomerView from "@/components/Agent/AgentCustomerView";
-import AgentClaimsView from "@/components/Agent/AgentClaimsView";
-import CreatePolicyModal from "@/components/Agent/CreatePolicyModal";
-import AddCustomerModal from "@/components/Agent/AddCustomerModal";
-import KYCForm from "@/components/KYCForm";
-import DocVault from "@/components/DocVault";
 import { Home, Users, FileText, Folder } from "lucide-react";
 
 const AgentDashboard = () => {
-  const [currentView, setCurrentView] = useState('overview');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [customers, setCustomers] = useState([
     { id: 1, name: "Alice Johnson", policy: "Health Insurance Premium", premium: "Ξ0.15/month", status: "Active" },
     { id: 2, name: "Bob Chen", policy: "Auto Insurance Comprehensive", premium: "Ξ0.08/month", status: "Active" },
@@ -25,13 +21,6 @@ const AgentDashboard = () => {
     customers: customers,
   };
 
-  const sidebarItems = [
-    { id: 'overview', icon: Home, label: 'Overview', onClick: () => setCurrentView('overview') },
-    { id: 'customers', icon: Users, label: 'Customers', onClick: () => setCurrentView('customers') },
-    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => setCurrentView('claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
-  ];
-
   const user = {
     name: agent.name,
     role: "Agent",
@@ -40,37 +29,30 @@ const AgentDashboard = () => {
     company: "EthSure"
   };
 
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case 'customers':
-        return <AgentCustomerView />;
-      case 'claims':
-        return <AgentClaimsView />;
-      case 'docvault':
-        return <DocVault user={user} />;
-      case 'create-policy':
-        return <CreatePolicyModal isOpen={true} onClose={() => setCurrentView('overview')} customers={agent.customers} />;
-      case 'add-customer':
-        return <AddCustomerModal isOpen={true} onClose={() => setCurrentView('overview')} onCustomerAdded={(newCustomer) => setCustomers(prev => [...prev, newCustomer])} />;
-      case 'kyc':
-        return <KYCForm user={user} isOpen={true} onClose={() => setCurrentView('overview')} onSubmitKYC={(kycData) => { console.log('KYC submitted:', kycData); setCurrentView('overview'); }} />;
-      case 'overview':
-      default:
-        return <AgentContent onNavigateToCustomers={() => setCurrentView('customers')} currentView={currentView} setCurrentView={setCurrentView} />;
-    }
-  };
+  const sidebarItems = [
+    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
+    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
+    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+  ];
 
-  const isFullPageView = ['create-policy', 'add-customer', 'kyc'].includes(currentView);
+  const getCurrentView = () => {
+    const path = location.pathname;
+    if (path.includes('/customers')) return 'customers';
+    if (path.includes('/claims')) return 'claims';
+    if (path.includes('/docvault')) return 'docvault';
+    return 'overview';
+  };
 
   return (
     <DashboardLayout 
       sidebarItems={sidebarItems}
       user={user}
       widthClass="w-48"
-      currentView={currentView}
-      fullPageView={isFullPageView}
+      currentView={getCurrentView()}
+      fullPageView={false}
     >
-      {renderCurrentView()}
+      <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />
     </DashboardLayout>
   );
 };

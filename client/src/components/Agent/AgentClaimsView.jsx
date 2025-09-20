@@ -1,9 +1,13 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FileText, Clock, CheckCircle, AlertTriangle, Eye, Download, MessageSquare, Calendar, DollarSign, User } from "lucide-react";
+import { FileText, Clock, CheckCircle, AlertTriangle, Eye, Download, MessageSquare, Calendar, DollarSign, User, Home, Users, Folder } from "lucide-react";
+import DashboardLayout from "@/layouts/DashboardLayout";
 
-const AgentClaimsView = () => {
+const AgentClaimsView = ({ withLayout = false }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const claims = [
     { id: "#CL-2024-001", customer: "Alice Johnson", customerEmail: "alice.johnson@email.com", amount: "Ξ0.25", status: "Under Review", priority: "High", type: "Health", submittedDate: "2024-01-20", lastUpdated: "2024-01-22", description: "Emergency room visit for chest pain", documents: ["Medical Report", "Hospital Bill", "Insurance Card"], estimatedProcessingTime: "3-5 business days" },
     { id: "#CL-2024-002", customer: "Bob Chen", customerEmail: "bob.chen@email.com", amount: "Ξ0.18", status: "Documentation Pending", priority: "Medium", type: "Auto", submittedDate: "2024-01-18", lastUpdated: "2024-01-21", description: "Vehicle damage from collision", documents: ["Police Report", "Repair Estimate"], estimatedProcessingTime: "5-7 business days" },
@@ -13,42 +17,65 @@ const AgentClaimsView = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "Under Review": return "text-blue-400 bg-blue-400/20";
-      case "Documentation Pending": return "text-amber-400 bg-amber-400/20";
-      case "Ready for Approval": return "text-green-400 bg-green-400/20";
-      case "Approved": return "text-emerald-400 bg-emerald-400/20";
-      case "Rejected": return "text-red-400 bg-red-400/20";
+      case "Under Review": return "text-gray-300 bg-gray-700/50";
+      case "Documentation Pending": return "text-gray-300 bg-gray-700/50";
+      case "Ready for Approval": return "text-gray-300 bg-gray-700/50";
+      case "Approved": return "text-gray-300 bg-gray-700/50";
+      case "Rejected": return "text-gray-300 bg-gray-700/50";
       default: return "text-gray-400 bg-gray-700/50";
     }
   };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case "High": return "text-red-400 bg-red-400/20";
-      case "Medium": return "text-amber-400 bg-amber-400/20";
-      case "Low": return "text-green-400 bg-green-400/20";
+      case "High": return "text-gray-300 bg-gray-700/50";
+      case "Medium": return "text-gray-300 bg-gray-700/50";
+      case "Low": return "text-gray-300 bg-gray-700/50";
       default: return "text-gray-400 bg-gray-700/50";
     }
   };
 
   const getTypeColor = (type) => {
     switch (type) {
-      case "Health": return "text-blue-400 bg-blue-400/20";
-      case "Auto": return "text-purple-400 bg-purple-400/20";
-      case "Property": return "text-green-400 bg-green-400/20";
-      case "Life": return "text-pink-400 bg-pink-400/20";
+      case "Health": return "text-gray-300 bg-gray-700/50";
+      case "Auto": return "text-gray-300 bg-gray-700/50";
+      case "Property": return "text-gray-300 bg-gray-700/50";
+      case "Life": return "text-gray-300 bg-gray-700/50";
       default: return "text-gray-400 bg-gray-700/50";
     }
   };
 
   const stats = [
-    { title: "Total Claims", value: claims.length.toString(), icon: FileText, color: "from-blue-500 to-cyan-500" },
-    { title: "Under Review", value: claims.filter(c => c.status === "Under Review").length.toString(), icon: Clock, color: "from-amber-500 to-orange-500" },
-    { title: "Ready for Approval", value: claims.filter(c => c.status === "Ready for Approval").length.toString(), icon: CheckCircle, color: "from-green-500 to-emerald-500" },
-    { title: "Approved", value: claims.filter(c => c.status === "Approved").length.toString(), icon: CheckCircle, color: "from-emerald-500 to-green-500" }
+    { title: "Total Claims", value: claims.length.toString(), icon: FileText, color: "from-gray-600 to-gray-500" },
+    { title: "Under Review", value: claims.filter(c => c.status === "Under Review").length.toString(), icon: Clock, color: "from-gray-600 to-gray-500" },
+    { title: "Ready for Approval", value: claims.filter(c => c.status === "Ready for Approval").length.toString(), icon: CheckCircle, color: "from-gray-600 to-gray-500" },
+    { title: "Approved", value: claims.filter(c => c.status === "Approved").length.toString(), icon: CheckCircle, color: "from-gray-600 to-gray-500" }
   ];
 
-  return (
+  const user = {
+    name: "Rajesh Sharma",
+    role: "Agent",
+    email: "rajesh.sharma@ethsure.com",
+    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
+    company: "EthSure"
+  };
+
+  const sidebarItems = [
+    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
+    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
+    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+  ];
+
+  const getCurrentView = () => {
+    const path = location.pathname;
+    if (path.includes('/customers')) return 'customers';
+    if (path.includes('/claims')) return 'claims';
+    if (path.includes('/docvault')) return 'docvault';
+    return 'overview';
+  };
+
+  const content = (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -166,6 +193,22 @@ const AgentClaimsView = () => {
       </Card>
     </div>
   );
+
+  if (withLayout) {
+    return (
+      <DashboardLayout 
+        sidebarItems={sidebarItems}
+        user={user}
+        widthClass="w-48"
+        currentView={getCurrentView()}
+        fullPageView={false}
+      >
+        {content}
+      </DashboardLayout>
+    );
+  }
+
+  return content;
 };
 
 export default AgentClaimsView;

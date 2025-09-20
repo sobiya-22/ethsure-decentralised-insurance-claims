@@ -1,13 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Shield, Users, FileText, AlertCircle, CheckCircle, Clock, Wallet, TrendingUp, Eye, Plus, UserPlus } from "lucide-react";
 import CustomerDetailsModal from "./CustomerDetailsModal";
-import CreatePolicyModal from "./CreatePolicyModal";
-import AddCustomerModal from "./AddCustomerModal";
-import KYCForm from "../KYCForm";
 
-const AgentContent = ({ onNavigateToCustomers, currentView, setCurrentView }) => {
+const AgentContent = ({ onNavigateToCustomers }) => {
+  const navigate = useNavigate();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [customers, setCustomers] = useState([
@@ -32,20 +31,19 @@ const AgentContent = ({ onNavigateToCustomers, currentView, setCurrentView }) =>
   };
 
   const handleCreatePolicy = () => {
-    setCurrentView('create-policy');
+    navigate('/agent/create-policy');
   };
 
   const handleAddCustomer = () => {
-    setCurrentView('add-customer');
+    navigate('/agent/add-customer');
   };
 
   const handleCustomerAdded = (newCustomer) => {
     setCustomers(prev => [...prev, newCustomer]);
   };
 
-  const handleKYCSubmit = (kycData) => {
-    console.log('KYC submitted:', kycData);
-    setCurrentView('overview');
+  const handleKYCSubmit = () => {
+    navigate('/agent/kyc');
   };
 
   const stats = [
@@ -129,7 +127,7 @@ const AgentContent = ({ onNavigateToCustomers, currentView, setCurrentView }) =>
             </div>
               <Button 
                 className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
-                onClick={() => setCurrentView('kyc')}
+                onClick={handleKYCSubmit}
               >
                 Complete KYC
               </Button>
