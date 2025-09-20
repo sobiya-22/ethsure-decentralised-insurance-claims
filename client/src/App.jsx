@@ -24,8 +24,6 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/role-select" element={<RoleSelect />} />
-
-
         <Route
           path="/customer-dashboard"
           element={
