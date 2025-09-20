@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-// Removed Navbar on dashboards; custom header with logo + actions is used
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Sidebar from "@/components/Sidebar";
-import { Users, FileText, Folder } from "lucide-react";
-import ProfileDrawer from "@/components/ProfileDrawer";
-import { useNavigate } from "react-router-dom";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import CustomerContent from "@/components/Customer/CustomerContent";
+import PayEMIContent from "@/components/Customer/PayEMIContent";
+import KYCForm from "@/components/KYCForm";
+import DocVault from "@/components/DocVault";
+import { Users, FileText, Folder, CreditCard } from "lucide-react";
 
 const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currentView, setCurrentView] = useState('overview'); // 'overview', 'pay-emi', etc.
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -32,124 +30,52 @@ const CustomerDashboard = () => {
       }
     };
     fetchCustomer();
-  }, [navigate]);
+  }, []);
 
-  if (loading) return <p className="text-center mt-20">Loading...</p>;
+  if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+
+  const sidebarItems = [
+    { id: 'overview', icon: Users, label: 'Overview', onClick: () => setCurrentView('overview') },
+    { id: 'policies', icon: FileText, label: 'Policies', onClick: () => setCurrentView('policies') },
+    { id: 'pay-emi', icon: CreditCard, label: 'Pay EMI', onClick: () => setCurrentView('pay-emi') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
+  ];
+
+  const user = {
+    name: customer?.name || 'Customer',
+    role: 'Customer',
+    email: customer?.email || 'john@example.com',
+    wallet: '0x742d...d8b6',
+    company: 'EthSure Insurance'
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'pay-emi':
+        return <PayEMIContent />;
+      case 'policies':
+        return <div className="text-white"><h2 className="text-2xl font-bold mb-4">Policies</h2><p>Policies content coming soon...</p></div>;
+      case 'docvault':
+        return <DocVault user={user} />;
+      case 'kyc':
+        return <KYCForm user={user} isOpen={true} onClose={() => setCurrentView('overview')} onSubmitKYC={(kycData) => { console.log('KYC submitted:', kycData); setCurrentView('overview'); }} />;
+      default:
+        return <CustomerContent onPayEMIClick={() => setCurrentView('pay-emi')} currentView={currentView} setCurrentView={setCurrentView} />;
+    }
+  };
+
+  const isFullPageView = ['kyc'].includes(currentView);
 
   return (
-    <div className="min-h-screen text-white w-full relative overflow-hidden">
-      {/* Background Grid Pattern */}
-      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
-      
-      {/* Gradient Orbs */}
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/30 via-emerald-400/20 to-purple-500/30 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-purple-500/25 via-pink-400/20 to-blue-500/25 blur-3xl" />
-      
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 glass border-b border-white/10">
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500" />
-            <div className="absolute inset-0 blur-md opacity-60 bg-gradient-to-r from-blue-500 via-emerald-400 to-purple-500 -z-10 rounded-lg" />
-          </div>
-          <span className="text-xl font-bold gradient-text">EthSure</span>
-        </div>
-        <div className="flex flex-col items-end gap-1">
-          <button onClick={() => setDrawerOpen(true)} className="w-9 h-9 rounded-full overflow-hidden border border-black/10 bg-[#cfe3ff] flex items-center justify-center hover:scale-105 transition-transform">
-            <span className="text-sm font-semibold text-black">CU</span>
-          </button>
-          <span className="text-xs text-gray-300 font-mono">0x742d...d8b6</span>
-        </div>
-      </header>
-      <div className="min-h-screen text-white relative pt-16">
-
-        <div className="flex">
-          {/* Sidebar */}
-          <Sidebar
-            items={[
-              { id: 'agents', icon: Users, label: 'Agents' },
-              { id: 'policies', icon: FileText, label: 'Policies' },
-              { id: 'docvault', icon: Folder, label: 'DocVault' },
-            ]}
-            onLogout={() => window.location.assign('/')}
-            topOffsetClass="top-16"
-            widthClass="w-48"
-          />
-
-          {/* Main */}
-          <main className="flex-1 p-8 md:ml-48">
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold mb-6 gradient-text">Welcome to EthSure</h1>
-              <div className="flex items-center gap-3">
-                
-              </div>
-            </div>
-
-            {/* KYC Alert */}
-            <div className="glass ui-card p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 rounded-full bg-yellow-400 mt-2" />
-                <div>
-                  <p className="font-semibold">KYC pending</p>
-                  <p className="text-gray-300 text-sm">Please complete your KYC to activate all features.</p>
-                </div>
-                <Button size="sm" className="ml-auto">Complete KYC</Button>
-              </div>
-            </div>
-
-            {/* Active Policy Section */}
-            <Card className="glass ui-card mb-8">
-              <CardHeader><CardTitle>Active Policy</CardTitle></CardHeader>
-              <CardContent className="space-y-2">
-                <p>Policy: Health Insurance Plus</p>
-                <p>Agent: Rajesh Sharma</p>
-                <p>Next EMI: 2025-10-15 • Due: $120</p>
-                <div className="flex gap-2 pt-2">
-                  <Button size="sm">View Details</Button>
-                  <Button size="sm" variant="outline">Pay EMI</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="glass ui-card">
-                <CardHeader>
-                  <CardTitle>Uploaded Documents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center justify-between bg-white/5 p-3 rounded">
-                      <span>ID Proof.pdf</span>
-                      <Button size="sm" variant="outline">View</Button>
-                    </li>
-                    <li className="flex items-center justify-between bg-white/5 p-3 rounded">
-                      <span>Medical Report.pdf</span>
-                      <Button size="sm" variant="outline">View</Button>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="glass ui-card">
-          <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex justify-between"><span>Premium Payment</span><span>$120 on 2025-09-15</span></li>
-                    <li className="flex justify-between"><span>Claim Submitted</span><span>#CLM-004 on 2025-08-02</span></li>
-                  </ul>
-          </CardContent>
-        </Card>
-      </div>
-          </main>
-        </div>
-      </div>
-      <ProfileDrawer
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        profile={{ name: customer?.name || 'Customer', role: 'Customer', email: customer?.email || 'john@example.com', wallet: '0x742d...d8b6' }}
-      />
-    </div>
+    <DashboardLayout 
+      sidebarItems={sidebarItems}
+      user={user}
+      widthClass="w-48"
+      currentView={currentView}
+      fullPageView={isFullPageView}
+    >
+      {renderContent()}
+    </DashboardLayout>
   );
 };
 

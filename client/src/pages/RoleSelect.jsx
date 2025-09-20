@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PageShell from '../components/PageShell';
 // import { IdentityTokenButton } from '../lib/web3auth/auth';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');

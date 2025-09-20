@@ -17,7 +17,7 @@ const Landing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 button-pill glass text-xs uppercase tracking-wider text-gray-300">
+            <div className="inline-flex items-center gap-2 glass text-xs uppercase tracking-wider text-gray-300 px-3 py-1 rounded-full">
               Insurance on-chain
             </div>
             <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight">
@@ -34,7 +34,7 @@ const Landing = () => {
                 </Button>
               </Link>
               <Link to="/services">
-                <Button size="lg" variant="outline" className="button-pill glass text-gray-200 hover:text-white text-lg px-8 py-4">
+                <Button size="lg" variant="outline" className="glass text-gray-200 hover:text-white text-lg px-8 py-4">
                   Learn More
                 </Button>
               </Link>
@@ -42,7 +42,7 @@ const Landing = () => {
           </div>
 
           <div className="space-y-6">
-            <Card className="glass shine">
+            <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <Badge className="bg-blue-600 text-white">1</Badge>
@@ -56,7 +56,7 @@ const Landing = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass shine">
+            <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <Badge className="bg-green-600 text-white">2</Badge>
@@ -70,7 +70,7 @@ const Landing = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass shine">
+            <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <Badge className="bg-purple-600 text-white">3</Badge>
@@ -94,7 +94,7 @@ const Landing = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="glass hover:bg-white/10 transition-colors">
+          <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
             <CardHeader>
               <CardTitle className="text-white">Transparent</CardTitle>
             </CardHeader>
@@ -105,7 +105,7 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="glass hover:bg-white/10 transition-colors">
+          <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
             <CardHeader>
               <CardTitle className="text-white">Secure</CardTitle>
             </CardHeader>
@@ -116,7 +116,7 @@ const Landing = () => {
             </CardContent>
           </Card>
 
-          <Card className="glass hover:bg-white/10 transition-colors">
+          <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
             <CardHeader>
               <CardTitle className="text-white">Fast</CardTitle>
             </CardHeader>
@@ -140,7 +140,7 @@ const Landing = () => {
               </Button>
             </Link>
             <Link to="/login">
-              <Button size="lg" variant="outline" className="button-pill glass text-gray-200 hover:text-white text-lg px-8 py-4">
+              <Button size="lg" variant="outline" className="glass text-gray-200 hover:text-white text-lg px-8 py-4">
                 Sign In
               </Button>
             </Link>

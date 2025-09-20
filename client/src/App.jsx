@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import CustomerDashboard from "./pages/dashboards/CustomerDashboard";
 import AgentDashboard from "./pages/dashboards/AgentDashboard";
 import CompanyDashboard from "./pages/dashboards/CompanyDashboard";
+import NomineeDashboard from "./pages/dashboards/NomineeDashboard";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
@@ -27,29 +28,39 @@ function App() {
         <Route
           path="/customer-dashboard"
           element={
-            <ProtectedRoute allowedRoles={["customer"]}>
+           // <ProtectedRoute allowedRoles={["customer"]}>
               <CustomerDashboard />
-            </ProtectedRoute>
+            //</ProtectedRoute>
           }
         />
 
         <Route
           path="/agent-dashboard"
           element={
-            <ProtectedRoute allowedRoles={["agent"]}>
+           // <ProtectedRoute allowedRoles={["agent"]}>
               <AgentDashboard />
-            </ProtectedRoute>
+           // </ProtectedRoute>
           }
         />
 
         <Route
           path="/company-dashboard"
           element={
-            <ProtectedRoute allowedRoles={["company"]}>
+            //<ProtectedRoute allowedRoles={["company"]}>
               <CompanyDashboard />
-            </ProtectedRoute>
+            //</ProtectedRoute>
           }
         />
+
+        <Route
+          path="/nominee-dashboard"
+          element={
+            //<ProtectedRoute allowedRoles={["nominee"]}>
+              <NomineeDashboard />
+            //</ProtectedRoute>
+          }
+        />
+
       </Routes>
 
   );

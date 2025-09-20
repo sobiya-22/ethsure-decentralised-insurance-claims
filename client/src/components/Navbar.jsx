@@ -40,17 +40,17 @@ const Navbar = () => {
             <span className="text-2xl font-bold gradient-text">EthSure</span>
           </div>
           <div className="hidden md:flex items-center space-x-2">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/about" className="nav-link">About</Link>
-            <Link to="/services" className="nav-link">Services</Link>
-            <Link to="/contact" className="nav-link">Contact</Link>
+            <Link to="/" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Home</Link>
+            <Link to="/about" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">About</Link>
+            <Link to="/services" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Services</Link>
+            <Link to="/contact" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Contact</Link>
           </div>
           <div className="flex items-center space-x-3">
             {!isConnected &&
               <Button
                 onClick={connectUser}
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+                className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 rounded-full px-6 py-2"
               >
                 Login
               </Button>
@@ -59,13 +59,13 @@ const Navbar = () => {
               <Button
                 onClick={logout}
                 variant="outline"
-                className="border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 transition-all duration-300"
+                className="border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 transition-all duration-300 rounded-full px-6 py-2"
               >
                 Logout
               </Button>
             }
             <Link to="/signup">
-              <Button className="btn-primary px-6 py-2 rounded-xl font-semibold">
+              <Button className="btn-primary px-6 py-2 rounded-full font-semibold">
                 Get Started
               </Button>
             </Link>

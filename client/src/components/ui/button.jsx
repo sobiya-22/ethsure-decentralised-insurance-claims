@@ -1,37 +1,32 @@
 import React from 'react';
 
 const Button = ({ 
-  children, 
-  variant = 'default', 
-  size = 'default', 
   className = '', 
+  variant = 'default', 
+  size = 'md', 
   ...props 
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 focus-visible:ring-offset-0 disabled:opacity-50 disabled:pointer-events-none backdrop-blur-sm';
+  const baseClasses = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
   
-  const variantClasses = {
-    // Default pastel light blue with dark text (matches provided color)
-    default: 'bg-[#cfe3ff] text-black hover:bg-[#bcd8ff] border border-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_1px_2px_rgba(0,0,0,0.15)]',
-    destructive: 'bg-red-500/90 text-white hover:bg-red-500 border border-white/10 shadow-sm shadow-red-500/20',
-    outline: 'bg-transparent text-white border border-white/20 hover:bg-white/10',
-    secondary: 'bg-[#cfe3ff] text-black hover:bg-[#bcd8ff] border border-black/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_1px_2px_rgba(0,0,0,0.15)]',
-    ghost: 'text-white hover:bg-white/10',
-    link: 'underline-offset-4 hover:underline text-blue-300'
+  const variants = {
+    default: 'bg-[#C6D9F7] hover:bg-[#B8D1F5] text-[#1f2937] shadow-lg hover:shadow-xl focus:ring-blue-500 font-semibold',
+    secondary: 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 backdrop-blur-sm',
+    destructive: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl focus:ring-red-500',
+    outline: 'border border-white/30 hover:bg-white/10 text-white hover:text-white',
+    ghost: 'hover:bg-white/10 text-white'
   };
   
-  const sizeClasses = {
-    default: 'h-10 py-2 px-5 rounded-full',
-    sm: 'h-9 px-4 rounded-full',
-    lg: 'h-12 px-8 rounded-full',
-    icon: 'h-10 w-10 rounded-full'
+  const sizes = {
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-6 py-3 text-base'
   };
-  
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
   
   return (
-    <button className={classes} {...props}>
-      {children}
-    </button>
+    <button 
+      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`} 
+      {...props} 
+    />
   );
 };
 
