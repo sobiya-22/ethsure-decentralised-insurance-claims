@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import AgentContent from "@/components/Agent/AgentContent";
+import DocVault from "@/components/DocVault";
 import { Home, Users, FileText, Folder } from "lucide-react";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentView, setCurrentView] = useState('overview');
   const [customers, setCustomers] = useState([
     { id: 1, name: "Alice Johnson", policy: "Health Insurance Premium", premium: "Ξ0.15/month", status: "Active" },
     { id: 2, name: "Bob Chen", policy: "Auto Insurance Comprehensive", premium: "Ξ0.08/month", status: "Active" },
@@ -30,18 +32,35 @@ const AgentDashboard = () => {
   };
 
   const sidebarItems = [
-    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
+    { id: 'overview', icon: Home, label: 'Overview', onClick: () => setCurrentView('overview') },
     { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
     { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
   ];
+
+  // Handle navigation from other components that want to go to DocVault
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const view = urlParams.get('view');
+    if (view === 'docvault') {
+      setCurrentView('docvault');
+    }
+  }, [location.search]);
 
   const getCurrentView = () => {
     const path = location.pathname;
     if (path.includes('/customers')) return 'customers';
     if (path.includes('/claims')) return 'claims';
-    if (path.includes('/docvault')) return 'docvault';
-    return 'overview';
+    return currentView;
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'docvault':
+        return <DocVault user={user} />;
+      default:
+        return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />;
+    }
   };
 
   return (
@@ -52,7 +71,7 @@ const AgentDashboard = () => {
       currentView={getCurrentView()}
       fullPageView={false}
     >
-      <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />
+      {renderContent()}
     </DashboardLayout>
   );
 };

@@ -17,32 +17,32 @@ const About = () => {
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className={`text-center mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
             About <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">EthSure</span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
             We're revolutionizing the insurance industry by leveraging blockchain technology to create a more transparent, secure, and efficient claims processing system.
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-50px] opacity-0'}`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-4xl font-bold text-white mb-6">Our Mission</h2>
-            <p className="text-lg text-gray-300 mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 sm:mb-6">Our Mission</h2>
+            <p className="text-base sm:text-lg text-gray-300 mb-4 sm:mb-6">
               To democratize insurance by making it accessible, transparent, and fair for everyone. We believe that insurance should work for the people, not against them.
             </p>
-            <p className="text-lg text-gray-300 mb-8">
+            <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8">
               By using blockchain technology, we eliminate the need for intermediaries, reduce costs, and ensure that every transaction is recorded immutably for complete transparency.
             </p>
             <Link to="/services">
-              <Button size="lg" className="button-pill">Learn More About Our Services</Button>
+              <Button size="lg" className="button-pill w-full sm:w-auto">Learn More About Our Services</Button>
             </Link>
           </div>
-          <div className={`space-y-6 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[50px] opacity-0'}`} style={{ transitionDelay: '400ms' }}>
+          <div className={`space-y-4 sm:space-y-6 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[50px] opacity-0'}`} style={{ transitionDelay: '400ms' }}>
             <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
               <CardHeader>
                 <CardTitle className="text-white">Transparency</CardTitle>
@@ -67,13 +67,13 @@ const About = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className={`text-center mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '600ms' }}>
-          <h2 className="text-4xl font-bold text-white mb-4">Our Team</h2>
-          <p className="text-xl text-gray-300">Meet the experts behind EthSure</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '600ms' }}>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Our Team</h2>
+          <p className="text-lg sm:text-xl text-gray-300">Meet the experts behind EthSure</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '800ms' }}>
             <CardContent className="p-6">
               <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
@@ -109,13 +109,13 @@ const About = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className={`text-center mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
-          <h2 className="text-4xl font-bold text-white mb-4">Our Values</h2>
-          <p className="text-xl text-gray-300">The principles that guide everything we do</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Our Values</h2>
+          <p className="text-lg sm:text-xl text-gray-300">The principles that guide everything we do</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1600ms' }}>
             <CardContent className="p-6">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg mx-auto mb-4 flex items-center justify-center hover:scale-110 hover:rotate-6 transition-all duration-300">
@@ -166,11 +166,11 @@ const About = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className={`text-center transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '2400ms' }}>
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Join Us?</h2>
-          <p className="text-xl text-gray-300 mb-8">Be part of the future of insurance</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Ready to Join Us?</h2>
+          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">Be part of the future of insurance</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link to="/signup">
               <Button size="lg" className="button-pill text-lg px-8 py-4 hover:scale-105 hover:shadow-[0_15px_35px_rgba(96,165,250,0.3)] transition-all duration-300">
                 Get Started Today

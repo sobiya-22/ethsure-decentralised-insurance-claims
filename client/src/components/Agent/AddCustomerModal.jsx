@@ -15,7 +15,9 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -43,7 +45,7 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false
     { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
     { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
     { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent-dashboard?view=docvault') },
   ];
 
   const getCurrentView = () => {
@@ -55,7 +57,7 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false
   };
 
   const content = (
-    <div className="text-white w-full space-y-8">
+    <div className="text-white w-full space-y-8 pt-12">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">

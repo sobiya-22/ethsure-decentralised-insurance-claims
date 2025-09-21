@@ -23,7 +23,9 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
 
   const handleSave = () => { onUpdateProfile?.(formData); setIsEditing(false); };
   const handleCancel = () => { setFormData({ name: user?.name || '', email: user?.email || '', phone: user?.phone || '', address: user?.address || '', company: user?.company || '', department: user?.department || '', employeeId: user?.employeeId || '', licenseNumber: user?.licenseNumber || '', specialization: user?.specialization || '', experience: user?.experience || '', kycStatus: user?.kycStatus || 'Pending', riskProfile: user?.riskProfile || 'Medium', annualIncome: user?.annualIncome || '', occupation: user?.occupation || '', emergencyContact: user?.emergencyContact || '', emergencyPhone: user?.emergencyPhone || '', did: user?.did || 'did:ethr:0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6' }); setIsEditing(false); };
-  const handleInputChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
   const handleCopyDID = async () => {
     try {
       await navigator.clipboard.writeText(formData.did);
@@ -125,7 +127,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   const cardClasses = "glass shine border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300 hover:scale-[1.02]";
 
   return (
-    <div className="text-white w-full space-y-8">
+    <div className="text-white w-full space-y-8 pt-12">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-3">

@@ -27,10 +27,10 @@ const CompanyContent = () => {
   ];
 
   return (
-    <div className="min-h-screen text-white w-full relative overflow-hidden">
+    <div className="text-white w-full relative overflow-hidden">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-6 pt-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -120,7 +120,7 @@ const CompanyContent = () => {
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
                           <h3 className="text-white font-medium">{agent.name}</h3>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${agent.status === 'Active' ? 'text-gray-300 bg-gray-700/50' : 'text-gray-300 bg-gray-700/50'}`}>{agent.status}</span>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${agent.status === 'Active' ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/30' : 'text-gray-300 bg-gray-700/50'}`}>{agent.status}</span>
                         </div>
                         <p className="text-white/60 text-sm">{agent.customers} customers • {agent.performance} performance</p>
                       </div>

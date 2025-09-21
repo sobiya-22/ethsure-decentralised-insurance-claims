@@ -77,12 +77,12 @@ const AgentContent = ({ onNavigateToCustomers }) => {
   };
 
   return (
-    <div className="min-h-screen text-white w-full relative">
+    <div className="text-white w-full relative">
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
       
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-6 pt-12">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
@@ -225,7 +225,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {agent.customers.slice(0, 3).map((customer) => (
+                {agent.customers.map((customer) => (
                   <div
                     key={customer.id}
                     className="p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer group"
@@ -235,7 +235,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
                       <span className="font-medium text-white text-sm">{customer.name}</span>
                       <div className="flex items-center gap-2">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          customer.status === 'Active' ? 'text-gray-300 bg-gray-700/50' : 'text-gray-300 bg-gray-700/50'
+                          customer.status === 'Active' ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/30' : 'text-gray-300 bg-gray-700/50'
                         }`}>
                           {customer.status}
                         </span>

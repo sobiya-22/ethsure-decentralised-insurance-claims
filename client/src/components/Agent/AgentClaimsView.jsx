@@ -64,7 +64,7 @@ const AgentClaimsView = ({ withLayout = false }) => {
     { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
     { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
     { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent/docvault') },
+    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent-dashboard?view=docvault') },
   ];
 
   const getCurrentView = () => {
@@ -76,11 +76,16 @@ const AgentClaimsView = ({ withLayout = false }) => {
   };
 
   const content = (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-12">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Claims Management</h1>
-          <p className="text-white/70">Review and process insurance claims for your customers</p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg glass"><FileText className="w-6 h-6 text-white" /></div>
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight"><span className="text-white">Claims</span> <span className="gradient-text">Management</span></h1>
+              <p className="text-xl text-gray-300">Review and process insurance claims for your customers</p>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30">
           <div className="w-2 h-2 rounded-full bg-emerald-400" />

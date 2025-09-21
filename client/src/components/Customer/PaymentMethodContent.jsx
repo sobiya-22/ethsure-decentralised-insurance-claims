@@ -20,7 +20,7 @@ const PaymentMethodContent = ({ onBack }) => {
   const handleBankTransfer = () => console.log('Bank transfer initiated');
 
   return (
-    <div className="text-white w-full space-y-8">
+    <div className="text-white w-full space-y-8 pt-12">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">

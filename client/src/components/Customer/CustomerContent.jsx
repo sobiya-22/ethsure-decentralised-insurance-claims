@@ -22,10 +22,10 @@ const CustomerContent = ({ onPayEMIClick, currentView, setCurrentView }) => {
   const handleKYCSubmit = (kycData) => { console.log('KYC submitted:', kycData); setCurrentView('overview'); };
 
   return (
-    <div className="min-h-screen text-white w-full relative overflow-hidden">
+    <div className="text-white w-full relative overflow-hidden">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-6 pt-12">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">

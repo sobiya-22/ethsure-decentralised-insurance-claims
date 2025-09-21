@@ -56,14 +56,16 @@ const DocVault = ({ user }) => {
   const actionButtonClass = "border-white/20 text-white hover:bg-white/10 transition-all duration-200";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-12">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-            <FileText className="w-6 h-6 text-cyan-400" />
-            Document Vault
-          </h2>
-          <p className="text-gray-400 mt-1">Secure storage for all your important documents</p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg glass"><FileText className="w-6 h-6 text-white" /></div>
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight"><span className="text-white">Document</span> <span className="gradient-text">Vault</span></h1>
+              <p className="text-xl text-gray-300">Secure storage for all your important documents</p>
+            </div>
+          </div>
         </div>
         <Button onClick={handleUpload} className={buttonClass}>
           <Upload className="w-5 h-5 mr-2" /> Upload Document
