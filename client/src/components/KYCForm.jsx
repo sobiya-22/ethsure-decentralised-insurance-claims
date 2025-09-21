@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+// import { Input } from '@/components/ui/input'; // Not using this anymore
 import { Label } from '@/components/ui/label';
 import { Upload, Check, AlertCircle, X, User, FileText, Camera, Shield, Home, Users, Folder } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -22,9 +22,25 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
     idDocument: null, addressProof: null, selfie: null
   });
 
+<<<<<<< HEAD
   const handleSubmit = () => { onSubmitKYC?.(formData); onClose?.(); };
   const handleFileUpload = (field, file) => setFormData({...formData, [field]: file});
   const handleInputChange = (field, value) => {
+=======
+  const handleSubmit = () => { 
+    console.log('KYC Form submitted:', formData);
+    onSubmitKYC?.(formData); 
+    onClose?.(); 
+  };
+  
+  const handleFileUpload = (field, file) => {
+    console.log('File uploaded:', field, file);
+    setFormData(prev => ({ ...prev, [field]: file }));
+  };
+  
+  const handleInputChange = (field, value) => {
+    console.log('Input changed:', field, value);
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -34,6 +50,7 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
     { id: 3, title: 'Verification', completed: false }
   ];
 
+<<<<<<< HEAD
   // Optimized form validation using useMemo to prevent recalculation on every render
   const isStep1Valid = useMemo(() => 
     formData.idType && formData.idNumber && formData.dateOfBirth && formData.occupation && formData.income,
@@ -47,6 +64,22 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
 
   if (!isOpen) return null;
 
+=======
+  const isStep1Valid = formData.idType && formData.idNumber && formData.dateOfBirth && formData.occupation && formData.income;
+  const isStep2Valid = formData.idDocument && formData.addressProof && formData.selfie;
+  
+  // Debug: Log form data changes
+  React.useEffect(() => {
+    console.log('Form data updated:', formData);
+  }, [formData]);
+
+  if (!isOpen) return null;
+
+  const inputClass = "w-full mt-3 bg-white/5 border border-white/10 text-white placeholder:text-gray-400 p-4 text-lg rounded-xl focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 hover:bg-white/10 focus:outline-none cursor-text";
+  const selectClass = "w-full mt-3 p-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 hover:bg-white/10 focus:outline-none cursor-pointer";
+  const buttonClass = "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-8 py-3 text-lg rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed";
+  const cardClass = "glass shine border-white/20 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300";
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
 
   const FileUploadSection = ({ title, icon: Icon, field, accept = "image/*,.pdf" }) => (
     <div>
@@ -64,6 +97,7 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
         <p className="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6">
           {accept === "image/*" ? 'Accepted formats: JPG, PNG (Max 10MB)' : 'Accepted formats: JPG, PNG, PDF (Max 10MB)'}
         </p>
+<<<<<<< HEAD
         <input type="file" accept={accept} onChange={(e) => handleFileUpload(field, e.target.files[0])} className="hidden" id={field} />
         <label htmlFor={field} className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-lg sm:rounded-xl cursor-pointer transition-all duration-200 hover:scale-105 text-sm sm:text-base">
           Choose File
@@ -73,6 +107,47 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
             <Check className="w-3 h-3 sm:w-4 sm:h-4" />
             {formData[field].name}
           </p>
+=======
+        <input 
+          type="file" 
+          accept={accept} 
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              console.log('File selected:', field, file.name, file.size);
+              handleFileUpload(field, file);
+            }
+          }} 
+          className="hidden" 
+          id={field} 
+        />
+        <label 
+          htmlFor={field} 
+          className="inline-block px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-xl cursor-pointer transition-all duration-200 hover:scale-105"
+        >
+          Choose File
+        </label>
+        {formData[field] && (
+          <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+            <p className="text-emerald-400 text-sm flex items-center justify-center gap-2">
+              <Check className="w-4 h-4" />
+              {formData[field].name} ({(formData[field].size / 1024 / 1024).toFixed(2)} MB)
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                console.log('Removing file:', field);
+                setFormData(prev => ({ ...prev, [field]: null }));
+                // Reset the file input
+                const fileInput = document.getElementById(field);
+                if (fileInput) fileInput.value = '';
+              }}
+              className="text-red-400 text-xs mt-1 hover:text-red-300 underline"
+            >
+              Remove file
+            </button>
+          </div>
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
         )}
       </div>
     </div>
@@ -139,6 +214,55 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
         ))}
       </div>
 
+      {/* Debug Panel - Remove in production */}
+      <div className="mb-6 p-4 bg-gray-800/50 border border-gray-600 rounded-lg">
+        <h4 className="text-white font-bold mb-2">Debug Info (Remove in production)</h4>
+        <div className="text-sm text-gray-300 space-y-1">
+          <p>Step 1 Valid: {isStep1Valid ? '✅' : '❌'}</p>
+          <p>Step 2 Valid: {isStep2Valid ? '✅' : '❌'}</p>
+          <p>Current Step: {currentStep}</p>
+          <div className="flex gap-2 mt-2">
+            <button 
+              onClick={() => {
+                setFormData({
+                  idType: 'passport',
+                  idNumber: 'TEST123456',
+                  dateOfBirth: '1990-01-01',
+                  occupation: 'Software Engineer',
+                  income: '50k-100k',
+                  idDocument: null,
+                  addressProof: null,
+                  selfie: null
+                });
+                console.log('Test data loaded');
+              }}
+              className="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+            >
+              Load Test Data
+            </button>
+            <button 
+              onClick={() => {
+                setFormData({
+                  idType: '',
+                  idNumber: '',
+                  dateOfBirth: '',
+                  occupation: '',
+                  income: '',
+                  idDocument: null,
+                  addressProof: null,
+                  selfie: null
+                });
+                console.log('Form cleared');
+              }}
+              className="px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+            >
+              Clear Form
+            </button>
+          </div>
+          <p className="mt-2">Form Data: {JSON.stringify(formData, null, 2)}</p>
+        </div>
+      </div>
+
       {currentStep === 1 && (
         <Card className={cardClass}>
           <CardHeader>
@@ -154,7 +278,14 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
                 <select 
                   id="idType" 
                   value={formData.idType} 
+<<<<<<< HEAD
                   onChange={(e) => handleInputChange('idType', e.target.value)} 
+=======
+                  onChange={(e) => {
+                    console.log('ID Type changed:', e.target.value);
+                    handleInputChange('idType', e.target.value);
+                  }} 
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                   className={selectClass}
                 >
                   <option value="" className="bg-gray-800">Select ID Type</option>
@@ -165,6 +296,7 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
               </div>
               <div>
                 <Label htmlFor="idNumber" className="text-white/90 font-medium text-lg">ID Number</Label>
+<<<<<<< HEAD
                 <Input 
                   id="idNumber" 
                   type="text" 
@@ -173,20 +305,53 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
                   className={inputClass}
                   placeholder="Enter your ID number" 
                   autoComplete="off"
+=======
+                <input 
+                  id="idNumber" 
+                  type="text" 
+                  value={formData.idNumber} 
+                  onChange={(e) => {
+                    console.log('ID Number changed:', e.target.value);
+                    handleInputChange('idNumber', e.target.value);
+                  }} 
+                  onFocus={(e) => {
+                    console.log('ID Number focused');
+                    e.target.select();
+                  }}
+                  className={inputClass} 
+                  placeholder="Enter your ID number"
+                  autoComplete="off"
+                  spellCheck="false"
+                  required
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                 />
               </div>
               <div>
                 <Label htmlFor="dateOfBirth" className="text-white/90 font-medium text-lg">Date of Birth</Label>
+<<<<<<< HEAD
                 <Input 
                   id="dateOfBirth" 
                   type="date" 
                   value={formData.dateOfBirth} 
                   onChange={(e) => handleInputChange('dateOfBirth', e.target.value)} 
                   className={inputClass}
+=======
+                <input 
+                  id="dateOfBirth" 
+                  type="date" 
+                  value={formData.dateOfBirth} 
+                  onChange={(e) => {
+                    console.log('Date of Birth changed:', e.target.value);
+                    handleInputChange('dateOfBirth', e.target.value);
+                  }} 
+                  className={inputClass}
+                  autoComplete="off"
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                 />
               </div>
               <div>
                 <Label htmlFor="occupation" className="text-white/90 font-medium text-lg">Occupation</Label>
+<<<<<<< HEAD
                 <Input 
                   id="occupation" 
                   type="text" 
@@ -195,6 +360,25 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
                   className={inputClass}
                   placeholder="Enter your occupation" 
                   autoComplete="off"
+=======
+                <input 
+                  id="occupation" 
+                  type="text" 
+                  value={formData.occupation} 
+                  onChange={(e) => {
+                    console.log('Occupation changed:', e.target.value);
+                    handleInputChange('occupation', e.target.value);
+                  }} 
+                  onFocus={(e) => {
+                    console.log('Occupation focused');
+                    e.target.select();
+                  }}
+                  className={inputClass} 
+                  placeholder="Enter your occupation"
+                  autoComplete="off"
+                  spellCheck="false"
+                  required
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                 />
               </div>
               <div className="md:col-span-2">
@@ -202,7 +386,14 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
                 <select 
                   id="income" 
                   value={formData.income} 
+<<<<<<< HEAD
                   onChange={(e) => handleInputChange('income', e.target.value)} 
+=======
+                  onChange={(e) => {
+                    console.log('Income changed:', e.target.value);
+                    handleInputChange('income', e.target.value);
+                  }} 
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                   className={selectClass}
                 >
                   <option value="" className="bg-gray-800">Select Income Range</option>
@@ -213,8 +404,24 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
                 </select>
               </div>
             </div>
+<<<<<<< HEAD
             <div className="flex justify-end pt-4 sm:pt-6">
               <Button onClick={() => setCurrentStep(2)} disabled={!isStep1Valid} className={`${buttonClass} w-full sm:w-auto`}>
+=======
+            <div className="flex justify-between items-center pt-6">
+              <div className="text-sm text-white/70">
+                {!isStep1Valid && (
+                  <span className="text-amber-400">Please fill in all required fields to continue</span>
+                )}
+                {isStep1Valid && (
+                  <span className="text-emerald-400 flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    All fields completed
+                  </span>
+                )}
+              </div>
+              <Button onClick={() => setCurrentStep(2)} disabled={!isStep1Valid} className={buttonClass}>
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                 Next Step
               </Button>
             </div>
@@ -234,11 +441,30 @@ const KYCForm = ({ user, isOpen, onSubmitKYC, onClose, withLayout = false }) => 
             <FileUploadSection title="ID Document" icon={Shield} field="idDocument" />
             <FileUploadSection title="Address Proof" icon={FileText} field="addressProof" />
             <FileUploadSection title="Selfie with ID" icon={Camera} field="selfie" accept="image/*" />
+<<<<<<< HEAD
             <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 pt-4 sm:pt-6">
               <Button variant="outline" onClick={() => setCurrentStep(1)} className="border-white/20 text-white hover:bg-white/10 px-6 sm:px-8 py-3 text-base sm:text-lg rounded-xl transition-all duration-200 hover:scale-105 w-full sm:w-auto">
                 Back
               </Button>
               <Button onClick={() => setCurrentStep(3)} disabled={!isStep2Valid} className={`${buttonClass} w-full sm:w-auto`}>
+=======
+            <div className="flex justify-between items-center pt-6">
+              <Button variant="outline" onClick={() => setCurrentStep(1)} className="border-white/20 text-white hover:bg-white/10 px-8 py-3 text-lg rounded-xl transition-all duration-200 hover:scale-105">
+                Back
+              </Button>
+              <div className="text-sm text-white/70">
+                {!isStep2Valid && (
+                  <span className="text-amber-400">Please upload all required documents to continue</span>
+                )}
+                {isStep2Valid && (
+                  <span className="text-emerald-400 flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    All documents uploaded
+                  </span>
+                )}
+              </div>
+              <Button onClick={() => setCurrentStep(3)} disabled={!isStep2Valid} className={buttonClass}>
+>>>>>>> 01d7c132851f3dbcb7782db9ece600e6553113f7
                 Next Step
               </Button>
             </div>

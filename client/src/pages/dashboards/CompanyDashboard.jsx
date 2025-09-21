@@ -23,7 +23,7 @@ const CompanyDashboard = () => {
   };
 
   const renderContent = () => {
-    return <CompanyContent />;
+    return <CompanyContent currentView={currentView} />;
   };
 
   return (
