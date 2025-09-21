@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { DollarSign, Calendar, ShieldCheck, AlertCircle, CreditCard, Clock, Wallet, TrendingUp, CheckCircle, History } from "lucide-react";
+import { Calendar, ShieldCheck, AlertCircle, CreditCard, Clock, Wallet, TrendingUp, CheckCircle, History,IndianRupee } from "lucide-react";
 import PaymentMethodContent from './PaymentMethodContent';
 
 const PayEMIContent = () => {
   const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const customer = { name: "John Doe", wallet: "0x742d...d8b6", verified: false };
   const stats = [
-    { title: "Amount Due", value: "₹2,500", icon: DollarSign, change: "Monthly Premium", color: "from-gray-600 to-gray-500" },
-    { title: "Due Date", value: "15 Jan", icon: Calendar, change: "5 days remaining", color: "from-gray-600 to-gray-500" },
-    { title: "Policy Status", value: "Active", icon: ShieldCheck, change: "Coverage Valid", color: "from-gray-600 to-gray-500" },
+    { title: "Amount Due", value: "₹2,500", icon: IndianRupee, change: "Monthly Premium", color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
+    { title: "Due Date", value: "15 Jan", icon: Calendar, change: "5 days remaining", color: "from-amber-500/20 to-amber-400/20", iconColor: "text-amber-400" },
+    { title: "Policy Status", value: "Active", icon: ShieldCheck, change: "Coverage Valid", color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
   ];
   const paymentHistory = [
     { id: "PAY-001", type: "Premium Payment", amount: "₹2,500", date: "Dec 15, 2023", status: "Completed", policy: "POL-2024-001" },
@@ -21,7 +21,6 @@ const PayEMIContent = () => {
   if (showPaymentMethods) {
     return <PaymentMethodContent onBack={() => setShowPaymentMethods(false)} />;
   }
-
   return (
     <div className="text-white w-full relative overflow-hidden">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
@@ -30,7 +29,7 @@ const PayEMIContent = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg glass"><CreditCard className="w-6 h-6 text-white" /></div>
+              <div className="p-2 rounded-lg glass"><CreditCard className="w-6 h-6 text-cyan-400" /></div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">Pay <span className="gradient-text">EMI</span></h1>
                 <p className="text-xl text-gray-300">Manage your insurance premium payments</p>
@@ -47,7 +46,6 @@ const PayEMIContent = () => {
             </Button>
           </div>
         </div>
-
         <Card className="border-gray-500/30 bg-gradient-to-r from-gray-500/10 to-gray-500/10">
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
@@ -77,14 +75,13 @@ const PayEMIContent = () => {
                     <p className="text-xs text-white/60 flex items-center gap-1"><TrendingUp className="w-3 h-3" />{stat.change}</p>
                   </div>
                   <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} group-hover:scale-110 transition-transform duration-200`}>
-                    <stat.icon className="w-6 h-6 text-white" />
+                    <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-2">
             <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
@@ -134,7 +131,6 @@ const PayEMIContent = () => {
               </CardContent>
             </Card>
           </div>
-
           <div className="space-y-6">
             <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
               <CardHeader>
@@ -162,7 +158,6 @@ const PayEMIContent = () => {
                 </div>
               </CardContent>
             </Card>
-
             <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Clock className="w-5 h-5" />Upcoming Payments</CardTitle>
@@ -192,5 +187,4 @@ const PayEMIContent = () => {
     </div>
   );
 };
-
 export default PayEMIContent;

@@ -18,6 +18,11 @@ import AgentClaimsView from "./components/Agent/AgentClaimsView";
 import CreatePolicyModal from "./components/Agent/CreatePolicyModal";
 import AddCustomerModal from "./components/Agent/AddCustomerModal";
 import KYCForm from "./components/KYCForm";
+// Company Components
+import CompanyAgentsView from "./components/Company/CompanyAgentsView";
+import CompanyCustomersView from "./components/Company/CompanyCustomersView";
+import CompanyPoliciesView from "./components/Company/CompanyPoliciesView";
+import CompanyClaimsView from "./components/Company/CompanyClaimsView";
 import DocVault from "./components/DocVault";
 import PaymentMethodContent from "./components/Customer/PaymentMethodContent";
 import PoliciesContent from "./components/Customer/PoliciesContent";
@@ -61,6 +66,12 @@ function App() {
             //</ProtectedRoute>
           }
         />
+
+        {/* Company Dashboard Routes */}
+        <Route path="/company/agents" element={<CompanyAgentsView withLayout={true} />} />
+        <Route path="/company/customers" element={<CompanyCustomersView withLayout={true} />} />
+        <Route path="/company/policies" element={<CompanyPoliciesView withLayout={true} />} />
+        <Route path="/company/claims" element={<CompanyClaimsView withLayout={true} />} />
 
         <Route
           path="/nominee-dashboard"

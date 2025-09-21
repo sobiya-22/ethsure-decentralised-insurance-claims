@@ -46,10 +46,10 @@ const AgentClaimsView = ({ withLayout = false }) => {
   };
 
   const stats = [
-    { title: "Total Claims", value: claims.length.toString(), icon: FileText, color: "from-gray-600 to-gray-500" },
-    { title: "Under Review", value: claims.filter(c => c.status === "Under Review").length.toString(), icon: Clock, color: "from-gray-600 to-gray-500" },
-    { title: "Ready for Approval", value: claims.filter(c => c.status === "Ready for Approval").length.toString(), icon: CheckCircle, color: "from-gray-600 to-gray-500" },
-    { title: "Approved", value: claims.filter(c => c.status === "Approved").length.toString(), icon: CheckCircle, color: "from-gray-600 to-gray-500" }
+    { title: "Total Claims", value: claims.length.toString(), icon: FileText, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
+    { title: "Under Review", value: claims.filter(c => c.status === "Under Review").length.toString(), icon: Clock, color: "from-amber-500/20 to-amber-400/20", iconColor: "text-amber-400" },
+    { title: "Ready for Approval", value: claims.filter(c => c.status === "Ready for Approval").length.toString(), icon: CheckCircle, color: "from-purple-500/20 to-purple-400/20", iconColor: "text-purple-400" },
+    { title: "Approved", value: claims.filter(c => c.status === "Approved").length.toString(), icon: CheckCircle, color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" }
   ];
 
   const user = {
@@ -103,7 +103,7 @@ const AgentClaimsView = ({ withLayout = false }) => {
                   <p className="text-2xl font-bold text-white">{stat.value}</p>
                 </div>
                 <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+                  <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
                 </div>
               </div>
             </CardContent>

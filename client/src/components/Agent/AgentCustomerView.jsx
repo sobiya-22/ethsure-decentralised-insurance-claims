@@ -232,8 +232,8 @@ const AgentCustomerView = ({ withLayout = false }) => {
                 <p className="text-white/60 text-sm">Active Customers</p>
                 <p className="text-2xl font-bold text-white">{customers.filter(c => c.status === 'Active').length}</p>
               </div>
-              <div className="p-3 rounded-full bg-gradient-to-r from-gray-600 to-gray-500">
-                <Users className="w-6 h-6 text-white" />
+              <div className="p-3 rounded-full bg-gradient-to-r from-emerald-500/20 to-emerald-400/20">
+                <Users className="w-6 h-6 text-emerald-400" />
               </div>
             </div>
           </CardContent>
@@ -246,8 +246,8 @@ const AgentCustomerView = ({ withLayout = false }) => {
                 <p className="text-white/60 text-sm">Pending Requests</p>
                 <p className="text-2xl font-bold text-white">{waitingCustomers.length}</p>
               </div>
-              <div className="p-3 rounded-full bg-gradient-to-r from-gray-600 to-gray-500">
-                <Clock className="w-6 h-6 text-white" />
+              <div className="p-3 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-400/20">
+                <Clock className="w-6 h-6 text-amber-400" />
               </div>
             </div>
           </CardContent>
@@ -260,8 +260,8 @@ const AgentCustomerView = ({ withLayout = false }) => {
                 <p className="text-white/60 text-sm">Total Customers</p>
                 <p className="text-2xl font-bold text-white">{customers.length + waitingCustomers.length}</p>
               </div>
-              <div className="p-3 rounded-full bg-gradient-to-r from-gray-600 to-gray-500">
-                <UserPlus className="w-6 h-6 text-white" />
+              <div className="p-3 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-400/20">
+                <UserPlus className="w-6 h-6 text-blue-400" />
               </div>
             </div>
           </CardContent>

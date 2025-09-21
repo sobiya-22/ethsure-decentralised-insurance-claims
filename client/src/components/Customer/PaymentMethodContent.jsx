@@ -27,7 +27,7 @@ const PaymentMethodContent = ({ onBack }) => {
             <Button variant="ghost" onClick={onBack} className="text-gray-400 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all duration-200"><ArrowLeft className="w-6 h-6" /></Button>
             <div className="p-3 rounded-xl glass shine"><CreditCard className="w-8 h-8 text-cyan-400" /></div>
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight">Payment <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Methods</span></h1>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">Payment <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Methods</span></h1>
               <p className="text-xl text-gray-300 mt-2">Choose your preferred payment method</p>
             </div>
           </div>
@@ -62,7 +62,7 @@ const PaymentMethodContent = ({ onBack }) => {
 
       {selectedMethod === 'card' && (
         <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
-          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><CreditCard className="w-5 h-5" />Credit/Debit Card Payment</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><CreditCard className="w-5 h-5 text-blue-400" />Credit/Debit Card Payment</CardTitle></CardHeader>
           <CardContent>
             <form onSubmit={handleCardSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -81,7 +81,7 @@ const PaymentMethodContent = ({ onBack }) => {
 
       {selectedMethod === 'crypto' && (
         <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
-          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Wallet className="w-5 h-5" />Cryptocurrency Payment</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Wallet className="w-5 h-5 text-purple-400" />Cryptocurrency Payment</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div className="text-center p-6 rounded-lg bg-white/5 border border-white/10">
@@ -101,7 +101,7 @@ const PaymentMethodContent = ({ onBack }) => {
 
       {selectedMethod === 'upi' && (
         <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
-          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Smartphone className="w-5 h-5" />UPI Payment</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Smartphone className="w-5 h-5 text-green-400" />UPI Payment</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div className="text-center p-6 rounded-lg bg-white/5 border border-white/10">
@@ -120,7 +120,7 @@ const PaymentMethodContent = ({ onBack }) => {
 
       {selectedMethod === 'bank' && (
         <Card className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
-          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Banknote className="w-5 h-5" />Bank Transfer</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Banknote className="w-5 h-5 text-orange-400" />Bank Transfer</CardTitle></CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div className="p-6 rounded-lg bg-white/5 border border-white/10">

@@ -47,9 +47,9 @@ const AgentContent = ({ onNavigateToCustomers }) => {
   };
 
   const stats = [
-    { title: "Assigned Claims", value: "5", icon: FileText, change: "+2 this week", color: "from-gray-600 to-gray-500" },
-    { title: "Pending Reviews", value: "2", icon: Clock, change: "Priority queue", color: "from-gray-600 to-gray-500" },
-    { title: "Resolved Claims", value: "12", icon: CheckCircle, change: "+3 this month", color: "from-gray-600 to-gray-500" },
+    { title: "Assigned Claims", value: "5", icon: FileText, change: "+2 this week", color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
+    { title: "Pending Reviews", value: "2", icon: Clock, change: "Priority queue", color: "from-amber-500/20 to-amber-400/20", iconColor: "text-amber-400" },
+    { title: "Resolved Claims", value: "12", icon: CheckCircle, change: "+3 this month", color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
   ];
 
   const claims = [
@@ -88,7 +88,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg glass">
-                <Shield className="w-6 h-6 text-white" />
+                <Shield className="w-6 h-6 text-cyan-400" />
               </div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
@@ -150,7 +150,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
                   </p>
                 </div>
                 <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} group-hover:scale-110 transition-transform duration-200`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+                  <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
                 </div>
               </div>
             </CardContent>

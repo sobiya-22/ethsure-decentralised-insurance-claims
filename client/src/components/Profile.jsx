@@ -136,7 +136,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                 <User className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
+                <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
                   Profile <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Settings</span>
                 </h1>
                 <p className="text-xl text-gray-300 mt-2">

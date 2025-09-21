@@ -32,12 +32,10 @@ const RoleSelect = () => {
     //     }
     // },[isConnected]);
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-60 sm:w-80 h-60 sm:h-80 bg-purple-500/20 rounded-full blur-3xl floating-animation"></div>
-                <div className="absolute -bottom-40 -left-40 w-60 sm:w-80 h-60 sm:h-80 bg-blue-500/20 rounded-full blur-3xl floating-animation" style={{animationDelay: '2s'}}></div>
-            </div>
+        <div className="min-h-screen text-white w-full relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+            <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+            <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
             
             <div className="enhanced-card p-6 sm:p-8 lg:p-10 w-full max-w-sm sm:max-w-md lg:max-w-lg relative z-10 fade-in">
                 <div className="text-center mb-6 sm:mb-8 lg:mb-10">
@@ -77,6 +75,7 @@ const RoleSelect = () => {
                         </button>
                     </div>
                 )}
+            </div>
             </div>
         </div>
     );

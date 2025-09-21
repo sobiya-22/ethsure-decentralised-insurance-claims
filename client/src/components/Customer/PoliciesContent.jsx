@@ -19,10 +19,10 @@ const PoliciesContent = () => {
   };
   const getTypeColor = (type) => 'text-gray-300 bg-gray-700/50';
   const stats = [
-    { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-gray-600 to-gray-500" },
-    { title: "Active Coverage", value: "₹50,000", icon: DollarSign, color: "from-gray-600 to-gray-500" },
-    { title: "Monthly Premium", value: "₹120", icon: CreditCard, color: "from-gray-600 to-gray-500" },
-    { title: "Claims This Year", value: "2", icon: FileText, color: "from-gray-600 to-gray-500" }
+    { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
+    { title: "Active Coverage", value: "₹50,000", icon: DollarSign, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
+    { title: "Monthly Premium", value: "₹120", icon: CreditCard, color: "from-purple-500/20 to-purple-400/20", iconColor: "text-purple-400" },
+    { title: "Claims This Year", value: "2", icon: FileText, color: "from-amber-500/20 to-amber-400/20", iconColor: "text-amber-400" }
   ];
 
   return (
@@ -32,7 +32,7 @@ const PoliciesContent = () => {
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl glass shine"><Shield className="w-8 h-8 text-cyan-400" /></div>
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight">My <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Policies</span></h1>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">My <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Policies</span></h1>
               <p className="text-xl text-gray-300 mt-2">Manage and view all your insurance policies</p>
             </div>
           </div>
@@ -44,7 +44,7 @@ const PoliciesContent = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div><p className="text-white/60 text-sm">{stat.title}</p><p className="text-2xl font-bold text-white">{stat.value}</p></div>
-                <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color} group-hover:scale-110 transition-transform duration-200`}><stat.icon className="w-6 h-6 text-white" /></div>
+                <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color} group-hover:scale-110 transition-transform duration-200`}><stat.icon className={`w-6 h-6 ${stat.iconColor}`} /></div>
               </div>
             </CardContent>
           </Card>
