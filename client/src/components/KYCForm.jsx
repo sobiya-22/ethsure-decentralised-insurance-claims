@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Upload, Check, AlertCircle, X, User, FileText, Camera, Shield, Home, Users, Folder } from 'lucide-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 
 // CSS classes moved outside component to prevent recalculation on every render
 const inputClass = "mt-3 w-full bg-gray-800 border border-gray-600 text-white placeholder:text-gray-400 p-4 text-lg rounded-xl focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200";

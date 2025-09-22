@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { X, User, Shield, Calendar, DollarSign, FileText, CheckCircle, Home, Users, Folder } from 'lucide-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 
 const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false }) => {
   const navigate = useNavigate();

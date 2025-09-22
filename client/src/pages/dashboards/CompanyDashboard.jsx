@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 import CompanyContent from '@/components/Company/CompanyContent';
 import { Users, FileText, Briefcase, Shield, Home, Folder } from 'lucide-react';
 

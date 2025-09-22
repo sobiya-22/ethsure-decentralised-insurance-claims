@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Users, Eye, Edit, Trash2, Plus, Search, Download, Home, FileText, Briefcase, Shield, Folder, X } from 'lucide-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 
 const CompanyAgentsView = ({ withLayout = false }) => {
   const navigate = useNavigate();

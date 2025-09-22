@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Folder, Eye, Home, Users, Briefcase, Shield, FileText, Search, X, Download, AlertCircle } from 'lucide-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 
 const CompanyClaimsView = ({ withLayout = false }) => {
   const navigate = useNavigate();

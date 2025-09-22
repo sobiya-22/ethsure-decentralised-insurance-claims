@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/context/layouts/DashboardLayout';
 import NomineeContent from '@/components/Nominee/NomineeContent';
 import DocVault from '@/components/DocVault';
 import { Shield, FileText, Folder } from 'lucide-react';

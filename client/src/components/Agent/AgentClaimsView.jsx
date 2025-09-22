@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FileText, Clock, CheckCircle, AlertTriangle, Eye, Download, MessageSquare, Calendar, DollarSign, User, Home, Users, Folder } from "lucide-react";
-import DashboardLayout from "@/layouts/DashboardLayout";
+import DashboardLayout from "@/context/layouts/DashboardLayout";
 
 const AgentClaimsView = ({ withLayout = false }) => {
   const navigate = useNavigate();

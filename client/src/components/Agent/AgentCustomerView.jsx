@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, UserPlus, Clock, CheckCircle, Mail, Phone, MapPin, Calendar, Eye, Home, FileText, Folder } from "lucide-react";
 import CustomerDetailsModal from "./CustomerDetailsModal";
 import AddCustomerModal from "./AddCustomerModal";
-import DashboardLayout from "@/layouts/DashboardLayout";
+import DashboardLayout from "@/context/layouts/DashboardLayout";
 
 const AgentCustomerView = ({ withLayout = false }) => {
   const navigate = useNavigate();

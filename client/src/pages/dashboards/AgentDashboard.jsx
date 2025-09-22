@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import DashboardLayout from '../../context/layouts/DashboardLayout';
-import AgentContent from "../../components/Agent/AgentContent";
+import DashboardLayout from "@/context/layouts/DashboardLayout";
+import AgentContent from "@/components/Agent/AgentContent";
 import DocVault from "@/components/DocVault";
 import { Home, Users, FileText, Folder } from "lucide-react";
-
-import { getAllCustomers } from "../../api/customerAPI"; 
-import { getUserByWallet } from "../../api/userAPI";     
+import { getAllCustomers } from "@/api/customerAPI"; 
+import { getUserByWallet } from "@/api/userAPI";   
 //import { useWalletAddress } from "@/hooks/useWalletAddress";
 
 const AgentDashboard = () => {
