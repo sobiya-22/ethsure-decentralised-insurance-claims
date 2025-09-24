@@ -1,0 +1,146 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Navbar from '@/components/Navbar';
+
+const Services = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const services = [
+    { id: 1, title: 'Auto Insurance', description: 'Comprehensive coverage for your vehicles with instant claims processing', features: ['Accident Coverage', 'Theft Protection', 'Liability Insurance', 'Instant Claims'], price: 'From $50/month', color: 'from-blue-500 to-blue-600', icon: '🚗' },
+    { id: 2, title: 'Health Insurance', description: 'Healthcare coverage with transparent pricing and fast claim settlements', features: ['Medical Coverage', 'Dental Care', 'Vision Care', 'Prescription Drugs'], price: 'From $80/month', color: 'from-green-500 to-green-600', icon: '🏥' },
+    { id: 3, title: 'Property Insurance', description: 'Protect your home and belongings with blockchain-verified coverage', features: ['Home Protection', 'Natural Disasters', 'Personal Property', 'Liability Coverage'], price: 'From $40/month', color: 'from-purple-500 to-purple-600', icon: '🏠' },
+    { id: 4, title: 'Life Insurance', description: 'Secure your family\'s future with transparent and reliable coverage', features: ['Death Benefit', 'Cash Value', 'Flexible Premiums', 'Family Protection'], price: 'From $30/month', color: 'from-red-500 to-red-600', icon: '🛡️' },
+    { id: 5, title: 'Business Insurance', description: 'Comprehensive coverage for businesses of all sizes', features: ['General Liability', 'Professional Liability', 'Property Coverage', 'Cyber Insurance'], price: 'From $100/month', color: 'from-yellow-500 to-yellow-600', icon: '💼' },
+    { id: 6, title: 'Travel Insurance', description: 'Travel with confidence knowing you\'re protected worldwide', features: ['Trip Cancellation', 'Medical Coverage', 'Baggage Protection', 'Emergency Assistance'], price: 'From $20/trip', color: 'from-pink-500 to-pink-600', icon: '✈️' }
+  ];
+
+  return (
+    <div className="min-h-screen text-white w-full relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <Navbar />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
+            Our <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">Services</span>
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+            Comprehensive insurance solutions powered by blockchain technology. Get the coverage you need with transparency, security, and speed.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {services.map((service, index) => (
+            <Card key={service.id} className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan transform transition-all duration-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: `${200 + index * 100}ms` }}>
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-3xl">{service.icon}</div>
+                <CardTitle className="text-white text-xl">{service.title}</CardTitle>
+                <CardDescription className="text-gray-300">{service.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  {service.features.map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <div className="w-2 h-2 rounded-full border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20"></div>
+                      <span className="text-gray-300 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-4 border-t border-gray-700">
+                  <p className="text-white font-bold text-lg mb-4">{service.price}</p>
+                  <Link to={`/service/${service.id}`}>
+                    <Button className="w-full button-pill">Learn More</Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '800ms' }}>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Why Choose Our Services?</h2>
+          <p className="text-lg sm:text-xl text-gray-300">The advantages of blockchain-powered insurance</p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1000ms' }}>
+            <CardContent className="p-6">
+              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-blue-500/80 to-blue-400/60">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Instant Claims</h3>
+              <p className="text-gray-300 text-sm">Get your claims processed instantly through smart contracts</p>
+            </CardContent>
+          </Card>
+
+          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1200ms' }}>
+            <CardContent className="p-6">
+              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-emerald-500/80 to-emerald-400/60">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Transparency</h3>
+              <p className="text-gray-300 text-sm">All transactions are recorded on the blockchain for complete transparency</p>
+            </CardContent>
+          </Card>
+
+          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
+            <CardContent className="p-6">
+              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-purple-600/80 to-purple-500/60">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Security</h3>
+              <p className="text-gray-300 text-sm">Advanced security through blockchain technology and smart contracts</p>
+            </CardContent>
+          </Card>
+
+          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1600ms' }}>
+            <CardContent className="p-6">
+              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-rose-500/80 to-rose-400/60">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Lower Costs</h3>
+              <p className="text-gray-300 text-sm">Reduced premiums through elimination of intermediaries</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className={`text-center transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1800ms' }}>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Ready to Get Started?</h2>
+          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">Choose the perfect insurance plan for your needs</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Link to="/signup">
+              <Button size="lg" className="button-pill text-lg px-8 py-4">Get Coverage Now</Button>
+            </Link>
+            <Link to="/contact">
+              <Button size="lg" variant="outline" className="glass text-gray-200 hover:text-white text-lg px-8 py-4">Speak to an Expert</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Services;
