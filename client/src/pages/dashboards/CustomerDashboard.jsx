@@ -5,7 +5,7 @@ import PayEMIContent from "@/components/Customer/PayEMIContent";
 import PoliciesContent from "@/components/Customer/PoliciesContent";
 import KYCForm from "@/components/KYCForm";
 import DocVault from "@/components/DocVault";
-import { Users, FileText, Folder, CreditCard } from "lucide-react";
+import { defaultCustomerUser, getCustomerSidebarItems } from "@/constants/dashboardConstants";
 
 const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
@@ -35,20 +35,8 @@ const CustomerDashboard = () => {
 
   if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
 
-  const sidebarItems = [
-    { id: 'overview', icon: Users, label: 'Overview', onClick: () => setCurrentView('overview') },
-    { id: 'policies', icon: FileText, label: 'Policies', onClick: () => setCurrentView('policies') },
-    { id: 'pay-emi', icon: CreditCard, label: 'Pay EMI', onClick: () => setCurrentView('pay-emi') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
-  ];
-
-  const user = {
-    name: customer?.name || 'Customer',
-    role: 'Customer',
-    email: customer?.email || 'john@example.com',
-    wallet: '0x742d...d8b6',
-    company: 'EthSure Insurance'
-  };
+  const sidebarItems = getCustomerSidebarItems(setCurrentView);
+  const user = { ...defaultCustomerUser, name: customer?.name || 'Customer', email: customer?.email || 'john@example.com' };
 
   const renderContent = () => {
     switch (currentView) {
@@ -71,7 +59,6 @@ const CustomerDashboard = () => {
     <DashboardLayout 
       sidebarItems={sidebarItems}
       user={user}
-      widthClass="w-48"
       currentView={currentView}
       fullPageView={isFullPageView}
     >

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
-const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass = 'w-48', currentView = 'overview', isMobileOpen = false, onMobileClose }) => {
+const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass = 'w-64', currentView = 'overview', isMobileOpen = false, onMobileClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
@@ -76,7 +76,7 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-4 shadow-xl hidden md:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none`}>
+      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-4 shadow-xl hidden md:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
         {sidebarContent}
       </aside>
 
@@ -89,7 +89,7 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
       )}
 
       {/* Mobile Sidebar */}
-      <aside className={`fixed left-0 top-0 z-50 h-full w-72 flex-col glass border-r border-white/10 p-4 pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed left-0 top-0 z-50 h-full w-72 flex-col glass border-r border-white/10 p-4 pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-3xl hover:shadow-blue-500/10 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {sidebarContent}
       </aside>
     </>

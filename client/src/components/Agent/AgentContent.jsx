@@ -2,48 +2,58 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Shield, Users, FileText, AlertCircle, CheckCircle, Clock, Wallet, TrendingUp, Eye, Plus, UserPlus } from "lucide-react";
+import { Shield, Users, FileText, AlertCircle, CheckCircle, Clock, Wallet, TrendingUp, Eye, Plus, UserPlus, X } from "lucide-react";
+import { getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 import CustomerDetailsModal from "./CustomerDetailsModal";
 
-const AgentContent = ({ onNavigateToCustomers }) => {
-  const navigate = useNavigate();
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [customers, setCustomers] = useState([
+const AgentContent = ({ 
+  onNavigateToCustomers, 
+  onViewCustomer, 
+  customers = [
     { id: 1, name: "Alice Johnson", policy: "Health Insurance Premium", premium: "Ξ0.15/month", status: "Active" },
     { id: 2, name: "Bob Chen", policy: "Auto Insurance Comprehensive", premium: "Ξ0.08/month", status: "Active" },
     { id: 3, name: "Charlie Davis", policy: "Property Insurance Standard", premium: "Ξ0.22/month", status: "Pending" },
     { id: 4, name: "Diana Smith", policy: "Life Insurance", premium: "Ξ0.12/month", status: "Active" },
     { id: 5, name: "Eva Brown", policy: "Travel Insurance", premium: "Ξ0.05/month", status: "Active" },
     { id: 6, name: "Frank Wilson", policy: "Business Insurance", premium: "Ξ0.35/month", status: "Pending" },
-  ]);
-
-  const agent = {
+  ],
+  agent = {
     name: "Rajesh Sharma",
     wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
     verified: true,
     customers: customers,
-  };
+  },
+  onCreatePolicy,
+  onAddCustomer,
+  onKYCSubmit
+}) => {
+  const navigate = useNavigate();
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
 
   const handleViewCustomer = (customer) => {
     setSelectedCustomer(customer);
     setIsCustomerModalOpen(true);
+    if (onViewCustomer) {
+      onViewCustomer(customer);
+    }
   };
 
   const handleCreatePolicy = () => {
-    navigate('/agent/create-policy');
+    if (onCreatePolicy) {
+      onCreatePolicy();
+    } else {
+      navigate('/agent/create-policy');
+    }
   };
 
-  const handleAddCustomer = () => {
-    navigate('/agent/add-customer');
-  };
-
-  const handleCustomerAdded = (newCustomer) => {
-    setCustomers(prev => [...prev, newCustomer]);
-  };
 
   const handleKYCSubmit = () => {
-    navigate('/agent/kyc');
+    if (onKYCSubmit) {
+      onKYCSubmit();
+    } else {
+      navigate('/agent/kyc');
+    }
   };
 
   const stats = [
@@ -58,23 +68,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
     { id: "#CL-2024-003", user: "Charlie Davis", amount: "Ξ0.35", status: "Ready for Approval", priority: "High", type: "Property" },
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Under Review": return "text-gray-300 bg-gray-700/50";
-      case "Documentation Pending": return "text-gray-300 bg-gray-700/50";
-      case "Ready for Approval": return "text-gray-300 bg-gray-700/50";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "High": return "text-gray-300 bg-gray-700/50";
-      case "Medium": return "text-gray-300 bg-gray-700/50";
-      case "Low": return "text-gray-300 bg-gray-700/50";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
 
   return (
     <div className="text-white w-full relative">
@@ -82,7 +76,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
       
-      <div className="relative z-10 space-y-6 pt-12">
+      <div className="relative z-10 space-y-6 pt-20">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
@@ -113,20 +107,21 @@ const AgentContent = ({ onNavigateToCustomers }) => {
         </div>
 
       {/* KYC Alert */}
-      <Card className="border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
-        <CardContent className="p-6">
+      <Card className="border-cyan-500/40 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-purple-500/15 hover:border-cyan-400/60 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 animate-pulse"></div>
+        <CardContent className="p-6 relative z-10">
           <div className="flex items-start gap-4">
-            <div className="p-2 rounded-lg bg-amber-500/20">
-              <AlertCircle className="w-5 h-5 text-amber-400" />
+            <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
+              <AlertCircle className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 animate-pulse" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-amber-400 mb-1">KYC Verification Pending</h3>
-              <p className="text-white/80 text-sm mb-3">
+              <h3 className="font-semibold text-cyan-300 text-lg mb-2">KYC Verification Pending</h3>
+              <p className="text-cyan-100 text-base mb-3">
                 Complete your Know Your Customer verification to access advanced claim management features and higher approval limits.
               </p>
             </div>
               <Button 
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300"
                 onClick={handleKYCSubmit}
               >
                 Complete KYC
@@ -218,10 +213,12 @@ const AgentContent = ({ onNavigateToCustomers }) => {
           {/* Customer Portfolio */}
           <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-bold">
-                <Users className="w-5 h-5 font-bold" />
-                Customer Portfolio
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 font-bold">
+                  <Users className="w-5 h-5 font-bold" />
+                  Customer Portfolio
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -272,6 +269,7 @@ const AgentContent = ({ onNavigateToCustomers }) => {
             </CardContent>
           </Card>
 
+
           {/* Quick Actions */}
           <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
             <CardHeader>
@@ -290,15 +288,6 @@ const AgentContent = ({ onNavigateToCustomers }) => {
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   Create New Policy
-                </Button>
-                <Button 
-                  variant="secondary" 
-                  className="w-full justify-start" 
-                  size="sm"
-                  onClick={handleAddCustomer}
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Add Customer
                 </Button>
                 <Button variant="destructive" className="w-full justify-start" size="sm">
                   <AlertCircle className="w-4 h-4 mr-2" />
@@ -321,5 +310,4 @@ const AgentContent = ({ onNavigateToCustomers }) => {
     </div>
   );
 };
-
 export default AgentContent;

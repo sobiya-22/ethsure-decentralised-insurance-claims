@@ -127,7 +127,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   const cardClasses = "glass shine border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300 hover:scale-[1.02]";
 
   return (
-    <div className="text-white w-full space-y-8 pt-12">
+    <div className="text-white w-full space-y-8 pt-20">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-3">

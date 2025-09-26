@@ -3,21 +3,11 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Shield, FileText, Calendar, DollarSign, User, Phone, Mail, CheckCircle, Download, Eye, CreditCard, BarChart3 } from 'lucide-react';
+import { getStatusColor, getTypeColor, defaultPolicies } from '@/constants/customerConstants';
 
 const PoliciesContent = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
-  const policies = [{
-    id: 'POL-2024-001', name: 'Health Insurance Plus', type: 'Health', status: 'Active', premium: '₹120', coverage: '₹50,000', startDate: '2024-01-15', endDate: '2025-01-15',
-    agent: { name: 'Rajesh Sharma', email: 'rajesh.sharma@ethsure.com', phone: '+1 (555) 123-4567' },
-    benefits: ['Medical Coverage up to ₹50,000', 'Emergency Room Visits', 'Prescription Drug Coverage', 'Dental & Vision Care', 'Mental Health Services'],
-    claims: [{ id: 'CLM-001', date: '2024-08-15', amount: '₹2,500', status: 'Approved', description: 'Emergency room visit' }, { id: 'CLM-002', date: '2024-09-02', amount: '₹850', status: 'Under Review', description: 'Prescription medication' }],
-    documents: [{ name: 'Policy Document.pdf', type: 'Policy', uploaded: '2024-01-15', status: 'Verified' }, { name: 'Terms & Conditions.pdf', type: 'Legal', uploaded: '2024-01-15', status: 'Verified' }, { name: 'Coverage Details.pdf', type: 'Coverage', uploaded: '2024-01-15', status: 'Verified' }]
-  }];
-  const getStatusColor = (status) => {
-    const colors = { 'Active': 'text-emerald-400 bg-emerald-400/20', 'Pending': 'text-amber-400 bg-amber-400/20', 'Expired': 'text-red-400 bg-red-400/20', 'Approved': 'text-emerald-400 bg-emerald-400/20', 'Under Review': 'text-blue-400 bg-blue-400/20', 'Rejected': 'text-red-400 bg-red-400/20' };
-    return colors[status] || 'text-gray-400 bg-gray-700/50';
-  };
-  const getTypeColor = (type) => 'text-gray-300 bg-gray-700/50';
+  const policies = defaultPolicies;
   const stats = [
     { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
     { title: "Active Coverage", value: "₹50,000", icon: DollarSign, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
@@ -26,7 +16,7 @@ const PoliciesContent = () => {
   ];
 
   return (
-    <div className="text-white w-full space-y-8 pt-12">
+    <div className="text-white w-full space-y-8 pt-20">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">

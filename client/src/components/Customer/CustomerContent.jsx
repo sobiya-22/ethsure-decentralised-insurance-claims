@@ -3,29 +3,24 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, Users, FileText, AlertCircle, CheckCircle, Clock, Wallet, TrendingUp, CreditCard, Folder } from "lucide-react";
 import KYCForm from "../KYCForm";
+import { defaultCustomer, defaultDocuments, defaultActivities } from '@/constants/customerConstants';
 
 const CustomerContent = ({ onPayEMIClick, currentView, setCurrentView }) => {
-  const customer = { name: "John Doe", wallet: "0x742d...d8b6", verified: false };
+  const customer = defaultCustomer;
   const stats = [
     { title: "Active Policies", value: "1", icon: Shield, change: "Health Insurance", color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
     { title: "Total Premiums", value: "₹9,600", icon: CreditCard, change: "Monthly payment", color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
     { title: "Claims Submitted", value: "2", icon: FileText, change: "1 pending review", color: "from-purple-500/20 to-purple-400/20", iconColor: "text-purple-400" },
   ];
-  const documents = [
-    { name: "ID Proof.pdf", type: "Identity", uploaded: "2024-01-15", status: "Verified" },
-    { name: "Medical Report.pdf", type: "Medical", uploaded: "2024-01-20", status: "Pending" },
-  ];
-  const activities = [
-    { type: "Premium Payment", amount: "$120", date: "2025-09-15", status: "Completed" },
-    { type: "Claim Submitted", reference: "#CLM-004", date: "2025-08-02", status: "Under Review" },
-  ];
+  const documents = defaultDocuments;
+  const activities = defaultActivities;
   const handleKYCSubmit = (kycData) => { console.log('KYC submitted:', kycData); setCurrentView('overview'); };
 
   return (
     <div className="text-white w-full relative overflow-hidden">
       <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 space-y-6 pt-12">
+      <div className="relative z-10 space-y-6 pt-20">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -47,15 +42,18 @@ const CustomerContent = ({ onPayEMIClick, currentView, setCurrentView }) => {
           </div>
         </div>
 
-        <Card className="border-amber-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
-          <CardContent className="p-6">
+        <Card className="border-cyan-500/40 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-purple-500/15 hover:border-cyan-400/60 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 animate-pulse"></div>
+          <CardContent className="p-6 relative z-10">
             <div className="flex items-start gap-4">
-              <div className="p-2 rounded-lg bg-amber-500/20"><AlertCircle className="w-5 h-5 text-amber-400" /></div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-amber-400 mb-1">KYC Verification Pending</h3>
-                <p className="text-white/80 text-sm mb-3">Complete your Know Your Customer verification to access all features and higher claim limits.</p>
+              <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
+                <AlertCircle className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 animate-pulse" />
               </div>
-              <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700" onClick={() => setCurrentView('kyc')}>Complete KYC</Button>
+              <div className="flex-1">
+                <h3 className="font-semibold text-cyan-300 text-lg mb-2">KYC Verification Pending</h3>
+                <p className="text-cyan-100 text-base mb-3">Complete your Know Your Customer verification to access all features and higher claim limits.</p>
+              </div>
+              <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300" onClick={() => setCurrentView('kyc')}>Complete KYC</Button>
             </div>
           </CardContent>
         </Card>
@@ -168,5 +166,4 @@ const CustomerContent = ({ onPayEMIClick, currentView, setCurrentView }) => {
     </div>
   );
 };
-
 export default CustomerContent;

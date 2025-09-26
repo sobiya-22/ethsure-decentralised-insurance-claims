@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 import Profile from '@/components/Profile';
 import { Menu } from 'lucide-react';
 
-const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe", role: "Customer", email: "john.doe@example.com", wallet: "0x1234567890abcdef1234567890abcdef12345678", company: "EthSure Insurance" }, widthClass = "w-48", currentView = "overview", fullPageView = false }) => {
+const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe", role: "Customer", email: "john.doe@example.com", wallet: "0x1234567890abcdef1234567890abcdef12345678", company: "EthSure Insurance" }, widthClass = "w-64", currentView = "overview", fullPageView = false }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,18 +40,18 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
           topOffsetClass="top-20"
         />
         {!profileOpen && !fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-48'} p-6 lg:p-8 pt-32`}>
-            <div className="max-w-6xl mx-auto">{children}</div>
-          </main>
-        )}
-        {!profileOpen && fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-48'} pt-20 p-6 lg:p-8 overflow-y-auto max-h-screen`}>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} p-8 lg:p-12 pt-40`}>
             <div className="max-w-7xl mx-auto">{children}</div>
           </main>
         )}
+        {!profileOpen && fullPageView && (
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-32 p-8 lg:p-12 overflow-y-auto max-h-screen`}>
+            <div className="max-w-8xl mx-auto">{children}</div>
+          </main>
+        )}
         {profileOpen && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-48'} pt-20 p-6 lg:p-8 overflow-y-auto max-h-screen`}>
-            <div className="max-w-7xl mx-auto">
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-32 p-8 lg:p-12 overflow-y-auto max-h-screen`}>
+            <div className="max-w-8xl mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
           </main>
@@ -61,18 +61,18 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
       {/* Mobile Layout */}
       <div className="md:hidden">
         {!profileOpen && !fullPageView && (
-          <main className="p-4 pt-32">
-            <div className="max-w-6xl mx-auto">{children}</div>
-          </main>
-        )}
-        {!profileOpen && fullPageView && (
-          <main className="pt-32 p-4 overflow-y-auto max-h-screen">
+          <main className="p-6 pt-40">
             <div className="max-w-7xl mx-auto">{children}</div>
           </main>
         )}
+        {!profileOpen && fullPageView && (
+          <main className="pt-40 p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-8xl mx-auto">{children}</div>
+          </main>
+        )}
         {profileOpen && (
-          <main className="pt-32 p-4 overflow-y-auto max-h-screen">
-            <div className="max-w-7xl mx-auto">
+          <main className="pt-40 p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-8xl mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
           </main>
@@ -92,5 +92,4 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
     </div>
   );
 };
-
 export default DashboardLayout;

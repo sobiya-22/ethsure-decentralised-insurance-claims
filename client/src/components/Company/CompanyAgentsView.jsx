@@ -64,7 +64,7 @@ const CompanyAgentsView = ({ withLayout = false }) => {
   };
 
   const content = (
-    <div className="space-y-6 pt-12">
+    <div className="space-y-6 pt-20">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
@@ -235,7 +235,6 @@ const CompanyAgentsView = ({ withLayout = false }) => {
       <DashboardLayout
         sidebarItems={sidebarItems}
         user={user}
-        widthClass="w-48"
         currentView="agents"
         fullPageView={false}
       >
