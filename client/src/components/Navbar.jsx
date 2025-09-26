@@ -1,29 +1,28 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
+import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
 import { useAccount } from 'wagmi'
-
+import useAuth from '../context/useAuth';
 const Navbar = () => {
-  const { connect,isConnected } = useWeb3AuthConnect();
-  // const { isConnected } = useAccount();
+  const { connect, isConnected } = useWeb3AuthConnect();
+  const { web3Auth } = useWeb3Auth();
   const { disconnect } = useWeb3AuthDisconnect();
-  const { userInfo } = useWeb3AuthUser();
   const navigate = useNavigate();
-  const connectUser = async () => {
+  const { login, logout } = useAuth();
+  const connectUser = async() => {
     try {
-      await connect(); 
-      if (isConnected) {
-      navigate("/role-select");
-    }
+      const res = await login();
+      if (res) {
+        navigate(`./${res.role}-dashboard`);
+      } 
     } catch (error) {
       console.error("Connection failed:", error);
     }
   };
-    const logout = async() => {
+    const logou = () => {
       try {
-        await disconnect();
-        localStorage.removeItem("role");
+        logout();
         navigate("/");
       } catch (error) {
         console.error("Disconnection failed:", error);
@@ -57,7 +56,7 @@ const Navbar = () => {
             }
             {isConnected && 
               <Button
-                onClick={logout}
+                onClick={logou}
                 variant="outline"
                 className="border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 transition-all duration-300 rounded-full px-6 py-2"
               >

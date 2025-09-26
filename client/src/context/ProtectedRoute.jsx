@@ -1,20 +1,18 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { getRoleFromToken, isLoggedIn } from "../utils/decodeJWT";
 
 export default function ProtectedRoute({ children, allowedRoles }) {
-  const user = localStorage.getItem("role"); // from login
+  const role = getRoleFromToken();
 
-  // If not logged in go to login
-  if (!user) {
-    return <Navigate to="/"  />;
-  }
+  // Not logged in → redirect to login
+  if (!isLoggedIn()) return <Navigate to="/" replace />;
 
-  // If logged in but role mismatch go to role select
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    alert("Select your role first");
+  // Role mismatch → redirect to role select
+  if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/role-select" replace />;
   }
 
-  // If everything fine render child
+  // Authorized → render child component
   return children;
 }
