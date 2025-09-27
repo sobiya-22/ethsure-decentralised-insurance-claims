@@ -31,7 +31,6 @@ import "./App.css";
 
 function App() {
   return (
-
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -95,7 +94,6 @@ function App() {
         <Route path="/customer/kyc" element={<KYCForm isOpen={true} onClose={() => window.history.back()} />} />
 
       </Routes>
-
   );
 }
 
