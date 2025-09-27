@@ -5,7 +5,8 @@ import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3Auth } from "@web3aut
 import { useAccount } from "wagmi";
 import { createEthrDID, getWalletAddress } from "../utils/blockchainOperations";
 
-const BASE_URL = `http://localhost:5000`;
+const BASE_URL = `https://ethsure-backend.onrender.com`;
+// const BASE_URL = `http://localhost:5000`;
 
 export default function useAuth() {
     const [user, setUser] = useState(null);
