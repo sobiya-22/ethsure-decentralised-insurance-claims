@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3AuthConnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
-import { getWalletAddress } from '../utils/getWalletAddress';
+import { getWalletAddress } from '../utils/blockchainOperations';
 import useAuth from '../context/useAuth';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');
