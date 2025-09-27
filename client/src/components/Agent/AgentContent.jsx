@@ -73,7 +73,6 @@ const AgentContent = ({
   return (
     <div className="text-white w-full relative">
       {/* Background Grid */}
-      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
       
       <div className="relative z-10 space-y-6 pt-20">

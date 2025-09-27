@@ -8,11 +8,17 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body, #root { height: 100%; width: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+body { padding-top: 80px; }
 #root { min-height: 100vh; width: 100%; }
 body {
-  background: radial-gradient(1200px 600px at 50% -200px, rgba(59,130,246,0.15), transparent 60%),
-              radial-gradient(1000px 600px at 90% 10%, rgba(168,85,247,0.12), transparent 60%),
-              linear-gradient(135deg, #0b1220 0%, #121826 50%, #0b0f1a 100%);
+  background: 
+    repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
+    repeating-linear-gradient(-45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
+    radial-gradient(1200px 600px at 50% -200px, rgba(59,130,246,0.15), transparent 60%),
+    radial-gradient(1000px 600px at 90% 10%, rgba(168,85,247,0.12), transparent 60%),
+    linear-gradient(135deg, #0b1220 0%, #121826 50%, #0b0f1a 100%);
+  background-size: 40px 40px, 40px 40px, auto, auto, auto;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
 :root {
@@ -37,17 +43,13 @@ body {
     50% { opacity: 1; }
     100% { transform: translateX(100%) translateY(100%) rotate(-45deg); opacity: 0; }
   }
+  /* Diamond/triangular grid pattern - consistent across all pages */
   .bg-grid {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px; position: relative;
-  }
-  .bg-grid::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(220px 220px at var(--cursor-x) var(--cursor-y), rgba(56,189,248,0.10), rgba(0,0,0,0) 60%),
-                repeating-linear-gradient(60deg, rgba(138,180,248,0.05) 0 2px, transparent 2px 60px),
-                repeating-linear-gradient(-60deg, rgba(138,180,248,0.05) 0 2px, transparent 2px 60px);
-    background-blend-mode: screen; transition: background 120ms linear;
+    background-image: 
+      repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
+      repeating-linear-gradient(-45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px);
+    background-size: 40px 40px;
+    background-position: 0 0, 0 0;
   }
   .gradient-text {
     background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6, #d946ef);

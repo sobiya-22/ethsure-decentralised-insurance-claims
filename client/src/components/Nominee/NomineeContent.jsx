@@ -14,7 +14,6 @@ const NomineeContent = () => {
 
   return (
     <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
       <div className="relative z-10 pt-20">
         <div className="flex items-center justify-between mb-8">

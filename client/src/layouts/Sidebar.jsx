@@ -10,7 +10,6 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
 
   const sidebarContent = (
     <>
-      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 via-transparent to-emerald-500/10 rounded-xl blur-xl opacity-50" />
       {/* Mobile Close Button */}
       <div className="md:hidden flex justify-end mb-4">
