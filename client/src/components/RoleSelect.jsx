@@ -1,188 +1,87 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
-import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { useWeb3AuthUser } from "@web3auth/modal/react";
-import {
-  registerCustomer,
-  getCustomer,
-} from "@/services/customerAPI";
-import {
-  registerAgent,
-  getAgent,
-} from "@/services/agentAPI";
-
-// ✅ Helper function to redirect based on role & KYC
-const redirectToDashboard = (roleType, data, navigate) => {
-  switch (roleType) {
-    case "customer":
-      if (data.kyc_status === "verified") {
-        navigate("/customer-dashboard");
-      } else {
-        navigate("/customer-kyc");
-      }
-      break;
-
-    case "agent":
-      if (data.kyc_status !== "verified") {
-        navigate("/agent-kyc");
-      } else {
-        navigate("/agent-dashboard"); 
-      }
-      break;
-
-    case "admin":
-      navigate("/admin-dashboard");
-      break;
-
-    default:
-      console.warn("Unknown role type:", roleType);
-  }
-};
-
-
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWeb3AuthConnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
+import { getWalletAddress } from '../utils/getWalletAddress';
+import useAuth from '../context/useAuth';
 const RoleSelect = () => {
-  const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState({});
-  const { walletAddress } = useWalletAddress();
-  const { userInfo } = useWeb3AuthUser();
+    const [selectedRole, setSelectedRole] = useState('');
+    const navigate = useNavigate();
+    const { isConnected } = useWeb3AuthConnect();
+    const { userInfo } = useWeb3AuthUser();
+    const { web3Auth } = useWeb3Auth();
+    const { assignRole } = useAuth();
+    console.log(userInfo);
+    const roles = [
+        { id: 'customer', name: 'Customer' },
+        { id: 'agent', name: 'Agent' },
+        // { id: 'nominee', name: 'Nominee' },
+        // { id: 'company', name: 'Insurance Company' }
+    ];
 
-  // Check if customer or agent already exists
-  useEffect(() => {
-    if (!walletAddress){
-    console.warn("⚠️ Wallet address is null, skipping API call");
-    return;
-  };
-  
-   console.log("✅ Using walletAddress:", walletAddress);
-
-    const fetchUser = async () => {
-      try {
-        const customerRes = await getCustomer(walletAddress);
-        if (customerRes.data?.data) {
-          setUserData((prev) => ({ ...prev, customer: customerRes.data.data }));
-          redirectToDashboard("customer" , customerRes.data.data.kyc_status, navigate);
-          return;
+    const handleRoleSelect = (roleId) => {
+        setSelectedRole(roleId);
+        console.log('Selected role:', roleId);
+    };
+    const handleContinue = async() => {
+        if (selectedRole) {
+            let wallet_address = await getWalletAddress(web3Auth);
+            let name = userInfo?.name;
+            let profile_photo_url = userInfo?.profileImage;
+            console.log(wallet_address, " ", name, " ", selectedRole, " ", profile_photo_url);
+            const res = await assignRole(wallet_address, selectedRole, name, profile_photo_url);
+            console.log(res);
+            navigate(`/${res}-dashboard`);
         }
-      } catch (_) {}
-
-      try {
-        const agentRes = await getAgent(walletAddress);
-        if (agentRes.data?.data) {
-          setUserData((prev) => ({ ...prev, agent: agentRes.data.data }));
-          redirectToDashboard( "agent", agentRes.data.data.is_approved, navigate);
-        }
-      } catch (_) {}
     };
 
-    fetchUser();
-  }, [walletAddress, navigate]);
+    return (
+        <div className="min-h-screen text-white w-full relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
+            <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+            <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
 
-  const handleConfirm = async () => {
-    if (!selectedRole || !walletAddress) return;
+                <div className="enhanced-card p-6 sm:p-8 lg:p-10 w-full max-w-sm sm:max-w-md lg:max-w-lg relative z-10 fade-in">
+                    <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-xl sm:rounded-2xl mx-auto mb-3 sm:mb-4 flex items-center justify-center pulse-glow">
+                            <span className="text-lg sm:text-xl lg:text-2xl font-bold text-white">E</span>
+                        </div>
+                        <h2 className="text-white text-2xl sm:text-3xl font-bold mb-2">
+                            {userInfo?.name}
+                        </h2>
+                        <p className="text-gray-300 text-sm sm:text-base">
+                            Select your role:
+                        </p>
+                    </div>
 
-    setLoading(true);
-    const email = userInfo?.email || "temp@example.com";
-    const name = userInfo?.name || userInfo?.email || "User";
+                    <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                        {roles.map((role) => (
+                            <button
+                                key={role.id}
+                                onClick={() => handleRoleSelect(role.id)}
+                                className={`w-full py-3 sm:py-4 lg:py-5 px-4 sm:px-6 lg:px-8 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 text-base sm:text-lg font-semibold hover:scale-105 ${selectedRole === role.id
+                                    ? 'border-blue-500 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-400 shadow-lg'
+                                    : 'border-white/20 text-gray-300 hover:border-white/40 hover:text-white hover:bg-white/5'
+                                    }`}
+                            >
+                                {role.name}
+                            </button>
+                        ))}
+                    </div>
 
-    try {
-      if (selectedRole === "customer") {
-        if (!userData.customer) {
-          const res = await registerCustomer({ wallet_address: walletAddress, email, name });
-          setUserData((prev) => ({ ...prev, customer: res.data.data }));
-          redirectToDashboard("customer", res.data.data.kyc_status, navigate);
-        } else {
-          redirectToDashboard("customer", userData.customer.kyc_status, navigate);
-        }
-      } else if (selectedRole === "agent") {
-        if (!userData.agent) {
-          const res = await registerAgent({ wallet_address: walletAddress, email, name });
-          setUserData((prev) => ({ ...prev, agent: res.data.data }));
-          redirectToDashboard("agent", res.data.data.is_approved, navigate);
-        } else {
-          redirectToDashboard("agent", userData.agent.is_approved, navigate);
-        }
-      } else if (selectedRole === "admin") {
-        // Admin flow if needed
-        navigate("/admin-dashboard");
-      }
-    } catch (err) {
-      console.error("Role selection failed:", err);
-      alert("Failed to process role selection. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 className="text-5xl font-bold mb-6">
-          Select Your{" "}
-          <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">
-            Role
-          </span>
-        </h1>
-        <p className="text-xl text-gray-300 mb-12">
-          Choose your role to continue with the EthSure platform.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {["agent", "customer", "admin"].map((role) => (
-            <Card
-              key={role}
-              className={`bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-colors cursor-pointer ${
-                selectedRole === role ? "ring-2 ring-blue-500" : ""
-              }`}
-              onClick={() => setSelectedRole(role)}
-            >
-              <CardHeader>
-                <CardTitle className="text-white flex items-center justify-between">
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-gray-300">
-                  {role === "agent" &&
-                    "Assist customers with insurance policies, verify claims, and act as a trusted intermediary."}
-                  {role === "customer" &&
-                    "Submit insurance claims, track claim status, and receive payouts quickly."}
-                  {role === "admin" && "Oversee the entire system, manage users, and ensure compliance."}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+                    {selectedRole && (
+                        <div className="text-center">
+                            <button
+                                onClick={handleContinue}
+                                className="btn-primary px-8 sm:px-10 lg:px-12 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-base sm:text-lg font-semibold w-full sm:w-auto"
+                            >
+                                Continue as {roles.find(r => r.id === selectedRole)?.name}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
-
-        <div className="mt-12">
-          <Button
-            size="lg"
-            disabled={!selectedRole || loading || !walletAddress}
-            onClick={handleConfirm}
-            className="bg-blue-600 hover:bg-blue-700 text-lg px-10 py-4"
-          >
-            {loading ? "Processing..." : "Continue"}
-          </Button>
-          {!walletAddress && (
-            <p className="text-red-400 text-sm mt-2">
-              Wallet connection failed. Please try logging in again.
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default RoleSelect;

@@ -1,22 +1,21 @@
-import axios from "axios";
+import api from "./api";
 
-const BASE_URL = "http://localhost:3000/api/customers"; 
-
- const registerCustomer = async ({ wallet_address, email, name }) => {
-  return axios.post(`${BASE_URL}/register`, { wallet_address, email, name });
+// Submit customer KYC
+export const submitCustomerKYC = (customerData) => {
+  return api.post("/customers/kyc", customerData);
 };
 
-const completeCustomerKYC = async (kycData) => {
-  return axios.post(`${BASE_URL}/complete-kyc`, kycData);
+// Check customer KYC status by wallet
+export const checkCustomerKYCStatus = (wallet_address) => {
+  return api.get(`/customers/kyc-status/${wallet_address}`);
 };
 
-const getCustomer = async (wallet_address) => {
-  return axios.get(`${BASE_URL}/${wallet_address}`);
+// Get a single customer
+export const getCustomer = (wallet_address) => {
+  return api.get(`/customers/${wallet_address}`);
 };
 
-const getAllCustomers = async () => {
-  return axios.get(BASE_URL);
+// Get all customers
+export const getAllCustomers = () => {
+  return api.get("/customers");
 };
-
-
-export {getAllCustomers , getCustomer , completeCustomerKYC , registerCustomer };

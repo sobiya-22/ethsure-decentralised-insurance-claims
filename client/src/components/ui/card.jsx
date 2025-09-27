@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Card = ({ className = '', ...props }) => (
-  <div className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`} {...props} />
+  <div className={`rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg text-white shadow-2xl transition-all duration-300 hover:shadow-3xl hover:bg-white/10 ${className}`} {...props} />
 );
 
 const CardHeader = ({ className = '', ...props }) => (
@@ -9,11 +9,11 @@ const CardHeader = ({ className = '', ...props }) => (
 );
 
 const CardTitle = ({ className = '', ...props }) => (
-  <h3 className={`text-2xl font-semibold leading-none tracking-tight ${className}`} {...props} />
+  <h3 className={`text-xl font-semibold leading-none tracking-tight text-white ${className}`} {...props} />
 );
 
 const CardDescription = ({ className = '', ...props }) => (
-  <p className={`text-sm text-muted-foreground ${className}`} {...props} />
+  <p className={`text-sm text-white/70 ${className}`} {...props} />
 );
 
 const CardContent = ({ className = '', ...props }) => (

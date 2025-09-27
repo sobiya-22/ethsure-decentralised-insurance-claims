@@ -1,71 +1,70 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser } from "@web3auth/modal/react";
-import { usePlayground } from '../services/playground';
-
+import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
+import { useAccount } from 'wagmi'
+import useAuth from '../context/useAuth';
 const Navbar = () => {
   const { connect, isConnected } = useWeb3AuthConnect();
+  const { web3Auth } = useWeb3Auth();
   const { disconnect } = useWeb3AuthDisconnect();
-  const { userInfo } = useWeb3AuthUser();
   const navigate = useNavigate();
-    const { loading } = usePlayground();
-  // 🔑 Redirect when user is connected
-//   useEffect(() => {
-//     if (isConnected && userInfo) {
-//       navigate("/role-select");
-//     }
-//   }, [isConnected, userInfo, navigate]);
-
-  const connectUser = async () => {
+  const { login, logout } = useAuth();
+  const connectUser = async() => {
     try {
-      await connect(); 
-      navigate("/role-select");
+      const res = await login();
+      if (res) {
+        navigate(`./${res.role}-dashboard`);
+      } 
     } catch (error) {
       console.error("Connection failed:", error);
     }
   };
-    const logout = async() => {
+    const logou = () => {
       try {
-        await disconnect();
+        logout();
         navigate("/");
       } catch (error) {
         console.error("Disconnection failed:", error);
       }
   }
   return (
-    <nav className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="glass-effect border-b border-white/10 sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg"></div>
-            <span className="text-xl font-bold">EthSure</span>
+        <div className="flex justify-between items-center h-20">
+          <div className="flex items-center space-x-4 fade-in">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-xl pulse-glow flex items-center justify-center">
+              <span className="text-white font-bold text-lg">E</span>
+            </div>
+            <span className="text-2xl font-bold gradient-text">EthSure</span>
           </div>
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-300 hover:text-white transition-colors">Home</Link>
-            <Link to="/about" className="text-gray-300 hover:text-white transition-colors">About</Link>
-            <Link to="/services" className="text-gray-300 hover:text-white transition-colors">Services</Link>
-            <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link>
+          <div className="hidden md:flex items-center space-x-2">
+            <Link to="/" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Home</Link>
+            <Link to="/about" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">About</Link>
+            <Link to="/services" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Services</Link>
+            <Link to="/contact" className="nav-link px-4 py-2 rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Contact</Link>
           </div>
-          <div className="flex items-center space-x-4">
-            <Button
-              onClick={connectUser}
-              variant="ghost"
-              className="text-gray-300 hover:text-white"
-            >
-              Login
-            </Button>
-
-            <Button
-              onClick={logout}
-              variant="ghost"
-              className="text-gray-300 hover:text-white"
-            >
-              LogOut
-            </Button>
-
+          <div className="flex items-center space-x-3">
+            {!isConnected &&
+              <Button
+                onClick={connectUser}
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 rounded-full px-6 py-2"
+              >
+                Login
+              </Button>
+            }
+            {isConnected && 
+              <Button
+                onClick={logou}
+                variant="outline"
+                className="border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 transition-all duration-300 rounded-full px-6 py-2"
+              >
+                Logout
+              </Button>
+            }
             <Link to="/signup">
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button className="btn-primary px-6 py-2 rounded-full font-semibold">
                 Get Started
               </Button>
             </Link>

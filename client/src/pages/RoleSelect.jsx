@@ -1,53 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
-import { useWalletAddress } from "@/hooks/useWalletAddress";
-import { useWeb3AuthUser } from "@web3auth/modal/react";
-import {
-  registerCustomer,
-  getCustomer,
-} from "@/services/customerAPI";
-import {
-  registerAgent,
-  getAgent,
-} from "@/services/agentAPI";
-
-// ✅ Helper function to redirect based on role & KYC/Approval
-const redirectToDashboard = (roleType, data, navigate) => {
-  switch (roleType) {
-    case "customer":
-      if (data.kyc_status === "verified") {
-        navigate("/customer-dashboard");
-      } else {
-        navigate("/customer-kyc");
-      }
-      break;
-
-    case "agent":
-      if (data.is_approved !== "verified") {
-        navigate("/agent-kyc");
-      } else {
-        navigate("/agent-dashboard"); 
-      }
-      break;
-
-    case "admin":
-      navigate("/admin-dashboard");
-      break;
-
-    default:
-      console.warn("Unknown role type:", roleType);
-  }
-};
-
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageShell from '../components/PageShell';
+// import { IdentityTokenButton } from '../lib/web3auth/auth';
 const RoleSelect = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState(null);

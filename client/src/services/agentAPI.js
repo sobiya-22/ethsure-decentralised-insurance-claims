@@ -1,21 +1,21 @@
-import axios from "axios";
+import api from "./api";
 
-const BASE_URL = "http://localhost:3000/api/agents";
-
-const registerAgent = async ({ wallet_address, email, name }) => {
-  return axios.post(`${BASE_URL}/register`, { wallet_address, email, name });
+// Submit agent KYC
+export const submitAgentKYC = (agentData) => {
+  return api.post("/agents/kyc", agentData);
 };
 
-const completeAgentKYC = async (kycData) => {
-  return axios.post(`${BASE_URL}/complete-kyc`, kycData);
+// Check agent KYC status
+export const checkAgentKYCStatus = (wallet_address) => {
+  return api.get(`/agents/kyc-status/${wallet_address}`);
 };
 
-const getAgent = async (wallet_address) => {
-  return axios.get(`${BASE_URL}/${wallet_address}`);
+// Get a single agent
+export const getAgent = (wallet_address) => {
+  return api.get(`/agents/${wallet_address}`);
 };
 
-const getAllAgents = async () => {
-  return axios.get(BASE_URL);
+// Get all agents
+export const getAllAgents = () => {
+  return api.get("/agents");
 };
-
-export {registerAgent , completeAgentKYC , getAgent , getAllAgents}
