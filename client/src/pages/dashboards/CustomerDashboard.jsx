@@ -6,69 +6,105 @@ import PoliciesContent from "@/components/Customer/PoliciesContent";
 import KYCForm from "@/components/KYCForm";
 import DocVault from "@/components/DocVault";
 import { Users, FileText, Folder, CreditCard } from "lucide-react";
+import { useAccount } from "wagmi";
+import { useNavigate } from "react-router-dom";
+import { getCustomer, checkCustomerKYCStatus } from "../../services/customerAPI";
 
 const CustomerDashboard = () => {
+  const { address, isConnected } = useAccount();
+  const navigate = useNavigate();
+
   const [customer, setCustomer] = useState(null);
+  const [kycStatus, setKycStatus] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [currentView, setCurrentView] = useState('overview'); // 'overview', 'pay-emi', etc.
+  const [currentView, setCurrentView] = useState("overview");
 
   useEffect(() => {
-    const fetchCustomer = async () => {
+    const fetchCustomerData = async () => {
+      if (!isConnected || !address) {
+        navigate("/");
+        return;
+      }
+        setLoading(true);
       try {
-      //   const email = localStorage.getItem("userEmail");
-      //   const response = await fetch(`http://localhost:5000/api/users/${email}`);
-      //   const data = await response.json();
-      //   setCustomer(data);
+        const response = await getCustomer(address.toLowerCase());
+        const customerData = response.data?.data?.customer || response.data?.data;
 
-      //   const customerRole = data.roles?.find((r) => r.role_type === "customer");
-      //   if (customerRole?.kyc_status !== "verified") {
-      //     navigate("/customer-kyc");
-      //   }
+        setCustomer(customerData);
+
+        const kycRes = await checkCustomerKYCStatus(address.toLowerCase());
+        setKycStatus(kycRes.data?.status);
+
+        if (kycRes.data?.status === "pending") {
+          setCurrentView("kyc");
+        }
       } catch (err) {
         console.error("Error fetching customer:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchCustomer();
-  }, []);
+
+    fetchCustomerData();
+  }, [isConnected, address, navigate]);
 
   if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
 
-  const sidebarItems = [
-    { id: 'overview', icon: Users, label: 'Overview', onClick: () => setCurrentView('overview') },
-    { id: 'policies', icon: FileText, label: 'Policies', onClick: () => setCurrentView('policies') },
-    { id: 'pay-emi', icon: CreditCard, label: 'Pay EMI', onClick: () => setCurrentView('pay-emi') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
-  ];
-
+  // Dynamic user object for sidebar/profile
   const user = {
-    name: customer?.name || 'Customer',
-    role: 'Customer',
-    email: customer?.email || 'john@example.com',
-    wallet: '0x742d...d8b6',
-    company: 'EthSure Insurance'
+    name: customer?.name || "Customer",
+    role: "Customer",
+    email: customer?.email || "N/A",
+    wallet: address,
+    company: customer?.company || "EthSure Insurance",
   };
+
+  const sidebarItems = [
+    { id: "overview", icon: Users, label: "Overview", onClick: () => setCurrentView("overview") },
+    { id: "policies", icon: FileText, label: "Policies", onClick: () => setCurrentView("policies") },
+    { id: "pay-emi", icon: CreditCard, label: "Pay EMI", onClick: () => setCurrentView("pay-emi") },
+    { id: "docvault", icon: Folder, label: "DocVault", onClick: () => setCurrentView("docvault") },
+  ];
 
   const renderContent = () => {
     switch (currentView) {
-      case 'pay-emi':
-        return <PayEMIContent />;
-      case 'policies':
-        return <PoliciesContent />;
-      case 'docvault':
+      case "pay-emi":
+        return <PayEMIContent customer={customer} />;
+      case "policies":
+        return <PoliciesContent customer={customer} />;
+      case "docvault":
         return <DocVault user={user} />;
-      case 'kyc':
-        return <KYCForm user={user} isOpen={true} onClose={() => setCurrentView('overview')} onSubmitKYC={(kycData) => { console.log('KYC submitted:', kycData); setCurrentView('overview'); }} />;
+      case "kyc":
+        return (
+          <KYCForm
+            walletAddress={address}
+            role="customer"
+            onClose={() => setCurrentView("overview")}
+            onSubmitKYC={(kycData) => {
+              console.log("KYC submitted:", kycData);
+              setCurrentView("overview");
+              setKycStatus("verified"); // Update status after submission
+            }}
+          />
+        );
       default:
-        return <CustomerContent onPayEMIClick={() => setCurrentView('pay-emi')} currentView={currentView} setCurrentView={setCurrentView} />;
+        console.log({customer});
+        return (
+          <CustomerContent
+            customer={customer}
+            kycStatus={kycStatus}
+            onPayEMIClick={() => setCurrentView("pay-emi")}
+            currentView={currentView}
+            setCurrentView={setCurrentView}
+          />
+        );
     }
   };
 
-  const isFullPageView = ['kyc', 'policies'].includes(currentView);
+  const isFullPageView = ["kyc", "policies"].includes(currentView);
 
   return (
-    <DashboardLayout 
+    <DashboardLayout
       sidebarItems={sidebarItems}
       user={user}
       widthClass="w-48"

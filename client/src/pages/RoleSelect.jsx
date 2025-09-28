@@ -3,67 +3,138 @@ import { useNavigate } from 'react-router-dom';
 import PageShell from '../components/PageShell';
 // import { IdentityTokenButton } from '../lib/web3auth/auth';
 const RoleSelect = () => {
-    const [selectedRole, setSelectedRole] = useState('');
-    const navigate = useNavigate();
-    const roles = [
-        { id: 'customer', name: 'Customer' },
-        { id: 'agent', name: 'Agent' },
-        { id: 'nominee', name: 'Nominee' },
-        { id: 'insurance-company', name: 'Insurance Company' }
-    ];
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({});
+  const { walletAddress } = useWalletAddress();
+  const { userInfo } = useWeb3AuthUser();
 
-    const handleRoleSelect = (roleId) => {
-        setSelectedRole(roleId);
-        console.log('Selected role:', roleId);
-        navigate(`/${roleId}-dashboard`);
-    };
-    const handleContinue = () => {
-        try {
-            if (selectedRole) {
-                // IdentityTokenButton();
-                navigate(`/${selectedRole}-dashboard`);
-            } else {
-                alert('Please select a role to continue.');
-            }
-        } catch (error) {
-            console.error("Navigation failed:", error);
+  // Check if customer or agent already exists
+  useEffect(() => {
+    if (!walletAddress) {
+      console.warn("⚠️ Wallet address is null, skipping API call");
+      return;
+    }
+  
+    console.log("✅ Using walletAddress:", walletAddress);
+
+    const fetchUser = async () => {
+      try {
+        const customerRes = await getCustomer(walletAddress);
+        if (customerRes.data?.data) {
+          setUserData((prev) => ({ ...prev, customer: customerRes.data.data }));
+          redirectToDashboard("customer", customerRes.data.data, navigate);
+          return;
         }
+      } catch (_) {}
+
+      try {
+        const agentRes = await getAgent(walletAddress);
+        if (agentRes.data?.data) {
+          setUserData((prev) => ({ ...prev, agent: agentRes.data.data }));
+          redirectToDashboard("agent", agentRes.data.data, navigate);
+        }
+      } catch (_) {}
     };
-    return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-            <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-md border border-gray-700">
-                <h2 className="text-white text-xl font-light text-center mb-8">
-                    Select your role:
-                </h2>
 
-                <div className="space-y-4">
-                    {roles.map((role) => (
-                        <button
-                            key={role.id}
-                            onClick={() => handleRoleSelect(role.id)}
-                            className={`w-full py-4 px-6 rounded-full border-2 transition-all duration-200 text-lg font-light ${selectedRole === role.id
-                                    ? 'border-blue-500 bg-blue-500 bg-opacity-20 text-blue-400'
-                                    : 'border-gray-500 text-gray-300 hover:border-gray-400 hover:text-gray-200'
-                                }`}
-                        >
-                            {role.name}
-                        </button>
-                    ))}
-                </div>
+    fetchUser();
+  }, [walletAddress, navigate]);
 
-                {selectedRole && (
-          <div className="mt-8 text-center">
-            <button
-            //   onClick={() => handleRoleSelect(role.id)}
-              className="px-8 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200"
+  const handleConfirm = async () => {
+    if (!selectedRole || !walletAddress) return;
+
+    setLoading(true);
+    const email = userInfo?.email || "temp@example.com";
+    const name = userInfo?.name || userInfo?.email || "User";
+
+    try {
+      if (selectedRole === "customer") {
+        if (!userData.customer) {
+          const res = await registerCustomer({ wallet_address: walletAddress, email, name });
+          setUserData((prev) => ({ ...prev, customer: res.data.data }));
+          redirectToDashboard("customer", res.data.data, navigate);
+        } else {
+          redirectToDashboard("customer", userData.customer, navigate);
+        }
+      } else if (selectedRole === "agent") {
+        if (!userData.agent) {
+          const res = await registerAgent({ wallet_address: walletAddress, email, name });
+          setUserData((prev) => ({ ...prev, agent: res.data.data }));
+          redirectToDashboard("agent", res.data.data, navigate);
+        } else {
+          redirectToDashboard("agent", userData.agent, navigate);
+        }
+      } else if (selectedRole === "admin") {
+        navigate("/admin-dashboard");
+      }
+    } catch (err) {
+      console.error("Role selection failed:", err);
+      alert("Failed to process role selection. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white w-full">
+      <Navbar />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <h1 className="text-5xl font-bold mb-6">
+          Select Your{" "}
+          <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">
+            Role
+          </span>
+        </h1>
+        <p className="text-xl text-gray-300 mb-12">
+          Choose your role to continue with the EthSure platform.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {["agent", "customer", "admin"].map((role) => (
+            <Card
+              key={role}
+              className={`bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-colors cursor-pointer ${
+                selectedRole === role ? "ring-2 ring-blue-500" : ""
+              }`}
+              onClick={() => setSelectedRole(role)}
             >
-              Continue
-            </button>
-          </div>
-        )}
-            </div>
+              <CardHeader>
+                <CardTitle className="text-white flex items-center justify-between">
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300">
+                  {role === "agent" &&
+                    "Assist customers with insurance policies, verify claims, and act as a trusted intermediary."}
+                  {role === "customer" &&
+                    "Submit insurance claims, track claim status, and receive payouts quickly."}
+                  {role === "admin" && "Oversee the entire system, manage users, and ensure compliance."}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-    );
+
+        <div className="mt-12">
+          <Button
+            size="lg"
+            disabled={!selectedRole || loading || !walletAddress}
+            onClick={handleConfirm}
+            className="bg-blue-600 hover:bg-blue-700 text-lg px-10 py-4"
+          >
+            {loading ? "Processing..." : "Continue"}
+          </Button>
+          {!walletAddress && (
+            <p className="text-red-400 text-sm mt-2">
+              Wallet connection failed. Please try logging in again.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default RoleSelect;

@@ -2,33 +2,85 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import AgentContent from "@/components/Agent/AgentContent";
+import KYCForm from "@/components/KYCForm";
 import DocVault from "@/components/DocVault";
 import { Home, Users, FileText, Folder } from "lucide-react";
+import { useAccount } from "wagmi";
+
+import {
+  getAgent,
+  checkAgentKYCStatus,
+  getAllAgents,
+} from "../../services/agentAPI"; 
+
+import { getAllCustomers } from "../../services/customerAPI";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { address, isConnected } = useAccount();
+
   const [currentView, setCurrentView] = useState('overview');
-  const [customers, setCustomers] = useState([
-    { id: 1, name: "Alice Johnson", policy: "Health Insurance Premium", premium: "Ξ0.15/month", status: "Active" },
-    { id: 2, name: "Bob Chen", policy: "Auto Insurance Comprehensive", premium: "Ξ0.08/month", status: "Active" },
-    { id: 3, name: "Charlie Davis", policy: "Property Insurance Standard", premium: "Ξ0.22/month", status: "Pending" },
-    { id: 4, name: "Diana Smith", policy: "Life Insurance", premium: "Ξ0.12/month", status: "Active" },
-  ]);
+  const [agent, setAgent] = useState(null);
+  const [customers, setCustomers] = useState([]);
+  const [kycStatus, setKycStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const agent = {
-    name: "Rajesh Sharma",
-    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
-    verified: true,
-    customers: customers,
-  };
+  useEffect(() => {
+    const fetchAgentData = async () => {
+      if (!isConnected || !address) {
+        navigate("/");
+        return;
+      }
 
+      try {
+        // Get agent profile
+        const agentRes = await getAgent(address.toLowerCase());
+        const agentData = agentRes.data?.data;
+        setAgent(agentData);
+
+        // Check agent KYC status
+        const kycRes = await checkAgentKYCStatus(address.toLowerCase());
+        setKycStatus(kycRes.data?.kyc_status);
+
+        if (kycRes.data?.kyc_status === "pending") {
+          navigate("/agent/kyc");
+          return;
+        }
+
+        // Fetch all customers for agent dashboard
+        const customerRes = await getAllCustomers();
+        setCustomers(customerRes.data?.data || []);
+
+      } catch (err) {
+        console.error("Error fetching agent data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAgentData();
+  }, [isConnected, address, navigate]);
+
+  // Handle URL query for direct DocVault navigation
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const view = urlParams.get('view');
+    if (view === 'docvault') {
+      setCurrentView('docvault');
+    }
+  }, [location.search]);
+
+  if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+
+  // Dynamic user object
   const user = {
-    name: agent.name,
+    name: agent?.name || "Agent",
     role: "Agent",
-    email: "rajesh.sharma@ethsure.com",
-    wallet: agent.wallet,
-    company: "EthSure"
+    email: agent?.email || "agent@example.com",
+    wallet: address,
+    company: agent?.company || "EthSure",
+    // TODO: add more dynamic fields if available in backend
   };
 
   const sidebarItems = [
@@ -37,15 +89,6 @@ const AgentDashboard = () => {
     { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
     { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
   ];
-
-  // Handle navigation from other components that want to go to DocVault
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const view = urlParams.get('view');
-    if (view === 'docvault') {
-      setCurrentView('docvault');
-    }
-  }, [location.search]);
 
   const getCurrentView = () => {
     const path = location.pathname;
@@ -56,10 +99,23 @@ const AgentDashboard = () => {
 
   const renderContent = () => {
     switch (currentView) {
+      case 'kyc':
+        return (
+          <KYCForm
+            walletAddress={address}
+            role="agent"
+            onClose={() => setCurrentView('overview')}
+            onSubmitKYC={(kycData) => {
+              console.log('Agent KYC submitted:', kycData);
+              setCurrentView('overview');
+              // TODO: optionally refetch agent KYC after submission
+            }}
+          />
+        );
       case 'docvault':
         return <DocVault user={user} />;
       default:
-        return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />;
+        return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} customers={customers} />;
     }
   };
 
