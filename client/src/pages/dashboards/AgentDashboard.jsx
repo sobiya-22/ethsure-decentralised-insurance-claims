@@ -99,7 +99,7 @@ const renderContent = () => {
     case 'kyc':
       return (
         <KYCForm
-          walletAddress={address} // Pass agent wallet
+          walletAddress={address}
           role="agent"
           onClose={() => setCurrentView('overview')}
           onSubmitKYC={(kycData) => {

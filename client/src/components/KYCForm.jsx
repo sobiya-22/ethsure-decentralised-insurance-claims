@@ -11,11 +11,11 @@ import { useAccount } from "wagmi";
 import { submitAgentKYC } from "@/services/agentAPI";
 import { submitCustomerKYC } from "@/services/customerAPI";
 
-const KYCForm = ({ role }) => {
+const KYCForm = ({role }) => {
   const navigate = useNavigate();
+ const { address, isConnected } = useAccount();
 
-  const { address, isConnected } = useAccount();
-
+  //const wallet_address = address
   const [formData, setFormData] = useState({
     idType: "",
     idNumber: "",
@@ -79,6 +79,7 @@ const KYCForm = ({ role }) => {
   //handle submit
   const handleSubmit = async () => {
   try {
+
     if (!isConnected || !address) {
       alert("Please connect your wallet first!");
       return;

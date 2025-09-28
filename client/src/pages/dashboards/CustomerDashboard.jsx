@@ -79,8 +79,8 @@ const CustomerDashboard = () => {
       case 'kyc':
         return(
         <KYCForm
-          walletAddress={address}   // Pass wallet address
-          role="customer"           // Role is needed for submit logic
+          walletAddress={address}   
+          role="customer"           
           onClose={() => setCurrentView('overview')}
           onSubmitKYC={(kycData) => {
           console.log('KYC submitted:', kycData);

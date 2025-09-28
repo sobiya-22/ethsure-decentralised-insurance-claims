@@ -90,7 +90,6 @@ function App() {
         path="/agent/kyc" 
         element={
         <KYCForm 
-        walletAddress
         role="agent"
         isOpen={true} 
         onClose={() => window.history.back()} withLayout={true} 
@@ -104,7 +103,6 @@ function App() {
         path="/customer/kyc" 
         element={
         <KYCForm 
-        walletAddress
         role = "customer"
         isOpen={true} 
         onClose={() => window.history.back()} 
