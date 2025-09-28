@@ -19,3 +19,8 @@ export const getCustomer = (wallet_address) => {
 export const getAllCustomers = () => {
   return api.get("/customer");
 };
+
+export const updateCustomer = () => {
+   return api.post("/customer/kyc", customerData);
+};
+

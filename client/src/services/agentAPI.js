@@ -19,3 +19,8 @@ export const getAgent = (wallet_address) => {
 export const getAllAgents = () => {
   return api.get("/agent");
 };
+
+//update agent KYC 
+export const updateAgent = () => {
+   return api.post("/agent/kyc", agentData);
+};

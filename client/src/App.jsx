@@ -17,7 +17,8 @@ import AgentCustomerView from "./components/Agent/AgentCustomerView";
 import AgentClaimsView from "./components/Agent/AgentClaimsView";
 import CreatePolicyModal from "./components/Agent/CreatePolicyModal";
 import AddCustomerModal from "./components/Agent/AddCustomerModal";
-import KYCForm from "./components/KYCForm";
+import CustomerKYCForm from "./components/CustomerKYCForm";
+import AgentKYCForm from "./components/AgentKYCForm";
 // Company Components
 import CompanyAgentsView from "./components/Company/CompanyAgentsView";
 import CompanyCustomersView from "./components/Company/CompanyCustomersView";
@@ -89,7 +90,7 @@ function App() {
         <Route 
         path="/agent/kyc" 
         element={
-        <KYCForm 
+        <AgentKYCForm 
         role="agent"
         isOpen={true} 
         onClose={() => window.history.back()} withLayout={true} 
@@ -102,7 +103,7 @@ function App() {
         <Route 
         path="/customer/kyc" 
         element={
-        <KYCForm 
+        <CustomerKYCForm
         role = "customer"
         isOpen={true} 
         onClose={() => window.history.back()} 
