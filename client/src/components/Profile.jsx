@@ -21,7 +21,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   // Fetch user details based on wallet + role
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!user?.wallet_address || !user?.role) {
+      if (!user?.wallet || !user?.role) {
         setLoading(false);
         return;
       }
@@ -34,35 +34,44 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
           response = await getCustomer(user.wallet.toLowerCase());
           const customerData = response.data?.data?.customer || response.data?.data || {};
           setFormData({
-            name: customerData.name || '',
-            email: customerData.email || '',
-            phone: customerData.phone || '',
-            address: customerData.address || '',
-            annualIncome: customerData.annual_income || customerData.annualIncome || '',
+            name: customerData.customer_name || '',
+            email: customerData.customer_email || '',
+            phone: customerData.customer_phone || '',
+            address: customerData.customer_address || '',
+            dateOfBirth: customerData.date_of_birth || '',
+            profilePhotoUrl: customerData.profile_photo_url || '',
+            idDocumentUrl: customerData.id_document_url || '',
+            kycStatus: customerData.kyc_status || 'pending',
+            did: customerData.customer_did || `did:ethr:${user.wallet}`,
+            wallet: user.wallet,
+            // Fields not in current schema - for future use
+            annualIncome: customerData.annual_income || '',
             occupation: customerData.occupation || '',
-            emergencyContact: customerData.emergency_contact || customerData.emergencyContact || '',
-            emergencyPhone: customerData.emergency_phone || customerData.emergencyPhone || '',
-            kycStatus: customerData.kyc_status || customerData.kycStatus || 'Pending',
-            riskProfile: customerData.risk_profile || customerData.riskProfile || 'Medium',
-            did: customerData.did || `did:ethr:${user.wallet}`,
-            wallet: user.wallet
+            emergencyContact: customerData.emergency_contact || '',
+            emergencyPhone: customerData.emergency_phone || '',
+            riskProfile: customerData.risk_profile || 'Medium'
           });
         } else if (user.role.toLowerCase() === 'agent') {
           response = await getAgent(user.wallet.toLowerCase());
           const agentData = response.data?.data || {};
           setFormData({
-            name: agentData.name || '',
-            email: agentData.email || '',
-            phone: agentData.phone || '',
+            name: agentData.agent_name || '',
+            email: agentData.agent_email || '',
+            phone: agentData.agent_phone || '',
+            licenseNumber: agentData.license_number || '',
+            dateOfBirth: agentData.date_of_birth || '',
+            profilePhotoUrl: agentData.profile_photo_url || '',
+            idDocumentUrl: agentData.id_document_url || '',
+            kycStatus: agentData.kyc_status || 'pending',
+            isApproved: agentData.is_approved || false,
+            did: agentData.agent_did || `did:ethr:${user.wallet}`,
+            wallet: user.wallet,
+            // Fields not in current schema - for future use
             address: agentData.address || '',
             company: agentData.company || '',
-            licenseNumber: agentData.license_number || agentData.licenseNumber || '',
             specialization: agentData.specialization || '',
             experience: agentData.experience || '',
-            kycStatus: agentData.kyc_status || agentData.kycStatus || 'Pending',
-            riskProfile: agentData.risk_profile || agentData.riskProfile || 'Medium',
-            did: agentData.did || `did:ethr:${user.wallet}`,
-            wallet: user.wallet
+            riskProfile: agentData.risk_profile || 'Medium'
           });
         }
       } catch (err) {
@@ -73,10 +82,20 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
           email: user.email || '',
           phone: '',
           address: '',
-          kycStatus: 'Pending',
-          riskProfile: 'Medium',
+          dateOfBirth: '',
+          kycStatus: 'pending',
           did: `did:ethr:${user.wallet}`,
-          wallet: user.wallet
+          wallet: user.wallet,
+          // Fields not in current schema - for future use
+          annualIncome: '',
+          occupation: '',
+          emergencyContact: '',
+          emergencyPhone: '',
+          riskProfile: 'Medium',
+          company: '',
+          specialization: '',
+          experience: '',
+          licenseNumber: ''
         });
       } finally {
         setLoading(false);
@@ -95,28 +114,32 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
 
       if (user.role.toLowerCase() === 'customer') {
         const updateData = {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          annual_income: formData.annualIncome,
-          occupation: formData.occupation,
-          emergency_contact: formData.emergencyContact,
-          emergency_phone: formData.emergencyPhone,
-          risk_profile: formData.riskProfile
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          customer_address: formData.address,
+          date_of_birth: formData.dateOfBirth
+          // Future fields will be added here when backend is updated:
+          // annual_income: formData.annualIncome,
+          // occupation: formData.occupation,
+          // emergency_contact: formData.emergencyContact,
+          // emergency_phone: formData.emergencyPhone,
+          // risk_profile: formData.riskProfile
         };
         response = await updateCustomer(user.wallet.toLowerCase(), updateData);
       } else if (user.role.toLowerCase() === 'agent') {
         const updateData = {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          company: formData.company,
+          agent_name: formData.name,
+          agent_email: formData.email,
+          agent_phone: formData.phone,
           license_number: formData.licenseNumber,
-          specialization: formData.specialization,
-          experience: formData.experience,
-          risk_profile: formData.riskProfile
+          date_of_birth: formData.dateOfBirth
+          // Future fields will be added here when backend is updated:
+          // address: formData.address,
+          // company: formData.company,
+          // specialization: formData.specialization,
+          // experience: formData.experience,
+          // risk_profile: formData.riskProfile
         };
         response = await updateAgent(user.wallet.toLowerCase(), updateData);
       }
@@ -176,20 +199,53 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
             }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Specialization</Label>
+            <Label className="text-white/90 font-medium">Date of Birth</Label>
+            {isEditing ? 
+              <Input 
+                type="date"
+                value={formData.dateOfBirth ? formData.dateOfBirth.split('T')[0] : ''} 
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)} 
+                className={commonClasses} 
+              /> : 
+              <p className={displayClasses}>
+                {formData.dateOfBirth ? new Date(formData.dateOfBirth).toLocaleDateString() : 'Not provided'}
+              </p>
+            }
+          </div>
+        </div>
+        
+        {/* Future Fields - Currently not in backend schema */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+          <div>
+            <Label className="text-white/90 font-medium">Company <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.company || ''} 
+                onChange={(e) => handleInputChange('company', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Enter company name" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.company || 'Not available yet'}</p>
+            }
+          </div>
+          <div>
+            <Label className="text-white/90 font-medium">Specialization <span className="text-xs text-gray-500">(Future)</span></Label>
             {isEditing ? 
               <Input 
                 value={formData.specialization || ''} 
                 onChange={(e) => handleInputChange('specialization', e.target.value)} 
                 className={commonClasses} 
                 placeholder="e.g., Health Insurance, Auto Insurance" 
+                disabled
               /> : 
-              <p className={displayClasses}>{formData.specialization || 'Not specified'}</p>
+              <p className={displayClasses}>{formData.specialization || 'Not available yet'}</p>
             }
           </div>
         </div>
-        <div>
-          <Label className="text-white/90 font-medium">Years of Experience</Label>
+        
+        <div className="opacity-60">
+          <Label className="text-white/90 font-medium">Years of Experience <span className="text-xs text-gray-500">(Future)</span></Label>
           {isEditing ? 
             <Input 
               type="number" 
@@ -197,24 +253,24 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
               onChange={(e) => handleInputChange('experience', e.target.value)} 
               className={commonClasses} 
               placeholder="Enter years of experience" 
+              disabled
             /> : 
-            <p className={displayClasses}>{formData.experience ? `${formData.experience} years` : 'Not specified'}</p>
+            <p className={displayClasses}>{formData.experience ? `${formData.experience} years` : 'Not available yet'}</p>
           }
         </div>
-        {formData.company && (
-          <div>
-            <Label className="text-white/90 font-medium">Company</Label>
-            {isEditing ? 
-              <Input 
-                value={formData.company || ''} 
-                onChange={(e) => handleInputChange('company', e.target.value)} 
-                className={commonClasses} 
-                placeholder="Enter company name" 
-              /> : 
-              <p className={displayClasses}>{formData.company}</p>
-            }
+        
+        <div>
+          <Label className="text-white/90 font-medium">Approval Status</Label>
+          <div className="mt-2">
+            <span className={`px-4 py-2 rounded-xl text-sm font-medium border ${
+              formData.isApproved 
+                ? 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30' 
+                : 'text-amber-400 bg-amber-500/20 border-amber-500/30'
+            }`}>
+              {formData.isApproved ? 'Approved' : 'Pending Approval'}
+            </span>
           </div>
-        )}
+        </div>
       </div>
     );
     
@@ -222,53 +278,81 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label className="text-white/90 font-medium">Annual Income</Label>
+            <Label className="text-white/90 font-medium">Date of Birth</Label>
+            {isEditing ? 
+              <Input 
+                type="date"
+                value={formData.dateOfBirth ? formData.dateOfBirth.split('T')[0] : ''} 
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)} 
+                className={commonClasses} 
+              /> : 
+              <p className={displayClasses}>
+                {formData.dateOfBirth ? new Date(formData.dateOfBirth).toLocaleDateString() : 'Not provided'}
+              </p>
+            }
+          </div>
+          <div>
+            <Label className="text-white/90 font-medium">Registration Date</Label>
+            <p className={displayClasses}>
+              {formData.registrationDate ? new Date(formData.registrationDate).toLocaleDateString() : 'N/A'}
+            </p>
+          </div>
+        </div>
+        
+        {/* Future Fields - Currently not in backend schema */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+          <div>
+            <Label className="text-white/90 font-medium">Annual Income <span className="text-xs text-gray-500">(Future)</span></Label>
             {isEditing ? 
               <Input 
                 value={formData.annualIncome || ''} 
                 onChange={(e) => handleInputChange('annualIncome', e.target.value)} 
                 className={commonClasses} 
                 placeholder="Enter annual income" 
+                disabled
               /> : 
-              <p className={displayClasses}>{formData.annualIncome || 'Not provided'}</p>
+              <p className={displayClasses}>{formData.annualIncome || 'Not available yet'}</p>
             }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Occupation</Label>
+            <Label className="text-white/90 font-medium">Occupation <span className="text-xs text-gray-500">(Future)</span></Label>
             {isEditing ? 
               <Input 
                 value={formData.occupation || ''} 
                 onChange={(e) => handleInputChange('occupation', e.target.value)} 
                 className={commonClasses} 
                 placeholder="Enter occupation" 
+                disabled
               /> : 
-              <p className={displayClasses}>{formData.occupation || 'Not provided'}</p>
+              <p className={displayClasses}>{formData.occupation || 'Not available yet'}</p>
             }
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
           <div>
-            <Label className="text-white/90 font-medium">Emergency Contact</Label>
+            <Label className="text-white/90 font-medium">Emergency Contact <span className="text-xs text-gray-500">(Future)</span></Label>
             {isEditing ? 
               <Input 
                 value={formData.emergencyContact || ''} 
                 onChange={(e) => handleInputChange('emergencyContact', e.target.value)} 
                 className={commonClasses} 
                 placeholder="Emergency contact name" 
+                disabled
               /> : 
-              <p className={displayClasses}>{formData.emergencyContact || 'Not provided'}</p>
+              <p className={displayClasses}>{formData.emergencyContact || 'Not available yet'}</p>
             }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Emergency Phone</Label>
+            <Label className="text-white/90 font-medium">Emergency Phone <span className="text-xs text-gray-500">(Future)</span></Label>
             {isEditing ? 
               <Input 
                 value={formData.emergencyPhone || ''} 
                 onChange={(e) => handleInputChange('emergencyPhone', e.target.value)} 
                 className={commonClasses} 
                 placeholder="Emergency contact phone" 
+                disabled
               /> : 
-              <p className={displayClasses}>{formData.emergencyPhone || 'Not provided'}</p>
+              <p className={displayClasses}>{formData.emergencyPhone || 'Not available yet'}</p>
             }
           </div>
         </div>
@@ -510,24 +594,25 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label className="text-white/90 font-medium">Risk Profile</Label>
+                      <Label className="text-white/90 font-medium">Risk Profile <span className="text-xs text-gray-500">(Future)</span></Label>
                       {isEditing ? 
                         <select 
                           value={formData.riskProfile || 'Medium'} 
                           onChange={(e) => handleInputChange('riskProfile', e.target.value)} 
-                          className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200"
+                          className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 opacity-60"
+                          disabled
                         >
                           <option value="Low" className="bg-gray-800 text-white">Low Risk</option>
                           <option value="Medium" className="bg-gray-800 text-white">Medium Risk</option>
                           <option value="High" className="bg-gray-800 text-white">High Risk</option>
                         </select> : 
-                        <p className={displayClasses}>{formData.riskProfile || 'Medium'}</p>
+                        <p className={displayClasses + " opacity-60"}>{formData.riskProfile || 'Not available yet'}</p>
                       }
                     </div>
                     <div>
                       <Label className="text-white/90 font-medium">Verification Level</Label>
                       <p className={displayClasses}>
-                        {user?.role === 'Agent' ? 'Level 2' : 'Level 1'}
+                        {user?.role === 'agent' ? 'Level 2 - Agent' : 'Level 1 - Customer'}
                       </p>
                     </div>
                   </div>

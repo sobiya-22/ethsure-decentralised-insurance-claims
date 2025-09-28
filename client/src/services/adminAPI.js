@@ -19,4 +19,19 @@ const getAdminProfile = async (token) => {
   });
 };
 
-export {registerAdmin  , loginAdmin , getAdminProfile}
+// ✅ Get all pending agent KYCs
+const getPendingAgentKYCs = () => {
+  return axios.get(`${BASE_URL}/agents/pending`);
+};
+
+// ✅ Approve agent
+const approveAgent = (agentId) => {
+  return axios.put(`${BASE_URL}/agents/approve/${agentId}`);
+};
+
+// ✅ Reject agent
+const rejectAgent = (agentId) => {
+  return axios.put(`${BASE_URL}/agents/reject/${agentId}`);
+};
+
+export {registerAdmin  , loginAdmin , getAdminProfile , getPendingAgentKYCs , approveAgent , rejectAgent}

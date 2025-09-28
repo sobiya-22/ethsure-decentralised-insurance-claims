@@ -28,6 +28,8 @@ import DocVault from "./components/DocVault";
 import PaymentMethodContent from "./components/Customer/PaymentMethodContent";
 import PoliciesContent from "./components/Customer/PoliciesContent";
 import PayEMIContent from "./components/Customer/PayEMIContent";
+//admin
+import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import "./App.css";
 
 function App() {
@@ -40,6 +42,16 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/role-select" element={<RoleSelect />} />
+
+        <Route
+          path="/admin-dashboard"
+          element={
+            // <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminDashboard />
+            // </ProtectedRoute> 
+          }
+        />
+
         <Route
           path="/customer-dashboard"
           element={

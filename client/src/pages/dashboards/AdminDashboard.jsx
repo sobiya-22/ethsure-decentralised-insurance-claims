@@ -9,6 +9,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { getAllAgents } from "@/services/agentAPI";
 import { getAllCustomers } from "@/services/customerAPI";
+import {
+  approveAgent,
+  rejectAgent,
+  getPendingAgentKYCs,
+} from "@/services/adminAPI";
 
 const AdminDashboard = () => {
   const [agents, setAgents] = useState([]);
@@ -18,6 +23,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Load all agents + customers
         const [agentsRes, customersRes] = await Promise.all([
           getAllAgents(),
           getAllCustomers(),
@@ -34,12 +40,18 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  // ✅ Call backend for Approve/Reject
   const handleAction = async (agentId, action) => {
     try {
-      // TODO: Replace with backend API to update agent status
-      console.log(`Agent ${agentId} ${action}`);
+      if (action === "approved") {
+        await approveAgent(agentId);
+      } else {
+        await rejectAgent(agentId);
+      }
+
+      // Refresh UI → remove agent from pending list
       setAgents((prev) =>
-        prev.filter((agent) => agent._id !== agentId) // remove from list after action
+        prev.filter((agent) => agent._id !== agentId)
       );
     } catch (err) {
       console.error("Error updating agent:", err);
@@ -48,7 +60,6 @@ const AdminDashboard = () => {
 
   if (loading) return <p className="text-center mt-20">Loading...</p>;
 
-  // ✅ Separate pending requests from approved agents
   const pendingAgents = agents.filter((a) => a.kyc_status !== "verified");
   const approvedAgents = agents.filter((a) => a.kyc_status === "verified");
 
@@ -58,9 +69,9 @@ const AdminDashboard = () => {
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
 
-        {/* ====== Overview Cards ====== */}
+        {/* Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="shadow-md">
+          <Card>
             <CardHeader>
               <CardTitle>Total Customers</CardTitle>
             </CardHeader>
@@ -71,7 +82,7 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-md">
+          <Card>
             <CardHeader>
               <CardTitle>Total Agents</CardTitle>
             </CardHeader>
@@ -82,7 +93,7 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-md">
+          <Card>
             <CardHeader>
               <CardTitle>Pending Requests</CardTitle>
             </CardHeader>
@@ -94,7 +105,7 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* ====== Requested Agents Section ====== */}
+        {/* Pending Agents */}
         <Card>
           <CardHeader>
             <CardTitle>Requested Agents</CardTitle>
