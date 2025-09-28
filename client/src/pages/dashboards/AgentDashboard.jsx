@@ -40,11 +40,11 @@ const AgentDashboard = () => {
 
         // Check agent KYC status
         const kycRes = await checkAgentKYCStatus(address);
-        setKycStatus(kycRes.data?.status);
+        setKycStatus(kycRes.data?.kyc_status);
 
-        if (kycRes.data?.status !== "verified") {
-          navigate("/agent-kyc");
-          return;
+        if (kycRes.data?.kyc_status !== "verified") {
+        navigate("/agent/kyc");
+        return;
         }
 
         // Fetch customers handled by this agent
@@ -94,14 +94,26 @@ const AgentDashboard = () => {
     return currentView;
   };
 
-  const renderContent = () => {
-    switch (currentView) {
-      case 'docvault':
-        return <DocVault user={user} />;
-      default:
-        return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />;
-    }
-  };
+const renderContent = () => {
+  switch (currentView) {
+    case 'kyc':
+      return (
+        <KYCForm
+          walletAddress={address} // Pass agent wallet
+          role="agent"
+          onClose={() => setCurrentView('overview')}
+          onSubmitKYC={(kycData) => {
+            console.log('Agent KYC submitted:', kycData);
+            setCurrentView('overview');
+          }}
+        />
+      );
+    case 'docvault':
+      return <DocVault user={user} />;
+    default:
+      return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} />;
+  }
+};
 
   return (
     <DashboardLayout 

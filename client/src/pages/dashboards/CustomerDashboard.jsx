@@ -30,16 +30,16 @@ const CustomerDashboard = () => {
       return;
     }
     try {
-      const response = await getCustomer(address);
+      const response = await getCustomer(address.toLowerCase());
       const customerData = response.data?.data;
       setCustomer(customerData);
 
-       const kycRes = await checkCustomerKYCStatus(address);
+       const kycRes = await checkCustomerKYCStatus(address.toLowerCase());
         setKycStatus(kycRes.data?.status);
 
         // If KYC is not verified, redirect to form
         if (kycRes.data?.status !== "verified") {
-          navigate("/customer-kyc");
+          navigate("/customer/kyc");
       }
     } catch (err) {
       console.error("Error fetching customer:", err);
@@ -77,20 +77,26 @@ const CustomerDashboard = () => {
       case 'docvault':
         return <DocVault user={user} />;
       case 'kyc':
-        return <KYCForm user={user} 
-        isOpen={true} 
-        onClose={() => setCurrentView('overview')} onSubmitKYC={(kycData) => { 
-          console.log('KYC submitted:', kycData); setCurrentView('overview'); 
+        return(
+        <KYCForm
+          walletAddress={address}   // Pass wallet address
+          role="customer"           // Role is needed for submit logic
+          onClose={() => setCurrentView('overview')}
+          onSubmitKYC={(kycData) => {
+          console.log('KYC submitted:', kycData);
+          setCurrentView('overview');
         }} 
-      />;
+      />
+    );
       default:
-        return 
+        return(
         <CustomerContent
          customer={customer}
          kycStatus={kycStatus}
          onPayEMIClick={() => setCurrentView('pay-emi')} 
          currentView={currentView} 
-         setCurrentView={setCurrentView} />;
+         setCurrentView={setCurrentView} />
+        );
     }
   };
 

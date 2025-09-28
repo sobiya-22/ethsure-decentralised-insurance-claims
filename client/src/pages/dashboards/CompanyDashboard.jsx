@@ -42,8 +42,8 @@ const CompanyDashboard = () => {
 
   const getCurrentView = () => {
     const path = location.pathname;
-    if (path.includes('/agents')) return 'agents';
-    if (path.includes('/customers')) return 'customers';
+    if (path.includes('/agent')) return 'agents';
+    if (path.includes('/customer')) return 'customers';
     if (path.includes('/policies')) return 'policies';
     if (path.includes('/claims')) return 'claims';
     return currentView; // Return internal state

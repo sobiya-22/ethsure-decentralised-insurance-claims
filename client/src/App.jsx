@@ -86,12 +86,29 @@ function App() {
         <Route path="/agent/claims" element={<AgentClaimsView withLayout={true} />} />
         <Route path="/agent/create-policy" element={<CreatePolicyModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
         <Route path="/agent/add-customer" element={<AddCustomerModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
-        <Route path="/agent/kyc" element={<KYCForm isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
+        <Route 
+        path="/agent/kyc" 
+        element={
+        <KYCForm 
+        walletAddress
+        role="agent"
+        isOpen={true} 
+        onClose={() => window.history.back()} withLayout={true} 
+        />} />
         {/* Customer Dashboard Routes */}
         <Route path="/customer/pay-emi" element={<PayEMIContent />} />
         <Route path="/customer/payment-methods" element={<PaymentMethodContent onBack={() => window.history.back()} />} />
         <Route path="/customer/policies" element={<PoliciesContent />} />
-        <Route path="/customer/kyc" element={<KYCForm isOpen={true} onClose={() => window.history.back()} />} />
+
+        <Route 
+        path="/customer/kyc" 
+        element={
+        <KYCForm 
+        walletAddress
+        role = "customer"
+        isOpen={true} 
+        onClose={() => window.history.back()} 
+        />} />
 
       </Routes>
   );
