@@ -4,13 +4,15 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Profile from '@/components/Profile';
 import { Menu } from 'lucide-react';
-
+import useAuth from '../context/useAuth';
 const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe", role: "Customer", email: "john.doe@example.com", wallet: "0x1234567890abcdef1234567890abcdef12345678", company: "EthSure Insurance" }, widthClass = "w-64", currentView = "overview", fullPageView = false }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
-  const handleLogout = () => navigate('/');
+  const { logout } = useAuth();
+  const handleLogout = async() => {
+    await logout();
+  };
   const handleProfileClick = () => setProfileOpen(true);
   const handleUpdateProfile = (updatedData) => console.log('Profile updated:', updatedData);
 
