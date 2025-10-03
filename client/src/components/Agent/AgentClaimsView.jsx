@@ -2,8 +2,9 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { FileText, Clock, CheckCircle, AlertTriangle, Eye, Download, MessageSquare, Calendar, DollarSign, User, Home, Users, Folder } from "lucide-react";
+import { FileText, Clock, CheckCircle, AlertTriangle, Eye, Download, MessageSquare, Calendar, DollarSign, User } from "lucide-react";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 
 const AgentClaimsView = ({ withLayout = false }) => {
   const navigate = useNavigate();
@@ -15,25 +16,6 @@ const AgentClaimsView = ({ withLayout = false }) => {
     { id: "#CL-2024-004", customer: "Diana Rodriguez", customerEmail: "diana.rodriguez@email.com", amount: "Ξ0.12", status: "Approved", priority: "Low", type: "Health", submittedDate: "2024-01-10", lastUpdated: "2024-01-24", description: "Routine dental procedure", documents: ["Dental Report", "Receipt"], estimatedProcessingTime: "Completed" }
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Under Review": return "text-gray-300 bg-gray-700/50";
-      case "Documentation Pending": return "text-gray-300 bg-gray-700/50";
-      case "Ready for Approval": return "text-gray-300 bg-gray-700/50";
-      case "Approved": return "text-gray-300 bg-gray-700/50";
-      case "Rejected": return "text-gray-300 bg-gray-700/50";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
-
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "High": return "text-gray-300 bg-gray-700/50";
-      case "Medium": return "text-gray-300 bg-gray-700/50";
-      case "Low": return "text-gray-300 bg-gray-700/50";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
 
   const getTypeColor = (type) => {
     switch (type) {
@@ -52,31 +34,12 @@ const AgentClaimsView = ({ withLayout = false }) => {
     { title: "Approved", value: claims.filter(c => c.status === "Approved").length.toString(), icon: CheckCircle, color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" }
   ];
 
-  const user = {
-    name: "Rajesh Sharma",
-    role: "Agent",
-    email: "rajesh.sharma@ethsure.com",
-    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
-    company: "EthSure"
-  };
-
-  const sidebarItems = [
-    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
-    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
-    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent-dashboard?view=docvault') },
-  ];
-
-  const getCurrentView = () => {
-    const path = location.pathname;
-    if (path.includes('/customers')) return 'customers';
-    if (path.includes('/claims')) return 'claims';
-    if (path.includes('/docvault')) return 'docvault';
-    return 'overview';
-  };
+  const user = defaultAgentUser;
+  const sidebarItems = getAgentSidebarItems(navigate);
+  const getCurrentView = () => getAgentCurrentView(location);
 
   const content = (
-    <div className="space-y-6 pt-12">
+    <div className="space-y-6 pt-20">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
@@ -204,7 +167,6 @@ const AgentClaimsView = ({ withLayout = false }) => {
       <DashboardLayout 
         sidebarItems={sidebarItems}
         user={user}
-        widthClass="w-48"
         currentView={getCurrentView()}
         fullPageView={false}
       >

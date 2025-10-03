@@ -2,79 +2,17 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Users, UserPlus, Clock, CheckCircle, Mail, Phone, MapPin, Calendar, Eye, Home, FileText, Folder } from "lucide-react";
+import { Users, UserPlus, Clock, Mail, Phone, MapPin, Calendar, Eye } from "lucide-react";
 import CustomerDetailsModal from "./CustomerDetailsModal";
-import AddCustomerModal from "./AddCustomerModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
+import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, defaultCustomers, getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 
 const AgentCustomerView = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
-  const [customers, setCustomers] = useState([
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice.johnson@email.com",
-      phone: "+1 (555) 123-4567",
-      location: "New York, NY",
-      policy: "Health Insurance Premium",
-      premium: "Ξ0.15/month",
-      status: "Active",
-      joinDate: "2024-01-15",
-      lastContact: "2024-01-20"
-    },
-    {
-      id: 2,
-      name: "Bob Chen",
-      email: "bob.chen@email.com",
-      phone: "+1 (555) 234-5678",
-      location: "San Francisco, CA",
-      policy: "Auto Insurance Comprehensive",
-      premium: "Ξ0.08/month",
-      status: "Active",
-      joinDate: "2024-02-01",
-      lastContact: "2024-01-18"
-    },
-    {
-      id: 3,
-      name: "Charlie Davis",
-      email: "charlie.davis@email.com",
-      phone: "+1 (555) 345-6789",
-      location: "Chicago, IL",
-      policy: "Property Insurance Standard",
-      premium: "Ξ0.22/month",
-      status: "Pending",
-      joinDate: "2024-02-10",
-      lastContact: "2024-02-10"
-    },
-    {
-      id: 4,
-      name: "Diana Smith",
-      email: "diana.smith@email.com",
-      phone: "+1 (555) 456-7890",
-      location: "Miami, FL",
-      policy: "Life Insurance",
-      premium: "Ξ0.12/month",
-      status: "Active",
-      joinDate: "2024-01-25",
-      lastContact: "2024-01-30"
-    },
-    {
-      id: 5,
-      name: "Eva Brown",
-      email: "eva.brown@email.com",
-      phone: "+1 (555) 567-8901",
-      location: "Seattle, WA",
-      policy: "Travel Insurance",
-      premium: "Ξ0.05/month",
-      status: "Active",
-      joinDate: "2024-02-05",
-      lastContact: "2024-02-08"
-    }
-  ]);
+  const [customers, setCustomers] = useState(defaultCustomers);
 
   const handleViewCustomer = (customer) => {
     setSelectedCustomer(customer);
@@ -82,51 +20,11 @@ const AgentCustomerView = ({ withLayout = false }) => {
   };
 
   const handleAddCustomer = () => {
-    setIsAddCustomerModalOpen(true);
+    navigate('/agent/add-customer');
   };
 
-  const handleCustomerAdded = (newCustomer) => {
-    setCustomers(prev => [...prev, newCustomer]);
-  };
 
-  const existingCustomers = [
-    {
-      id: 1,
-      name: "Alice Johnson",
-      email: "alice.johnson@email.com",
-      phone: "+1 (555) 123-4567",
-      location: "New York, NY",
-      policy: "Health Insurance Premium",
-      premium: "Ξ0.15/month",
-      status: "Active",
-      joinDate: "2024-01-15",
-      lastContact: "2024-01-20"
-    },
-    {
-      id: 2,
-      name: "Bob Chen",
-      email: "bob.chen@email.com",
-      phone: "+1 (555) 234-5678",
-      location: "San Francisco, CA",
-      policy: "Auto Insurance Comprehensive",
-      premium: "Ξ0.08/month",
-      status: "Active",
-      joinDate: "2024-02-01",
-      lastContact: "2024-01-18"
-    },
-    {
-      id: 3,
-      name: "Charlie Davis",
-      email: "charlie.davis@email.com",
-      phone: "+1 (555) 345-6789",
-      location: "Chicago, IL",
-      policy: "Property Insurance Standard",
-      premium: "Ξ0.22/month",
-      status: "Pending",
-      joinDate: "2024-01-25",
-      lastContact: "2024-01-25"
-    }
-  ];
+  const existingCustomers = defaultCustomers.slice(0, 3);
 
   const waitingCustomers = [
     {
@@ -164,48 +62,13 @@ const AgentCustomerView = ({ withLayout = false }) => {
     }
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Active": return "text-emerald-400 bg-emerald-500/20 border border-emerald-500/30";
-      case "Pending": return "text-amber-400 bg-amber-500/20 border border-amber-500/30";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "High": return "text-gray-300 bg-gray-700/50";
-      case "Medium": return "text-gray-300 bg-gray-700/50";
-      case "Low": return "text-gray-300 bg-gray-700/50";
-      default: return "text-gray-400 bg-gray-700/50";
-    }
-  };
-
-  const user = {
-    name: "Rajesh Sharma",
-    role: "Agent",
-    email: "rajesh.sharma@ethsure.com",
-    wallet: "0xA12B34C56D78E90F1234567890ABCDEF12345678",
-    company: "EthSure"
-  };
-
-  const sidebarItems = [
-    { id: 'overview', icon: Home, label: 'Overview', onClick: () => navigate('/agent-dashboard') },
-    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
-    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
-    { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => navigate('/agent-dashboard?view=docvault') },
-  ];
-
-  const getCurrentView = () => {
-    const path = location.pathname;
-    if (path.includes('/customers')) return 'customers';
-    if (path.includes('/claims')) return 'claims';
-    if (path.includes('/docvault')) return 'docvault';
-    return 'overview';
-  };
+  const user = defaultAgentUser;
+  const sidebarItems = getAgentSidebarItems(navigate);
+  const getCurrentView = () => getAgentCurrentView(location);
 
   const content = (
-    <div className="space-y-6 pt-12">
+    <div className="space-y-6 pt-20">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
@@ -419,12 +282,6 @@ const AgentCustomerView = ({ withLayout = false }) => {
         onClose={() => setIsCustomerModalOpen(false)}
       />
       
-      {/* Add Customer Modal */}
-      <AddCustomerModal
-        isOpen={isAddCustomerModalOpen}
-        onClose={() => setIsAddCustomerModalOpen(false)}
-        onCustomerAdded={handleCustomerAdded}
-      />
     </div>
   );
 
@@ -433,7 +290,6 @@ const AgentCustomerView = ({ withLayout = false }) => {
       <DashboardLayout 
         sidebarItems={sidebarItems}
         user={user}
-        widthClass="w-48"
         currentView={getCurrentView()}
         fullPageView={false}
       >

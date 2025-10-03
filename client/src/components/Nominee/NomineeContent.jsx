@@ -14,9 +14,8 @@ const NomineeContent = () => {
 
   return (
     <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 pt-4">
+      <div className="relative z-10 pt-20">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl lg:text-4xl font-bold leading-tight mb-6 text-white">Nominee <span className="gradient-text">Dashboard</span></h1>
           <button onClick={() => window.location.assign('/')} className="button-pill glass nav-link">Logout</button>

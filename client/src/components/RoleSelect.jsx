@@ -36,7 +36,6 @@ const RoleSelect = () => {
 
     return (
         <div className="min-h-screen text-white w-full relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid pointer-events-none opacity-40" />
             <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
             <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
 

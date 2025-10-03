@@ -97,6 +97,7 @@ const AgentDashboard = () => {
     return currentView;
   };
 
+
   const renderContent = () => {
     switch (currentView) {
       case 'kyc':
@@ -123,7 +124,6 @@ const AgentDashboard = () => {
     <DashboardLayout 
       sidebarItems={sidebarItems}
       user={user}
-      widthClass="w-48"
       currentView={getCurrentView()}
       fullPageView={false}
     >

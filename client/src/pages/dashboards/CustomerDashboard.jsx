@@ -107,7 +107,6 @@ const CustomerDashboard = () => {
     <DashboardLayout
       sidebarItems={sidebarItems}
       user={user}
-      widthClass="w-48"
       currentView={currentView}
       fullPageView={isFullPageView}
     >

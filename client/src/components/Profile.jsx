@@ -395,7 +395,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   }
 
   return (
-    <div className="text-white w-full space-y-8 pt-12">
+    <div className="text-white w-full space-y-8 pt-20">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-3">
