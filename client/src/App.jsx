@@ -17,7 +17,8 @@ import AgentCustomerView from "./components/Agent/AgentCustomerView";
 import AgentClaimsView from "./components/Agent/AgentClaimsView";
 import CreatePolicyModal from "./components/Agent/CreatePolicyModal";
 import AddCustomerModal from "./components/Agent/AddCustomerModal";
-import KYCForm from "./components/KYCForm";
+import CustomerKYCForm from "./components/CustomerKYCForm";
+import AgentKYCForm from "./components/AgentKYCForm";
 // Company Components
 import CompanyAgentsView from "./components/Company/CompanyAgentsView";
 import CompanyCustomersView from "./components/Company/CompanyCustomersView";
@@ -27,6 +28,8 @@ import DocVault from "./components/DocVault";
 import PaymentMethodContent from "./components/Customer/PaymentMethodContent";
 import PoliciesContent from "./components/Customer/PoliciesContent";
 import PayEMIContent from "./components/Customer/PayEMIContent";
+//admin
+// import AdminDashboard from "./pages/dashboards/AdminDashboard";
 import "./App.css";
 
 function App() {
@@ -86,12 +89,27 @@ function App() {
         <Route path="/agent/claims" element={<AgentClaimsView withLayout={true} />} />
         <Route path="/agent/create-policy" element={<CreatePolicyModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
         <Route path="/agent/add-customer" element={<AddCustomerModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
-        <Route path="/agent/kyc" element={<KYCForm isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
+        <Route 
+        path="/agent/kyc" 
+        element={
+        <AgentKYCForm 
+        role="agent"
+        isOpen={true} 
+        onClose={() => window.history.back()} withLayout={true} 
+        />} />
         {/* Customer Dashboard Routes */}
         <Route path="/customer/pay-emi" element={<PayEMIContent />} />
         <Route path="/customer/payment-methods" element={<PaymentMethodContent onBack={() => window.history.back()} />} />
         <Route path="/customer/policies" element={<PoliciesContent />} />
-        <Route path="/customer/kyc" element={<KYCForm isOpen={true} onClose={() => window.history.back()} />} />
+
+        <Route 
+        path="/customer/kyc" 
+        element={
+        <CustomerKYCForm
+        role = "customer"
+        isOpen={true} 
+        onClose={() => window.history.back()} 
+        />} />
 
       </Routes>
   );

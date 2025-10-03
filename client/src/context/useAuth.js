@@ -95,6 +95,5 @@ export default function useAuth() {
         setToken(null);
         setUser(null);
     };
-
     return { user, token, login, assignRole, logout };
 }

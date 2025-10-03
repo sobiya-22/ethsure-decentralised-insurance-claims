@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Edit2, Save, X, User, Shield, FileText, Settings, Bell, Lock, Upload, AlertCircle, Key, Eye, EyeOff, Fingerprint, Copy, Check } from 'lucide-react';
 import DocVault from './DocVault';
+import { getCustomer, updateCustomer } from '../services/customerAPI';
+import { getAgent, updateAgent } from '../services/agentAPI';
 
 const Profile = ({ user, onUpdateProfile, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -12,20 +14,157 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   const [showWallet, setShowWallet] = useState(false);
   const [showDID, setShowDID] = useState(false);
   const [copiedDID, setCopiedDID] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || '', email: user?.email || '', phone: user?.phone || '', address: user?.address || '',
-    company: user?.company || '', department: user?.department || '', employeeId: user?.employeeId || '',
-    licenseNumber: user?.licenseNumber || '', specialization: user?.specialization || '', experience: user?.experience || '',
-    kycStatus: user?.kycStatus || 'Pending', riskProfile: user?.riskProfile || 'Medium', annualIncome: user?.annualIncome || '',
-    occupation: user?.occupation || '', emergencyContact: user?.emergencyContact || '', emergencyPhone: user?.emergencyPhone || '',
-    did: user?.did || 'did:ethr:0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
-  });
+  const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
-  const handleSave = () => { onUpdateProfile?.(formData); setIsEditing(false); };
-  const handleCancel = () => { setFormData({ name: user?.name || '', email: user?.email || '', phone: user?.phone || '', address: user?.address || '', company: user?.company || '', department: user?.department || '', employeeId: user?.employeeId || '', licenseNumber: user?.licenseNumber || '', specialization: user?.specialization || '', experience: user?.experience || '', kycStatus: user?.kycStatus || 'Pending', riskProfile: user?.riskProfile || 'Medium', annualIncome: user?.annualIncome || '', occupation: user?.occupation || '', emergencyContact: user?.emergencyContact || '', emergencyPhone: user?.emergencyPhone || '', did: user?.did || 'did:ethr:0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6' }); setIsEditing(false); };
+  // Fetch user details based on wallet + role
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.wallet || !user?.role) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        let response;
+        
+        if (user.role.toLowerCase() === 'customer') {
+          response = await getCustomer(user.wallet.toLowerCase());
+          const customerData = response.data?.data?.customer || response.data?.data || {};
+          setFormData({
+            name: customerData.customer_name || '',
+            email: customerData.customer_email || '',
+            phone: customerData.customer_phone || '',
+            address: customerData.customer_address || '',
+            dateOfBirth: customerData.date_of_birth || '',
+            profilePhotoUrl: customerData.profile_photo_url || '',
+            idDocumentUrl: customerData.id_document_url || '',
+            kycStatus: customerData.kyc_status || 'pending',
+            did: customerData.customer_did || `did:ethr:${user.wallet}`,
+            wallet: user.wallet,
+            // Fields not in current schema - for future use
+            annualIncome: customerData.annual_income || '',
+            occupation: customerData.occupation || '',
+            emergencyContact: customerData.emergency_contact || '',
+            emergencyPhone: customerData.emergency_phone || '',
+            riskProfile: customerData.risk_profile || 'Medium'
+          });
+        } else if (user.role.toLowerCase() === 'agent') {
+          response = await getAgent(user.wallet.toLowerCase());
+          const agentData = response.data?.data || {};
+          setFormData({
+            name: agentData.agent_name || '',
+            email: agentData.agent_email || '',
+            phone: agentData.agent_phone || '',
+            licenseNumber: agentData.license_number || '',
+            dateOfBirth: agentData.date_of_birth || '',
+            profilePhotoUrl: agentData.profile_photo_url || '',
+            idDocumentUrl: agentData.id_document_url || '',
+            kycStatus: agentData.kyc_status || 'pending',
+            isApproved: agentData.is_approved || false,
+            did: agentData.agent_did || `did:ethr:${user.wallet}`,
+            wallet: user.wallet,
+            // Fields not in current schema - for future use
+            address: agentData.address || '',
+            company: agentData.company || '',
+            specialization: agentData.specialization || '',
+            experience: agentData.experience || '',
+            riskProfile: agentData.risk_profile || 'Medium'
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch user details:', err);
+        // Initialize with basic data if fetch fails
+        setFormData({
+          name: user.name || '',
+          email: user.email || '',
+          phone: '',
+          address: '',
+          dateOfBirth: '',
+          kycStatus: 'pending',
+          did: `did:ethr:${user.wallet}`,
+          wallet: user.wallet,
+          // Fields not in current schema - for future use
+          annualIncome: '',
+          occupation: '',
+          emergencyContact: '',
+          emergencyPhone: '',
+          riskProfile: 'Medium',
+          company: '',
+          specialization: '',
+          experience: '',
+          licenseNumber: ''
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  const handleSave = async () => {
+    if (!user?.wallet || !user?.role) return;
+
+    try {
+      setUpdating(true);
+      let response;
+
+      if (user.role.toLowerCase() === 'customer') {
+        const updateData = {
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          customer_address: formData.address,
+          date_of_birth: formData.dateOfBirth
+          // Future fields will be added here when backend is updated:
+          // annual_income: formData.annualIncome,
+          // occupation: formData.occupation,
+          // emergency_contact: formData.emergencyContact,
+          // emergency_phone: formData.emergencyPhone,
+          // risk_profile: formData.riskProfile
+        };
+        response = await updateCustomer(user.wallet.toLowerCase(), updateData);
+      } else if (user.role.toLowerCase() === 'agent') {
+        const updateData = {
+          agent_name: formData.name,
+          agent_email: formData.email,
+          agent_phone: formData.phone,
+          license_number: formData.licenseNumber,
+          date_of_birth: formData.dateOfBirth
+          // Future fields will be added here when backend is updated:
+          // address: formData.address,
+          // company: formData.company,
+          // specialization: formData.specialization,
+          // experience: formData.experience,
+          // risk_profile: formData.riskProfile
+        };
+        response = await updateAgent(user.wallet.toLowerCase(), updateData);
+      }
+
+      if (response && onUpdateProfile) {
+        onUpdateProfile(formData);
+      }
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Failed to update profile:', err);
+      // You might want to show an error message to the user here
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset form data to original values - you might want to refetch here
+    setIsEditing(false);
+  };
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
   const handleCopyDID = async () => {
     try {
       await navigator.clipboard.writeText(formData.did);
@@ -49,16 +188,88 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
               <Shield className="w-4 h-4" />
               License Number
             </Label>
-            {isEditing ? <Input value={formData.licenseNumber} onChange={(e) => handleInputChange('licenseNumber', e.target.value)} className={commonClasses} placeholder="Enter license number" /> : <p className={displayClasses}>{user?.licenseNumber || 'Not provided'}</p>}
+            {isEditing ? 
+              <Input 
+                value={formData.licenseNumber || ''} 
+                onChange={(e) => handleInputChange('licenseNumber', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Enter license number" 
+              /> : 
+              <p className={displayClasses}>{formData.licenseNumber || 'Not provided'}</p>
+            }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Specialization</Label>
-            {isEditing ? <Input value={formData.specialization} onChange={(e) => handleInputChange('specialization', e.target.value)} className={commonClasses} placeholder="e.g., Health Insurance, Auto Insurance" /> : <p className={displayClasses}>{user?.specialization || 'Not specified'}</p>}
+            <Label className="text-white/90 font-medium">Date of Birth</Label>
+            {isEditing ? 
+              <Input 
+                type="date"
+                value={formData.dateOfBirth ? formData.dateOfBirth.split('T')[0] : ''} 
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)} 
+                className={commonClasses} 
+              /> : 
+              <p className={displayClasses}>
+                {formData.dateOfBirth ? new Date(formData.dateOfBirth).toLocaleDateString() : 'Not provided'}
+              </p>
+            }
           </div>
         </div>
+        
+        {/* Future Fields - Currently not in backend schema */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+          <div>
+            <Label className="text-white/90 font-medium">Company <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.company || ''} 
+                onChange={(e) => handleInputChange('company', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Enter company name" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.company || 'Not available yet'}</p>
+            }
+          </div>
+          <div>
+            <Label className="text-white/90 font-medium">Specialization <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.specialization || ''} 
+                onChange={(e) => handleInputChange('specialization', e.target.value)} 
+                className={commonClasses} 
+                placeholder="e.g., Health Insurance, Auto Insurance" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.specialization || 'Not available yet'}</p>
+            }
+          </div>
+        </div>
+        
+        <div className="opacity-60">
+          <Label className="text-white/90 font-medium">Years of Experience <span className="text-xs text-gray-500">(Future)</span></Label>
+          {isEditing ? 
+            <Input 
+              type="number" 
+              value={formData.experience || ''} 
+              onChange={(e) => handleInputChange('experience', e.target.value)} 
+              className={commonClasses} 
+              placeholder="Enter years of experience" 
+              disabled
+            /> : 
+            <p className={displayClasses}>{formData.experience ? `${formData.experience} years` : 'Not available yet'}</p>
+          }
+        </div>
+        
         <div>
-          <Label className="text-white/90 font-medium">Years of Experience</Label>
-          {isEditing ? <Input type="number" value={formData.experience} onChange={(e) => handleInputChange('experience', e.target.value)} className={commonClasses} placeholder="Enter years of experience" /> : <p className={displayClasses}>{user?.experience || 'Not specified'} years</p>}
+          <Label className="text-white/90 font-medium">Approval Status</Label>
+          <div className="mt-2">
+            <span className={`px-4 py-2 rounded-xl text-sm font-medium border ${
+              formData.isApproved 
+                ? 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30' 
+                : 'text-amber-400 bg-amber-500/20 border-amber-500/30'
+            }`}>
+              {formData.isApproved ? 'Approved' : 'Pending Approval'}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -67,41 +278,87 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label className="text-white/90 font-medium">Annual Income</Label>
-            {isEditing ? <Input value={formData.annualIncome} onChange={(e) => handleInputChange('annualIncome', e.target.value)} className={commonClasses} placeholder="Enter annual income" /> : <p className={displayClasses}>{user?.annualIncome || 'Not provided'}</p>}
+            <Label className="text-white/90 font-medium">Date of Birth</Label>
+            {isEditing ? 
+              <Input 
+                type="date"
+                value={formData.dateOfBirth ? formData.dateOfBirth.split('T')[0] : ''} 
+                onChange={(e) => handleInputChange('dateOfBirth', e.target.value)} 
+                className={commonClasses} 
+              /> : 
+              <p className={displayClasses}>
+                {formData.dateOfBirth ? new Date(formData.dateOfBirth).toLocaleDateString() : 'Not provided'}
+              </p>
+            }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Occupation</Label>
-            {isEditing ? <Input value={formData.occupation} onChange={(e) => handleInputChange('occupation', e.target.value)} className={commonClasses} placeholder="Enter occupation" /> : <p className={displayClasses}>{user?.occupation || 'Not provided'}</p>}
+            <Label className="text-white/90 font-medium">Registration Date</Label>
+            <p className={displayClasses}>
+              {formData.registrationDate ? new Date(formData.registrationDate).toLocaleDateString() : 'N/A'}
+            </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Future Fields - Currently not in backend schema */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
           <div>
-            <Label className="text-white/90 font-medium">Emergency Contact</Label>
-            {isEditing ? <Input value={formData.emergencyContact} onChange={(e) => handleInputChange('emergencyContact', e.target.value)} className={commonClasses} placeholder="Emergency contact name" /> : <p className={displayClasses}>{user?.emergencyContact || 'Not provided'}</p>}
+            <Label className="text-white/90 font-medium">Annual Income <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.annualIncome || ''} 
+                onChange={(e) => handleInputChange('annualIncome', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Enter annual income" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.annualIncome || 'Not available yet'}</p>
+            }
           </div>
           <div>
-            <Label className="text-white/90 font-medium">Emergency Phone</Label>
-            {isEditing ? <Input value={formData.emergencyPhone} onChange={(e) => handleInputChange('emergencyPhone', e.target.value)} className={commonClasses} placeholder="Emergency contact phone" /> : <p className={displayClasses}>{user?.emergencyPhone || 'Not provided'}</p>}
+            <Label className="text-white/90 font-medium">Occupation <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.occupation || ''} 
+                onChange={(e) => handleInputChange('occupation', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Enter occupation" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.occupation || 'Not available yet'}</p>
+            }
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+          <div>
+            <Label className="text-white/90 font-medium">Emergency Contact <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.emergencyContact || ''} 
+                onChange={(e) => handleInputChange('emergencyContact', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Emergency contact name" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.emergencyContact || 'Not available yet'}</p>
+            }
+          </div>
+          <div>
+            <Label className="text-white/90 font-medium">Emergency Phone <span className="text-xs text-gray-500">(Future)</span></Label>
+            {isEditing ? 
+              <Input 
+                value={formData.emergencyPhone || ''} 
+                onChange={(e) => handleInputChange('emergencyPhone', e.target.value)} 
+                className={commonClasses} 
+                placeholder="Emergency contact phone" 
+                disabled
+              /> : 
+              <p className={displayClasses}>{formData.emergencyPhone || 'Not available yet'}</p>
+            }
           </div>
         </div>
       </div>
     );
     
-    if (role === 'company') return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label className="text-white/90 font-medium">Department</Label>
-            {isEditing ? <Input value={formData.department} onChange={(e) => handleInputChange('department', e.target.value)} className={commonClasses} placeholder="Enter department" /> : <p className={displayClasses}>{user?.department || 'Not specified'}</p>}
-          </div>
-          <div>
-            <Label className="text-white/90 font-medium">Employee ID</Label>
-            {isEditing ? <Input value={formData.employeeId} onChange={(e) => handleInputChange('employeeId', e.target.value)} className={commonClasses} placeholder="Enter employee ID" /> : <p className={displayClasses}>{user?.employeeId || 'Not provided'}</p>}
-          </div>
-        </div>
-      </div>
-    );
     return null;
   };
 
@@ -126,6 +383,17 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   const displayClasses = "text-white p-4 bg-white/5 rounded-xl mt-2 border border-white/10 hover:bg-white/10 transition-all duration-200";
   const cardClasses = "glass shine border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300 hover:scale-[1.02]";
 
+  if (loading) {
+    return (
+      <div className="text-white w-full space-y-8 pt-12 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="text-white w-full space-y-8 pt-20">
         {/* Header Section */}
@@ -147,15 +415,27 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
           </div>
           <div className="flex items-center gap-4">
             {!isEditing ? (
-              <Button onClick={() => setIsEditing(true)} className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105">
+              <Button 
+                onClick={() => setIsEditing(true)} 
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105"
+              >
                 <Edit2 className="w-5 h-5" /> Edit Profile
               </Button>
             ) : (
               <div className="flex gap-3">
-                <Button onClick={handleSave} className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105">
-                  <Save className="w-5 h-5" /> Save
+                <Button 
+                  onClick={handleSave} 
+                  disabled={updating}
+                  className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                >
+                  <Save className="w-5 h-5" /> {updating ? 'Saving...' : 'Save'}
                 </Button>
-                <Button onClick={handleCancel} variant="outline" className="flex items-center gap-2 border-white/20 text-white hover:bg-white/10 px-6 py-3 rounded-xl transition-all duration-200">
+                <Button 
+                  onClick={handleCancel} 
+                  variant="outline" 
+                  disabled={updating}
+                  className="flex items-center gap-2 border-white/20 text-white hover:bg-white/10 px-6 py-3 rounded-xl transition-all duration-200"
+                >
                   <X className="w-5 h-5" /> Cancel
                 </Button>
               </div>
@@ -198,7 +478,9 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                 </CardHeader>
                 <CardContent className="text-center">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4 border-2 border-white/20 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
-                    <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">{user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}</span>
+                    <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                      {formData.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                    </span>
                   </div>
                   <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-6 py-2 rounded-xl transition-all duration-200 hover:scale-105">
                     <Upload className="w-4 h-4 mr-2" /> Upload Photo
@@ -217,15 +499,41 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label className="text-white/90 font-medium">Full Name</Label>
-                      {isEditing ? <Input value={formData.name} onChange={(e) => handleInputChange('name', e.target.value)} className={commonClasses} placeholder="Enter full name" /> : <p className={displayClasses}>{user?.name}</p>}
+                      {isEditing ? 
+                        <Input 
+                          value={formData.name || ''} 
+                          onChange={(e) => handleInputChange('name', e.target.value)} 
+                          className={commonClasses} 
+                          placeholder="Enter full name" 
+                        /> : 
+                        <p className={displayClasses}>{formData.name || 'Not provided'}</p>
+                      }
                     </div>
                     <div>
                       <Label className="text-white/90 font-medium">Email</Label>
-                      {isEditing ? <Input type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} className={commonClasses} placeholder="Enter email" /> : <p className={displayClasses}>{user?.email}</p>}
+                      {isEditing ? 
+                        <Input 
+                          type="email" 
+                          value={formData.email || ''} 
+                          onChange={(e) => handleInputChange('email', e.target.value)} 
+                          className={commonClasses} 
+                          placeholder="Enter email" 
+                        /> : 
+                        <p className={displayClasses}>{formData.email || 'Not provided'}</p>
+                      }
                     </div>
                     <div>
                       <Label className="text-white/90 font-medium">Phone</Label>
-                      {isEditing ? <Input type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} className={commonClasses} placeholder="Enter phone number" /> : <p className={displayClasses}>{user?.phone || 'Not provided'}</p>}
+                      {isEditing ? 
+                        <Input 
+                          type="tel" 
+                          value={formData.phone || ''} 
+                          onChange={(e) => handleInputChange('phone', e.target.value)} 
+                          className={commonClasses} 
+                          placeholder="Enter phone number" 
+                        /> : 
+                        <p className={displayClasses}>{formData.phone || 'Not provided'}</p>
+                      }
                     </div>
                     <div>
                       <Label className="text-white/90 font-medium flex items-center gap-2">
@@ -233,7 +541,9 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                         Wallet Address
                       </Label>
                       <div className="flex items-center gap-3 mt-2">
-                        <p className="text-white p-4 bg-white/5 rounded-xl font-mono text-sm flex-1 border border-white/10">{showWallet ? user?.wallet : `${user?.wallet?.slice(0, 8)}...${user?.wallet?.slice(-6)}`}</p>
+                        <p className="text-white p-4 bg-white/5 rounded-xl font-mono text-sm flex-1 border border-white/10">
+                          {showWallet ? formData.wallet : `${formData.wallet?.slice(0, 8)}...${formData.wallet?.slice(-6)}`}
+                        </p>
                         <Button variant="ghost" size="sm" onClick={() => setShowWallet(!showWallet)} className="text-gray-400 hover:text-white p-3 rounded-xl transition-all duration-200">
                           {showWallet ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </Button>
@@ -242,7 +552,16 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                   </div>
                   <div>
                     <Label className="text-white/90 font-medium">Address</Label>
-                    {isEditing ? <textarea value={formData.address} onChange={(e) => handleInputChange('address', e.target.value)} className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 hover:bg-white/10 resize-none" rows={3} placeholder="Enter address" /> : <p className={displayClasses}>{user?.address || 'Not provided'}</p>}
+                    {isEditing ? 
+                      <textarea 
+                        value={formData.address || ''} 
+                        onChange={(e) => handleInputChange('address', e.target.value)} 
+                        className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 hover:bg-white/10 resize-none" 
+                        rows={3} 
+                        placeholder="Enter address" 
+                      /> : 
+                      <p className={displayClasses}>{formData.address || 'Not provided'}</p>
+                    }
                   </div>
                   {getRoleSpecificFields()}
                 </CardContent>
@@ -269,20 +588,32 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                         <p className="text-gray-400 text-sm">Know Your Customer verification</p>
                       </div>
                     </div>
-                    <span className={`px-4 py-2 rounded-xl text-sm font-medium border ${getStatusColor(user?.kycStatus)}`}>{user?.kycStatus || 'Pending'}</span>
+                    <span className={`px-4 py-2 rounded-xl text-sm font-medium border ${getStatusColor(formData.kycStatus)}`}>
+                      {formData.kycStatus || 'Pending'}
+                    </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <Label className="text-white/90 font-medium">Risk Profile</Label>
-                      {isEditing ? <select value={formData.riskProfile} onChange={(e) => handleInputChange('riskProfile', e.target.value)} className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200">
-                        <option value="Low" className="bg-gray-800 text-white">Low Risk</option>
-                        <option value="Medium" className="bg-gray-800 text-white">Medium Risk</option>
-                        <option value="High" className="bg-gray-800 text-white">High Risk</option>
-                      </select> : <p className={displayClasses}>{user?.riskProfile || 'Medium'}</p>}
+                      <Label className="text-white/90 font-medium">Risk Profile <span className="text-xs text-gray-500">(Future)</span></Label>
+                      {isEditing ? 
+                        <select 
+                          value={formData.riskProfile || 'Medium'} 
+                          onChange={(e) => handleInputChange('riskProfile', e.target.value)} 
+                          className="w-full mt-2 p-4 rounded-xl bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 opacity-60"
+                          disabled
+                        >
+                          <option value="Low" className="bg-gray-800 text-white">Low Risk</option>
+                          <option value="Medium" className="bg-gray-800 text-white">Medium Risk</option>
+                          <option value="High" className="bg-gray-800 text-white">High Risk</option>
+                        </select> : 
+                        <p className={displayClasses + " opacity-60"}>{formData.riskProfile || 'Not available yet'}</p>
+                      }
                     </div>
                     <div>
                       <Label className="text-white/90 font-medium">Verification Level</Label>
-                      <p className={displayClasses}>{user?.role === 'Agent' ? 'Level 2' : 'Level 1'}</p>
+                      <p className={displayClasses}>
+                        {user?.role === 'agent' ? 'Level 2 - Agent' : 'Level 1 - Customer'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -314,7 +645,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                         <Label className="text-white/90 font-medium">DID Address</Label>
                         <div className="flex items-center gap-3 mt-2">
                           <div className="flex-1 p-4 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-sm break-all">
-                            {showDID ? formData.did : `${formData.did.substring(0, 20)}...${formData.did.substring(formData.did.length - 10)}`}
+                            {showDID ? formData.did : `${formData.did?.substring(0, 20)}...${formData.did?.substring(formData.did.length - 10)}`}
                           </div>
                           <Button
                             variant="outline"

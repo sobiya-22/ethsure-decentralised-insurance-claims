@@ -13,6 +13,5 @@ export default function ProtectedRoute({ children, allowedRoles }) {
     return <Navigate to="/role-select" replace />;
   }
 
-  // Authorized → render child component
   return children;
 }
