@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
 import { useAccount } from 'wagmi'
-import useAuth from '../context/useAuth';
+import { useAuth } from "../context/AuthContext";
 const Navbar = () => {
   const { connect, isConnected } = useWeb3AuthConnect();
   const { web3Auth } = useWeb3Auth();

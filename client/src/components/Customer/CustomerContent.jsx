@@ -4,21 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Shield, FileText, CreditCard, Folder, AlertCircle, CheckCircle, Clock, Wallet, TrendingUp } from "lucide-react";
 
 const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setCurrentView }) => {
-  if (!customer) return <p className="text-center text-white mt-10">Loading customer data...</p>;
+  // if (!customer) return <p className="text-center text-white mt-10">Loading customer data...</p>;
 
   // Stats dynamically from customer data
   const stats = [
     { 
       title: "Active Policies", 
-      value: customer.activePolicies || "0", 
+      value: customer?.activePolicies || 0, 
       icon: Shield, 
-      change: customer.policyChange || "N/A", 
+      change: customer?.policyChange || "N/A", 
       color: "from-emerald-500/20 to-emerald-400/20", 
       iconColor: "text-emerald-400" 
     },
     { 
       title: "Total Premiums", 
-      value: `₹${customer.totalPremiums || 0}`, 
+      value: `₹${customer?.totalPremiums || 0}`, 
       icon: CreditCard, 
       change: "Monthly payment", 
       color: "from-blue-500/20 to-blue-400/20", 
@@ -26,7 +26,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setC
     },
     { 
       title: "Claims Submitted", 
-      value: customer.claimsCount || "0", 
+      value: customer?.claimsCount || "0", 
       icon: FileText, 
       change: "Pending review", 
       color: "from-purple-500/20 to-purple-400/20", 
@@ -34,8 +34,8 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setC
     },
   ];
 
-  const documents = customer.documents || [];
-  const activities = customer.activities || [];
+  const documents = customer?.documents || [];
+  const activities = customer?.activities || [];
 
   return (
     <div className="text-white w-full relative overflow-hidden">
@@ -50,7 +50,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setC
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
                   Customer <span className="gradient-text">Dashboard</span>
                 </h1>
-                <p className="text-xl text-gray-300">Welcome back, {customer.customer_name}</p>
+                <p className="text-xl text-gray-300">Welcome back, {customer?.customer_name}</p>
               </div>
             </div>
           </div>
@@ -62,7 +62,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setC
               </div>
             )}
             <Button variant="outline" className="flex items-center gap-2 glass">
-              <Wallet className="w-4 h-4" />{customer.wallet}
+              <Wallet className="w-4 h-4" />{customer?.wallet}
             </Button>
           </div>
         </div>

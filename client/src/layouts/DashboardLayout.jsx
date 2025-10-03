@@ -4,7 +4,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Profile from '@/components/Profile';
 import { Menu } from 'lucide-react';
-import useAuth from '../context/useAuth';
+import {useAuth} from '../context/AuthContext';
 const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe", role: "Customer", email: "john.doe@example.com", wallet: "0x1234567890abcdef1234567890abcdef12345678", company: "EthSure Insurance" }, widthClass = "w-64", currentView = "overview", fullPageView = false }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);

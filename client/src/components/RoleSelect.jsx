@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWeb3AuthConnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
 import { getWalletAddress } from '../utils/blockchainOperations';
-import useAuth from '../context/useAuth';
+import {useAuth} from '../context/AuthContext';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const navigate = useNavigate();
@@ -15,7 +15,9 @@ const RoleSelect = () => {
         { id: 'customer', name: 'Customer' },
         { id: 'agent', name: 'Agent' },
         // { id: 'nominee', name: 'Nominee' },
-        // { id: 'company', name: 'Insurance Company' }
+
+        // ---! do not add any company in role select,
+        // since there's one company there acc creation should be hidden!---
     ];
 
     const handleRoleSelect = (roleId) => {

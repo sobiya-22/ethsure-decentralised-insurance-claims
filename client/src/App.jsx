@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
-import Login from "./pages/Login";
+
 // import Signup from "./pages/Signup";
 import CustomerDashboard from "./pages/dashboards/CustomerDashboard";
 import AgentDashboard from "./pages/dashboards/AgentDashboard";
@@ -36,7 +36,7 @@ function App() {
   return (
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
+
         {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />

@@ -16,7 +16,6 @@ const CustomerDashboard = () => {
 
   const [customer, setCustomer] = useState(null);
   const [kycStatus, setKycStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState("overview");
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const CustomerDashboard = () => {
         navigate("/");
         return;
       }
-        setLoading(true);
+        // setLoading(true);
       try {
         const response = await getCustomer(address.toLowerCase());
         const customerData = response.data?.data?.customer || response.data?.data;
@@ -41,14 +40,14 @@ const CustomerDashboard = () => {
       } catch (err) {
         console.error("Error fetching customer:", err);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
     fetchCustomerData();
   }, [isConnected, address, navigate]);
 
-  if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+  // if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
 
   // Dynamic user object for sidebar/profile
   const user = {
