@@ -22,25 +22,25 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
       </div>
       
       <div className="flex flex-col h-full relative z-10">
-        <nav className="flex-1 space-y-3 mt-4">
+        <nav className="flex-1 space-y-2 sm:space-y-3 mt-2 sm:mt-4">
           {items.map((item, index) => (
             <div key={item.id} className={`transform transition-all duration-500 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-20px] opacity-0'}`} style={{ transitionDelay: `${(index + 1) * 100}ms` }}>
-              <button onClick={() => { item.onClick(); onMobileClose?.(); }} className={`group w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl text-white transition-all duration-300 ease-out relative overflow-hidden hover:translate-x-1 hover:scale-[1.02] hover:shadow-xl border-2 backdrop-blur-sm ${currentView === item.id ? 'border-blue-400/60 bg-gradient-to-r from-blue-500/20 to-blue-400/10 shadow-[0_8px_20px_rgba(96,165,250,0.15)]' : 'border-white/20 hover:border-blue-400/40 hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-emerald-500/10'}`}>
+              <button onClick={() => { item.onClick(); onMobileClose?.(); }} className={`group w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl text-white transition-all duration-300 ease-out relative overflow-hidden hover:translate-x-1 hover:scale-[1.02] hover:shadow-xl border-2 backdrop-blur-sm ${currentView === item.id ? 'border-blue-400/60 bg-gradient-to-r from-blue-500/20 to-blue-400/10 shadow-[0_8px_20px_rgba(96,165,250,0.15)]' : 'border-white/20 hover:border-blue-400/40 hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-emerald-500/10'}`}>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-400/0 to-emerald-500/0 group-hover:from-blue-500/10 group-hover:via-blue-400/10 group-hover:to-emerald-500/10 transition-all duration-300 rounded-xl" />
                 <div className="relative">
-                  <item.icon className={`w-5 h-5 transition-all duration-300 group-hover:scale-110 ${currentView === item.id ? 'text-blue-300' : 'text-gray-300 group-hover:text-blue-300'} ${currentView === item.id ? 'drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]' : ''}`} />
+                  <item.icon className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 group-hover:scale-110 ${currentView === item.id ? 'text-blue-300' : 'text-gray-300 group-hover:text-blue-300'} ${currentView === item.id ? 'drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]' : ''}`} />
                   {currentView === item.id && (
-                    <div className="absolute inset-0 w-5 h-5">
+                    <div className="absolute inset-0 w-4 h-4 sm:w-5 sm:h-5">
                       <div className="absolute inset-0 bg-blue-400/30 rounded-full animate-ping" />
                     </div>
                   )}
                 </div>
-                <span className={`font-medium tracking-wide transition-all duration-300 relative ${currentView === item.id ? 'text-blue-100 font-semibold' : 'text-gray-200 group-hover:text-white'}`}>
+                <span className={`font-medium tracking-wide text-sm sm:text-base transition-all duration-300 relative truncate flex-1 min-w-0 ${currentView === item.id ? 'text-blue-100 font-semibold' : 'text-gray-200 group-hover:text-white'}`}>
                   {item.label}
                   <span className={`absolute bottom-[-2px] left-0 h-0.5 bg-gradient-to-r from-blue-400 to-emerald-400 transition-all duration-300 ${currentView === item.id ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </span>
                 {currentView === item.id && (
-                  <div className="absolute right-2 w-2 h-2 bg-blue-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                  <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(96,165,250,0.8)] flex-shrink-0" />
                 )}
                 <div className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-150">
                   <div className="absolute inset-0 bg-white/10 rounded-xl animate-ping" />
@@ -75,7 +75,12 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-4 shadow-xl hidden md:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
+      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 xl:p-4 shadow-xl hidden lg:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
+        {sidebarContent}
+      </aside>
+
+      {/* Tablet Sidebar */}
+      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 sm:p-4 shadow-xl hidden md:flex lg:hidden ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
         {sidebarContent}
       </aside>
 
@@ -88,7 +93,7 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
       )}
 
       {/* Mobile Sidebar */}
-      <aside className={`fixed left-0 top-0 z-50 h-full w-72 flex-col glass border-r border-white/10 p-4 pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-3xl hover:shadow-blue-500/10 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed left-0 top-0 z-50 h-full w-72 xs:w-80 sm:w-96 flex-col glass border-r border-white/10 p-3 xs:p-4 pt-20 xs:pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-3xl hover:shadow-blue-500/10 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {sidebarContent}
       </aside>
     </>

@@ -65,19 +65,19 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
 
   const content = (
     <div className="text-white w-full space-y-8 pt-20">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-        <div className="space-y-3">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl glass shine"><Shield className="w-8 h-8 text-cyan-400" /></div>
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 xs:gap-6">
+        <div className="space-y-2 xs:space-y-3">
+          <div className="flex items-center gap-3 xs:gap-4">
+            <div className="p-2 xs:p-3 rounded-xl glass shine"><Shield className="w-6 h-6 xs:w-8 xs:h-8 text-cyan-400" /></div>
             <div>
-              <h1 className="text-4xl lg:text-5xl font-bold leading-tight">Create New <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Policy</span></h1>
-              <p className="text-xl text-gray-300 mt-2">Step {currentStep} of 3 - Create a comprehensive insurance policy</p>
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">Create New <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Policy</span></h1>
+              <p className="text-sm xs:text-base lg:text-xl text-gray-300 mt-1 xs:mt-2">Step {currentStep} of 3 - Create a comprehensive insurance policy</p>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white hover:bg-white/10 p-3 rounded-xl transition-all duration-200">
-            <X className="w-6 h-6" />
+        <div className="flex items-center gap-2 xs:gap-4">
+          <Button variant="ghost" size="sm" onClick={onClose} className="text-gray-400 hover:text-white hover:bg-white/10 p-2 xs:p-3 rounded-xl transition-all duration-200">
+            <X className="w-5 h-5 xs:w-6 xs:h-6" />
           </Button>
         </div>
       </div>

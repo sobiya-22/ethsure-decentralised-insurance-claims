@@ -33,7 +33,7 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
       <Header user={user} onProfileClick={handleProfileClick} />
       
       {/* Desktop Layout */}
-      <div className="hidden md:flex">
+      <div className="hidden lg:flex">
         <Sidebar 
           items={sidebarItems} 
           onLogout={handleLogout} 
@@ -42,17 +42,17 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
           topOffsetClass="top-20"
         />
         {!profileOpen && !fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} p-8 lg:p-12 pt-40`}>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} p-4 sm:p-6 lg:p-8 xl:p-12 pt-32 sm:pt-36 lg:pt-40`}>
             <div className="max-w-7xl mx-auto">{children}</div>
           </main>
         )}
         {!profileOpen && fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-32 p-8 lg:p-12 overflow-y-auto max-h-screen`}>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto max-h-screen`}>
             <div className="max-w-8xl mx-auto">{children}</div>
           </main>
         )}
         {profileOpen && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-32 p-8 lg:p-12 overflow-y-auto max-h-screen`}>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto max-h-screen`}>
             <div className="max-w-8xl mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
@@ -60,21 +60,49 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
         )}
       </div>
 
-      {/* Mobile Layout */}
-      <div className="md:hidden">
+      {/* Tablet Layout */}
+      <div className="hidden md:flex lg:hidden">
+        <Sidebar 
+          items={sidebarItems} 
+          onLogout={handleLogout} 
+          widthClass="w-56" 
+          currentView={currentView} 
+          topOffsetClass="top-20"
+        />
         {!profileOpen && !fullPageView && (
-          <main className="p-6 pt-40">
-            <div className="max-w-7xl mx-auto">{children}</div>
+          <main className="flex-1 ml-56 p-4 sm:p-6 pt-32 sm:pt-36">
+            <div className="max-w-6xl mx-auto">{children}</div>
           </main>
         )}
         {!profileOpen && fullPageView && (
-          <main className="pt-40 p-6 overflow-y-auto max-h-screen">
-            <div className="max-w-8xl mx-auto">{children}</div>
+          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-4 sm:p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-6xl mx-auto">{children}</div>
           </main>
         )}
         {profileOpen && (
-          <main className="pt-40 p-6 overflow-y-auto max-h-screen">
-            <div className="max-w-8xl mx-auto">
+          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-4 sm:p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-6xl mx-auto">
+              <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
+            </div>
+          </main>
+        )}
+      </div>
+
+      {/* Mobile/Small Tablet Layout */}
+      <div className="md:hidden">
+        {!profileOpen && !fullPageView && (
+          <main className="p-3 xs:p-4 sm:p-6 pt-32 xs:pt-36">
+            <div className="max-w-full mx-auto">{children}</div>
+          </main>
+        )}
+        {!profileOpen && fullPageView && (
+          <main className="pt-24 sm:pt-28 p-3 xs:p-4 sm:p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-full mx-auto">{children}</div>
+          </main>
+        )}
+        {profileOpen && (
+          <main className="pt-24 sm:pt-28 p-3 xs:p-4 sm:p-6 overflow-y-auto max-h-screen">
+            <div className="max-w-full mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
           </main>

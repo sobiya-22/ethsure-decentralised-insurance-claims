@@ -110,13 +110,13 @@ const KYCForm = ({role }) => {
   const cardClass =
     "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-white/10 shadow-xl rounded-2xl overflow-hidden";
   const inputClass =
-    "w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all";
+    "w-full p-2 xs:p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all text-sm xs:text-base";
   const selectClass =
-    "w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all";
+    "w-full p-2 xs:p-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all text-sm xs:text-base";
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12 lg:space-y-16">
+    <div className="container mx-auto p-3 xs:p-4 sm:p-6 lg:p-8">
+      <div className="max-w-4xl mx-auto space-y-6 xs:space-y-8 sm:space-y-12 lg:space-y-16">
         {/* Step 1: Personal Information */}
         {currentStep === 1 && (
           <Card className={cardClass}>
