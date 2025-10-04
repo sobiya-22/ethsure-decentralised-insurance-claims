@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-
+    console.log('Prinit base url: ', BASE_URL);
     // Restore session
     // useEffect(() => {
     //     const restoreSession = async () => {
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
         if (!web3Auth) throw new Error("Web3Auth not initialized");
         const did = await createEthrDID(web3Auth);
 
-        const res = await axios.patch(`/api/users/assign-role`, {
+        const res = await axios.patch(`${BASE_URL}/api/users/assign-role`, {
             wallet_address,
             did,
             role,
