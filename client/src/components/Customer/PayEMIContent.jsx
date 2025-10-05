@@ -20,7 +20,7 @@ const PayEMIContent = () => {
   }
   return (
     <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-blue-400/10 to-blue-500/15 blur-3xl" />
       <div className="relative z-10 space-y-6 pt-20">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
@@ -37,17 +37,14 @@ const PayEMIContent = () => {
               <AlertCircle className="w-4 h-4 text-amber-400" />
               <span className="text-sm text-amber-400 font-medium">Due in 5 days</span>
             </div>
-            <Button variant="outline" className="flex items-center gap-2 glass">
-              <Wallet className="w-4 h-4" />{customer.wallet}
-            </Button>
           </div>
         </div>
-        <Card className="border-cyan-500/40 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-purple-500/15 hover:border-cyan-400/60 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 animate-pulse"></div>
+        <Card className="border-blue-500/40 bg-gradient-to-r from-blue-500/15 via-blue-500/10 to-blue-500/15 hover:border-blue-400/60 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-blue-500/5 to-blue-500/5 animate-pulse"></div>
           <CardContent className="p-6 relative z-10">
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
-                <AlertCircle className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 animate-pulse" />
+              <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-500/20 border border-blue-500/30 group-hover:from-blue-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
+                <AlertCircle className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors duration-300 animate-pulse" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -67,7 +64,7 @@ const PayEMIContent = () => {
                 </div>
               </div>
               <Button 
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                 onClick={() => setShowPaymentMethods(true)}
               >
                 <CreditCard className="w-4 h-4 mr-2" />
@@ -171,29 +168,7 @@ const PayEMIContent = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Clock className="w-5 h-5" />Upcoming Payments</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">Next Payment</span>
-                      <span className="text-amber-400 text-xs font-medium">Due Soon</span>
-                    </div>
-                    <p className="text-white/60 text-xs">Jan 15, 2024 • ₹2,500</p>
-                  </div>
-                  <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">Feb Payment</span>
-                      <span className="text-white/60 text-xs">Scheduled</span>
-                    </div>
-                    <p className="text-white/60 text-xs">Feb 15, 2024 • ₹2,500</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Upcoming Payments card removed as requested */}
           </div>
         </div>
       </div>

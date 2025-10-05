@@ -13,8 +13,8 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, onKY
       value: customer?.activePolicies || 0, 
       icon: Shield, 
       change: customer?.policyChange || "N/A", 
-      color: "from-emerald-500/20 to-emerald-400/20", 
-      iconColor: "text-emerald-400" 
+      color: "from-blue-500/20 to-blue-400/20", 
+      iconColor: "text-blue-400" 
     },
     { 
       title: "Total Premiums", 
@@ -29,8 +29,8 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, onKY
       value: customer?.claimsCount || "0", 
       icon: FileText, 
       change: "Pending review", 
-      color: "from-purple-500/20 to-purple-400/20", 
-      iconColor: "text-purple-400" 
+      color: "from-blue-500/20 to-blue-400/20", 
+      iconColor: "text-blue-400" 
     },
   ];
 
@@ -39,7 +39,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, onKY
 
   return (
     <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[400px] xs:w-[500px] sm:w-[600px] h-[400px] xs:h-[500px] sm:h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 w-[400px] xs:w-[500px] sm:w-[600px] h-[400px] xs:h-[500px] sm:h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl pointer-events-none" />
       <div className="relative z-10 space-y-4 sm:space-y-6 pt-8 sm:pt-12">
         {/* Header */}
         <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 xs:gap-4">
@@ -69,7 +69,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, onKY
             )}
             <Button variant="outline" size="sm" className="flex items-center gap-1 xs:gap-2 glass w-full xs:w-auto justify-start xs:justify-center">
               <Wallet className="w-3 h-3 xs:w-4 xs:h-4" />
-              <span className="text-xs xs:text-sm truncate">{customer?.wallet}</span>
+              <span className="text-xs xs:text-sm font-mono break-all">{customer?.wallet}</span>
             </Button>
           </div>
         </div>

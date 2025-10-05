@@ -10,7 +10,7 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
 
   const sidebarContent = (
     <>
-      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 via-transparent to-emerald-500/10 rounded-xl blur-xl opacity-50" />
+      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 via-blue-500/0 to-blue-500/10 rounded-xl blur-xl opacity-40" />
       {/* Mobile Close Button */}
       <div className="md:hidden flex justify-end mb-4">
         <button
@@ -75,12 +75,12 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 xl:p-4 shadow-xl hidden lg:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
+      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 xl:p-4 shadow-xl hidden lg:flex ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-blue-500/0 before:to-blue-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
         {sidebarContent}
       </aside>
 
       {/* Tablet Sidebar */}
-      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 sm:p-4 shadow-xl hidden md:flex lg:hidden ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
+      <aside className={`fixed left-0 ${topOffsetClass} z-40 h-[calc(100vh-4rem)] ${widthClass} flex-col glass border-r border-white/10 p-3 sm:p-4 shadow-xl hidden md:flex lg:hidden ${isVisible ? 'animate-slideInLeft' : 'translate-x-[-100%] opacity-0'} transition-all duration-700 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/80 via-gray-800/70 to-gray-900/80 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-blue-500/0 before:to-blue-500/5 before:pointer-events-none hover:shadow-2xl hover:shadow-blue-500/10`}>
         {sidebarContent}
       </aside>
 
@@ -93,7 +93,7 @@ const Sidebar = ({ items = [], onLogout, topOffsetClass = 'top-16', widthClass =
       )}
 
       {/* Mobile Sidebar */}
-      <aside className={`fixed left-0 top-0 z-50 h-full w-72 xs:w-80 sm:w-96 flex-col glass border-r border-white/10 p-3 xs:p-4 pt-20 xs:pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-transparent before:to-emerald-500/5 before:pointer-events-none hover:shadow-3xl hover:shadow-blue-500/10 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed left-0 top-0 z-50 h-full w-72 xs:w-80 sm:w-96 flex-col glass border-r border-white/10 p-3 xs:p-4 pt-20 xs:pt-24 shadow-2xl md:hidden transition-all duration-300 ease-out backdrop-blur-xl bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98 before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/5 before:via-blue-500/0 before:to-blue-500/5 before:pointer-events-none hover:shadow-3xl hover:shadow-blue-500/10 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {sidebarContent}
       </aside>
     </>

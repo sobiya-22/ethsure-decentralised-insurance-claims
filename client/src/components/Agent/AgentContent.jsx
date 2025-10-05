@@ -73,7 +73,7 @@ const AgentContent = ({
   return (
     <div className="text-white w-full relative">
       {/* Background Grid */}
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-blue-400/10 to-blue-500/15 blur-3xl" />
       
       <div className="relative z-10 space-y-6 pt-20">
         {/* Header Section */}
@@ -98,10 +98,7 @@ const AgentContent = ({
               <div className="w-2 h-2 rounded-full bg-emerald-400" />
               <span className="text-sm text-emerald-400 font-medium">Verified Agent</span>
             </div>
-            <Button variant="outline" className="flex items-center gap-2 glass">
-              <Wallet className="w-4 h-4" />
-              {agent.wallet.slice(0, 6)}...{agent.wallet.slice(-4)}
-            </Button>
+           { /*remove wallete address from here*/}
           </div>
         </div>
 
