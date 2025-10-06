@@ -1,26 +1,21 @@
 import api from "./api";
 
-// Submit customer KYC
-export const submitCustomerKYC = (customerData) => {
-  return api.post("/customer/kyc", customerData);
+
+// Get customer details
+export const getCustomer = async (wallet_address) => {
+  const res = await api.post("/customer/get", { wallet_address });
+  return res;
 };
 
-// Check customer KYC status by wallet
-export const checkCustomerKYCStatus = (wallet_address) => {
-  return api.get(`/customer/kyc-status/${wallet_address}`);
+// Update customer details
+export const updateCustomer = async (wallet_address, updateData) => {
+  const res = await api.put("/customer/update", { wallet_address, updateData });
+  return res;
 };
 
-// Get a single customer
-export const getCustomer = (wallet_address) => {
-  return api.get(`/customer/${wallet_address}`);
-};
-
-// Get all customers
-export const getAllCustomers = () => {
-  return api.get("/customer");
-};
-
-export const updateCustomer = () => {
-   return api.post("/customer/kyc", customerData);
+// Customer sends policy request to agent
+export const sendPolicyRequest = async (customer_wallet_address, agent_wallet_address, policy_id) => {
+  const res = await api.post("/customer/send-policy-request", { customer_wallet_address, agent_wallet_address, policy_id });
+  return res;
 };
 
