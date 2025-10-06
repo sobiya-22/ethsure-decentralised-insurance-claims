@@ -3,7 +3,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import CustomerContent from "@/components/Customer/CustomerContent";
 import PayEMIContent from "@/components/Customer/PayEMIContent";
 import PoliciesContent from "@/components/Customer/PoliciesContent";
-import KYCForm from "@/components/KYCForm";
+import AgentKYCForm from "@/components/AgentKYCForm";
 import DocVault from "@/components/DocVault";
 import { Users, FileText, Folder, CreditCard } from "lucide-react";
 import { useAccount } from "wagmi";
@@ -32,11 +32,13 @@ const CustomerDashboard = () => {
         setCustomer(customerData);
 
         const kycRes = await checkCustomerKYCStatus(address.toLowerCase());
-        setKycStatus(kycRes.data?.status);
+        setKycStatus(kycRes.data?.kyc_status);
 
-        if (kycRes.data?.status === "pending") {
-          setCurrentView("kyc");
-        }
+        // Don't automatically navigate to KYC, let user decide from dashboard
+        // if (kycRes.data?.kyc_status === "pending") {
+        //   setCurrentView("kyc");
+        //   return;
+        // }
       } catch (err) {
         console.error("Error fetching customer:", err);
       } finally {
@@ -74,18 +76,7 @@ const CustomerDashboard = () => {
       case "docvault":
         return <DocVault user={user} />;
       case "kyc":
-        return (
-          <KYCForm
-            walletAddress={address}
-            role="customer"
-            onClose={() => setCurrentView("overview")}
-            onSubmitKYC={(kycData) => {
-              console.log("KYC submitted:", kycData);
-              setCurrentView("overview");
-              setKycStatus("verified"); // Update status after submission
-            }}
-          />
-        );
+        return <AgentKYCForm />;
       default:
         console.log({customer});
         return (
@@ -95,12 +86,13 @@ const CustomerDashboard = () => {
             onPayEMIClick={() => setCurrentView("pay-emi")}
             currentView={currentView}
             setCurrentView={setCurrentView}
+            onKYCSubmit={() => setCurrentView("kyc")}
           />
         );
     }
   };
-
-  const isFullPageView = ["kyc", "policies"].includes(currentView);
+  {/*remove double sidebar */}
+  const isFullPageView = ["kyc"].includes(currentView);
 
   return (
     <DashboardLayout

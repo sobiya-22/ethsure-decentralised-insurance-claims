@@ -1,4 +1,292 @@
-/* App.css - Basic app styles */
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+/* App.css - Enhanced responsive app styles */
+
+/* Smooth Scrolling for Better Mobile Experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive Container Styles */
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  padding: 0;
+  margin: 0;
+}
+
+/* Responsive Background Elements */
+.background-responsive {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Enhanced Mobile Layout */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .mobile-nav-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+  }
+  
+  .mobile-content-spacing {
+    padding-top: 4rem; /* Account for fixed header */
+    padding-bottom: 1rem;
+  }
+}
+
+/* Tablet Layout Adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tablet-optimized {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .tablet-sidebar {
+    width: 14rem; /* 224px */
+  }
+  
+  .tablet-main {
+    margin-left: 14rem;
+  }
+}
+
+/* Desktop Layout Enhancements */
+@media (min-width: 1025px) {
+  .desktop-optimized {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .desktop-sidebar {
+    width: 16rem; /* 256px */
+  }
+  
+  .desktop-main {
+    margin-left: 16rem;
+  }
+}
+
+/* Responsive Glass Effects */
+.glass-responsive {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 640px) {
+  .glass-responsive {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Responsive Animation Performance */
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High Performance Animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animation-performance {
+    will-change: transform, opacity;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+}
+
+/* Responsive Typography Scale */
+@media (max-width: 320px) {
+  .text-xs-responsive { font-size: 0.75rem; }
+  .text-sm-responsive { font-size: 0.875rem; }
+  .text-base-responsive { font-size: 1rem; }
+  .text-lg-responsive { font-size: 1.125rem; }
+  .text-xl-responsive { font-size: 1.25rem; }
+}
+
+@media (min-width: 321px) and (max-width: 640px) {
+  .text-xs-responsive { font-size: 0.625rem; }
+  .text-sm-responsive { font-size: 0.75rem; }
+  .text-base-responsive { font-size: 0.875rem; }
+  .text-lg-responsive { font-size: 1rem; }
+  .text-xl-responsive { font-size: 1.125rem; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .text-xs-responsive { font-size: 0.75rem; }
+  .text-sm-responsive { font-size: 0.875rem; }
+  .text-base-responsive { font-size: 1rem; }
+  .text-lg-responsive { font-size: 1.125rem; }
+  .text-xl-responsive { font-size: 1.25rem; }
+}
+
+@media (min-width: 1025px) {
+  .text-xs-responsive { font-size: 0.75rem; }
+  .text-sm-responsive { font-size: 0.875rem; }
+  .text-base-responsive { font-size: 1rem; }
+  .text-lg-responsive { font-size: 1.125rem; }
+  .text-xl-responsive { font-size: 1.25rem; }
+}
+
+/* Responsive Spacing System */
+.spacing-responsive {
+  padding: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .spacing-responsive {
+    padding: 2rem;
+  }
+}
+
+/* Responsive Grid System */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-responsive {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+/* Responsive Button States */
+@media (hover: none) {
+  .no-hover .hover\:scale-105:hover {
+    transform: none;
+  }
+  
+  .no-hover .hover\:bg-white\/10:hover {
+    background-color: transparent;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (pointer: coarse) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-spacing {
+    margin: 0.5rem;
+  }
+}
+
+/* Responsive Scrollbar Styling */
+@media (max-width: 640px) {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    recycl: 2px;
+  }
+}
+
+/* Enhanced Focus Indicators for Keyboard Navigation */
+.focus-enhanced:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Responsive Loading States */
+.skeleton-responsive {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark mode responsive adjustments */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-responsive {
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+  
+  .dark-mode-responsive .glass-responsive {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Print-friendly styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+}

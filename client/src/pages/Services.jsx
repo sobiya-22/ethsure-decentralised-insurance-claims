@@ -1,143 +1,171 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import Navbar from '@/components/Navbar';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Navbar from "@/components/Navbar";
+import { Link } from "react-router-dom";
+import {
+  ShieldCheck,
+  FileCheck,
+  Wallet,
+  Users,
+  Database,
+  Zap,
+  Link2,
+} from "lucide-react";
 
 const Services = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
+    setTimeout(() => setVisible(true), 100);
   }, []);
-  
-  const services = [
-    { id: 1, title: 'Auto Insurance', description: 'Comprehensive coverage for your vehicles with instant claims processing', features: ['Accident Coverage', 'Theft Protection', 'Liability Insurance', 'Instant Claims'], price: 'From $50/month', color: 'from-blue-500 to-blue-600', icon: '🚗' },
-    { id: 2, title: 'Health Insurance', description: 'Healthcare coverage with transparent pricing and fast claim settlements', features: ['Medical Coverage', 'Dental Care', 'Vision Care', 'Prescription Drugs'], price: 'From $80/month', color: 'from-green-500 to-green-600', icon: '🏥' },
-    { id: 3, title: 'Property Insurance', description: 'Protect your home and belongings with blockchain-verified coverage', features: ['Home Protection', 'Natural Disasters', 'Personal Property', 'Liability Coverage'], price: 'From $40/month', color: 'from-purple-500 to-purple-600', icon: '🏠' },
-    { id: 4, title: 'Life Insurance', description: 'Secure your family\'s future with transparent and reliable coverage', features: ['Death Benefit', 'Cash Value', 'Flexible Premiums', 'Family Protection'], price: 'From $30/month', color: 'from-red-500 to-red-600', icon: '🛡️' },
-    { id: 5, title: 'Business Insurance', description: 'Comprehensive coverage for businesses of all sizes', features: ['General Liability', 'Professional Liability', 'Property Coverage', 'Cyber Insurance'], price: 'From $100/month', color: 'from-yellow-500 to-yellow-600', icon: '💼' },
-    { id: 6, title: 'Travel Insurance', description: 'Travel with confidence knowing you\'re protected worldwide', features: ['Trip Cancellation', 'Medical Coverage', 'Baggage Protection', 'Emergency Assistance'], price: 'From $20/trip', color: 'from-pink-500 to-pink-600', icon: '✈️' }
+
+  const steps = [
+    {
+      icon: <FileCheck className="w-10 h-10 text-blue-400" />,
+      title: "Policy Registration",
+      desc: "Begin your insurance journey by registering your policy on-chain. No paperwork — just verified digital ownership.",
+    },
+    {
+      icon: <Users className="w-10 h-10 text-emerald-400" />,
+      title: "Nominee Digital Identity",
+      desc: "Nominees get decentralized IDs (DID) with verifiable credentials for tamper-proof claim verification.",
+    },
+    {
+      icon: <ShieldCheck className="w-10 h-10 text-purple-400" />,
+      title: "Claim Initiation & Verification",
+      desc: "When a claim is raised, all documents and details are auto-verified through smart contracts — zero manual checks.",
+    },
+    {
+      icon: <Database className="w-10 h-10 text-cyan-400" />,
+      title: "On-Chain Storage",
+      desc: "Every policy, document, and claim record is securely encrypted and stored using IPFS with blockchain verification.",
+    },
+    {
+      icon: <Wallet className="w-10 h-10 text-yellow-400" />,
+      title: "Smart Contract Settlement",
+      desc: "Approved claims trigger automatic payouts through blockchain — instant, transparent, and traceable.",
+    },
+    {
+      icon: <Zap className="w-10 h-10 text-pink-400" />,
+      title: "Real-Time Claim Tracking",
+      desc: "Track claim progress live with on-chain transparency and full visibility for both insurer and nominee.",
+    },
   ];
 
   return (
-    <div className="min-h-screen text-white w-full relative overflow-hidden pt-20">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+    <div className="min-h-screen text-white relative overflow-hidden">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-            Our <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">Services</span>
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-            Comprehensive insurance solutions powered by blockchain technology. Get the coverage you need with transparency, security, and speed.
-          </p>
-        </div>
-      </div>
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-950 z-0" />
+      <div className="absolute w-[800px] h-[800px] bg-gradient-to-tr from-blue-600/20 via-emerald-500/10 to-purple-600/20 blur-3xl top-[-200px] left-[-200px] animate-pulse-slow" />
+      <div className="absolute w-[800px] h-[800px] bg-gradient-to-tr from-purple-600/20 via-blue-500/10 to-green-600/20 blur-3xl bottom-[-200px] right-[-200px] animate-pulse-slow" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {services.map((service, index) => (
-            <Card key={service.id} className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan transform transition-all duration-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: `${200 + index * 100}ms` }}>
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-3xl">{service.icon}</div>
-                <CardTitle className="text-white text-xl">{service.title}</CardTitle>
-                <CardDescription className="text-gray-300">{service.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  {service.features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20"></div>
-                      <span className="text-gray-300 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-4 border-t border-gray-700">
-                  <p className="text-white font-bold text-lg mb-4">{service.price}</p>
-                  <Link to={`/service/${service.id}`}>
-                    <Button className="w-full button-pill">Learn More</Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+      {/* Hero Section */}
+      <section className="relative z-10 text-center py-24 px-4 max-w-5xl mx-auto">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 via-emerald-400 to-purple-500 bg-clip-text text-transparent"
+        >
+          One Chain. One Policy. Complete Trust.
+        </motion.h1>
+        <p className="text-gray-300 text-lg mb-10">
+          EthSure simplifies the entire insurance journey — from registration to payout — into one unified, blockchain-verified flow.
+        </p>
+      </section>
+
+      {/* Flow Section */}
+      <section className="relative max-w-6xl mx-auto px-6 pb-24">
+        
+          {steps.map((step, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -100 : 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className={`relative flex flex-col md:flex-row items-center gap-6 py-10 px-4 ${
+                i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              }`}
+            >
+              <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-blue-500/30 transition">
+                {step.icon}
+              </div>
+              <div className="max-w-md">
+                <h3 className="text-2xl font-semibold mb-2 bg-gradient-to-r from-blue-300 to-emerald-400 bg-clip-text text-transparent">
+                  {step.title}
+                </h3>
+                <p className="text-gray-400">{step.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        
+      </section>
+
+      {/* Special Features */}
+      <section className="relative text-center px-6 pb-24 max-w-5xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-green-500 bg-clip-text text-transparent"
+        >
+          Why EthSure is Different
+        </motion.h2>
+        <p className="text-gray-300 text-lg max-w-3xl mx-auto mb-10">
+          Unlike traditional insurance platforms, EthSure operates fully on blockchain — merging registration, claims, verification, and payout under one single policy lifecycle.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6">
+          {[
+            "🔐 100% On-Chain Storage & Verification",
+            "📜 Single Unified Policy System",
+            "⚙️ Smart Contract-Based Claim Approval",
+            "🌐 Full Transparency, Zero Manual Work",
+          ].map((point, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="bg-white/5 border border-white/10 rounded-full px-6 py-3 text-gray-200 text-sm hover:scale-105 hover:text-white transition"
+            >
+              {point}
+            </motion.div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '800ms' }}>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Why Choose Our Services?</h2>
-          <p className="text-lg sm:text-xl text-gray-300">The advantages of blockchain-powered insurance</p>
+      {/* CTA */}
+      <section className="text-center pb-24 relative z-10">
+        <motion.h3
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-3xl font-semibold mb-4"
+        >
+          Experience the Future of Insurance
+        </motion.h3>
+        <p className="text-gray-400 mb-8">
+          Join EthSure and be part of the world’s first fully on-chain insurance ecosystem.
+        </p>
+        <div className="flex justify-center gap-4">
+          <Link to="/signup">
+            <Button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-lg rounded-full">
+              Get Started
+            </Button>
+          </Link>
+          <Link to="/contact">
+            <Button
+              variant="outline"
+              className="px-8 py-4 border-white/30 text-lg rounded-full"
+            >
+              Contact Us
+            </Button>
+          </Link>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1000ms' }}>
-            <CardContent className="p-6">
-              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-blue-500/80 to-blue-400/60">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Instant Claims</h3>
-              <p className="text-gray-300 text-sm">Get your claims processed instantly through smart contracts</p>
-            </CardContent>
-          </Card>
-
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1200ms' }}>
-            <CardContent className="p-6">
-              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-emerald-500/80 to-emerald-400/60">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Transparency</h3>
-              <p className="text-gray-300 text-sm">All transactions are recorded on the blockchain for complete transparency</p>
-            </CardContent>
-          </Card>
-
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
-            <CardContent className="p-6">
-              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-purple-600/80 to-purple-500/60">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Security</h3>
-              <p className="text-gray-300 text-sm">Advanced security through blockchain technology and smart contracts</p>
-            </CardContent>
-          </Card>
-
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1600ms' }}>
-            <CardContent className="p-6">
-              <div className="w-16 h-16 rounded-lg mx-auto mb-4 flex items-center justify-center border border-white/15 bg-gradient-to-br from-rose-500/80 to-rose-400/60">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Lower Costs</h3>
-              <p className="text-gray-300 text-sm">Reduced premiums through elimination of intermediaries</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className={`text-center transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1800ms' }}>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Ready to Get Started?</h2>
-          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">Choose the perfect insurance plan for your needs</p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <Link to="/signup">
-              <Button size="lg" className="button-pill text-lg px-8 py-4">Get Coverage Now</Button>
-            </Link>
-            <Link to="/contact">
-              <Button size="lg" variant="outline" className="glass text-gray-200 hover:text-white text-lg px-8 py-4">Speak to an Expert</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

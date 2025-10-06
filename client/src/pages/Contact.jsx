@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import Navbar from '@/components/Navbar';
+import { sendContactEmail } from '@/utils/email';
 
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,15 +19,22 @@ const Contact = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = (e) => {
+  const [status, setStatus] = useState({ state: 'idle', message: '' });
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      setStatus({ state: 'loading', message: '' });
+      await sendContactEmail(formData);
+      setStatus({ state: 'success', message: 'Message sent successfully.' });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      setStatus({ state: 'error', message: err?.message || 'Failed to send message.' });
+    }
   };
 
   return (
     <div className="min-h-screen text-white w-full relative overflow-hidden pt-20">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl pointer-events-none" />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
@@ -42,7 +50,7 @@ const Contact = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan transform transition-all duration-500 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-50px] opacity-0'}`} style={{ transitionDelay: '200ms' }}>
+          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan transform transition-all duration-500 relative z-10 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-50px] opacity-0'}`} style={{ transitionDelay: '200ms' }}>
             <CardHeader>
               <CardTitle className="text-white text-2xl">Send us a Message</CardTitle>
               <CardDescription className="text-gray-400">Fill out the form below and we'll get back to you within 24 hours</CardDescription>
@@ -67,8 +75,14 @@ const Contact = () => {
                   <Label htmlFor="message" className="text-gray-300">Message</Label>
                   <textarea id="message" name="message" rows={6} placeholder="Tell us more about your inquiry..." value={formData.message} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 text-white placeholder:text-gray-400 focus:border-blue-500 rounded-md px-3 py-2 resize-none transition-all duration-300 hover:bg-white/10" required />
                 </div>
-                <Button type="submit" className="w-full button-pill h-12 hover:scale-105 hover:shadow-[0_15px_35px_rgba(96,165,250,0.3)] transition-all duration-300">
-                  Send Message
+                {status.state === 'success' && (
+                  <p className="text-emerald-400">{status.message}</p>
+                )}
+                {status.state === 'error' && (
+                  <p className="text-red-400">{status.message}</p>
+                )}
+                <Button type="submit" disabled={status.state === 'loading'} className="w-full button-pill h-12 hover:scale-105 hover:shadow-[0_15px_35px_rgba(96,165,250,0.3)] transition-all duration-300">
+                  {status.state === 'loading' ? 'Sending…' : 'Send Message'}
                 </Button>
               </form>
             </CardContent>

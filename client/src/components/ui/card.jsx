@@ -5,23 +5,23 @@ const Card = ({ className = '', ...props }) => (
 );
 
 const CardHeader = ({ className = '', ...props }) => (
-  <div className={`flex flex-col space-y-1.5 p-6 group-hover:bg-white/5 transition-all duration-300 rounded-t-xl ${className}`} {...props} />
+  <div className={`flex flex-col space-y-1.5 p-4 sm:p-6 group-hover:bg-white/5 transition-all duration-300 rounded-t-xl ${className}`} {...props} />
 );
 
 const CardTitle = ({ className = '', ...props }) => (
-  <h3 className={`text-xl font-semibold leading-none tracking-tight text-white group-hover:text-cyan-100 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.4)] transition-all duration-300 ${className}`} {...props} />
+  <h3 className={`text-lg sm:text-xl font-semibold leading-none tracking-tight text-white group-hover:text-cyan-100 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.4)] transition-all duration-300 ${className}`} {...props} />
 );
 
 const CardDescription = ({ className = '', ...props }) => (
-  <p className={`text-sm text-white/70 group-hover:text-cyan-200/80 group-hover:drop-shadow-[0_0_4px_rgba(6,182,212,0.3)] transition-all duration-300 ${className}`} {...props} />
+  <p className={`text-xs sm:text-sm text-white/70 group-hover:text-cyan-200/80 group-hover:drop-shadow-[0_0_4px_rgba(6,182,212,0.3)] transition-all duration-300 ${className}`} {...props} />
 );
 
 const CardContent = ({ className = '', ...props }) => (
-  <div className={`p-6 pt-0 ${className}`} {...props} />
+  <div className={`p-4 sm:p-6 pt-0 ${className}`} {...props} />
 );
 
 const CardFooter = ({ className = '', ...props }) => (
-  <div className={`flex items-center p-6 pt-0 ${className}`} {...props} />
+  <div className={`flex items-center p-4 sm:p-6 pt-0 ${className}`} {...props} />
 );
 
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };

@@ -9,10 +9,10 @@ const PoliciesContent = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const policies = defaultPolicies;
   const stats = [
-    { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-emerald-500/20 to-emerald-400/20", iconColor: "text-emerald-400" },
+    { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
     { title: "Active Coverage", value: "₹50,000", icon: DollarSign, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
-    { title: "Monthly Premium", value: "₹120", icon: CreditCard, color: "from-purple-500/20 to-purple-400/20", iconColor: "text-purple-400" },
-    { title: "Claims This Year", value: "2", icon: FileText, color: "from-amber-500/20 to-amber-400/20", iconColor: "text-amber-400" }
+    { title: "Monthly Premium", value: "₹120", icon: CreditCard, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
+    { title: "Claims This Year", value: "2", icon: FileText, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" }
   ];
 
   return (
@@ -22,7 +22,7 @@ const PoliciesContent = () => {
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl glass shine"><Shield className="w-8 h-8 text-cyan-400" /></div>
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">My <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">Policies</span></h1>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">My <span className="text-blue-400">Policies</span></h1>
               <p className="text-xl text-gray-300 mt-2">Manage and view all your insurance policies</p>
             </div>
           </div>
@@ -117,7 +117,7 @@ const PoliciesContent = () => {
                     </div>
                   </div>
                   <div className="flex gap-4 pt-4 border-t border-white/10">
-                    <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"><CreditCard className="w-4 h-4 mr-2" />Pay Premium</Button>
+                    <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"><CreditCard className="w-4 h-4 mr-2" />Pay Premium</Button>
                     <Button variant="outline" className="hover:bg-white/10"><FileText className="w-4 h-4 mr-2" />Submit Claim</Button>
                     <Button variant="outline" className="hover:bg-white/10"><BarChart3 className="w-4 h-4 mr-2" />View Analytics</Button>
                   </div>
@@ -131,10 +131,10 @@ const PoliciesContent = () => {
       {policies.length === 0 && (
         <Card className="glass shine border-white/10 text-center py-12">
           <CardContent>
-            <div className="p-6 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 w-24 h-24 mx-auto mb-6 flex items-center justify-center"><Shield className="w-12 h-12 text-blue-400" /></div>
+            <div className="p-6 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 w-24 h-24 mx-auto mb-6 flex items-center justify-center"><Shield className="w-12 h-12 text-blue-400" /></div>
             <h3 className="text-2xl font-bold text-white mb-4">No Policies Found</h3>
             <p className="text-white/60 mb-6">You don't have any active insurance policies yet.</p>
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"><Shield className="w-4 h-4 mr-2" />Get Your First Policy</Button>
+            <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"><Shield className="w-4 h-4 mr-2" />Get Your First Policy</Button>
           </CardContent>
         </Card>
       )}
