@@ -193,3 +193,20 @@ html { scroll-behavior: smooth; }
 .hover-glow-cyan:hover { border-color: rgba(59, 130, 246, 0.35); box-shadow: 0 0 12px rgba(59, 130, 246, 0.25); }
 .hover-glow-cyan-subtle { transition: all 0.3s ease; }
 .hover-glow-cyan-subtle:hover { border-color: rgba(59, 130, 246, 0.25); box-shadow: 0 0 8px rgba(59, 130, 246, 0.2); background-color: rgba(255, 255, 255, 0.06); }
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Press/active dim interaction for common interactive elements */
+button, a, .glass, .card, .sidebar-item, .nav-link, .btn-primary, .button-pill, [role="button"] {
+  transition: filter 150ms ease;
+}
+button:active, a:active, .glass:active, .card:active, .sidebar-item:active, .nav-link:active, .btn-primary:active, .button-pill:active, [role="button"]:active {
+  filter: brightness(0.85);
+}

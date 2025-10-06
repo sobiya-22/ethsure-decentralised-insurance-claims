@@ -91,8 +91,8 @@ const CustomerDashboard = () => {
         );
     }
   };
-
-  const isFullPageView = ["kyc", "policies"].includes(currentView);
+  {/*remove double sidebar */}
+  const isFullPageView = ["kyc"].includes(currentView);
 
   return (
     <DashboardLayout

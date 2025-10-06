@@ -39,7 +39,8 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, onKY
 
   return (
     <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[400px] xs:w-[500px] sm:w-[600px] h-[400px] xs:h-[500px] sm:h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl pointer-events-none" />
+      {/*remove double scroll bar*/}
+      <div className="absolute -top-24 -right-24 w-[400px] xs:w-[500px] sm:w-[600px] h-[400px] xs:h-[500px] sm:h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-blue-400/10 to-blue-500/15 blur-3xl pointer-events-none" />
       <div className="relative z-10 space-y-4 sm:space-y-6 pt-8 sm:pt-12">
         {/* Header */}
         <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 xs:gap-4">

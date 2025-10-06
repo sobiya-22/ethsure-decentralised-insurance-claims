@@ -66,47 +66,89 @@ const About = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '600ms' }}>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Our Team</h2>
-          <p className="text-lg sm:text-xl text-gray-300">Meet the experts behind EthSure</p>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '800ms' }}>
-            <CardContent className="p-6">
-              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
-                <span className="text-2xl font-bold text-white">JD</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">John Doe</h3>
-              <p className="text-gray-400 mb-2">CEO & Founder</p>
-              <p className="text-gray-300 text-sm">Blockchain expert with 10+ years in insurance technology</p>
-            </CardContent>
-          </Card>
+     {/* ==== Our Team Section ==== */}
+<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+  <div
+    className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${
+      isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+    }`}
+    style={{ transitionDelay: '600ms' }}
+  >
+    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+      Our Team
+    </h2>
+    <p className="text-lg sm:text-xl text-gray-300">
+      Meet the brilliant minds behind EthSure
+    </p>
+  </div>
 
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1000ms' }}>
-            <CardContent className="p-6">
-              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-emerald-500/20 to-teal-500/20">
-                <span className="text-2xl font-bold text-white">JS</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Jane Smith</h3>
-              <p className="text-gray-400 mb-2">CTO</p>
-              <p className="text-gray-300 text-sm">Smart contract developer and DeFi specialist</p>
-            </CardContent>
-          </Card>
-
-          <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan text-center transform transition-all duration-700 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '1200ms' }}>
-            <CardContent className="p-6">
-              <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 bg-gradient-to-r from-purple-500/20 to-pink-500/20">
-                <span className="text-2xl font-bold text-white">MJ</span>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Mike Johnson</h3>
-              <p className="text-gray-400 mb-2">Head of Operations</p>
-              <p className="text-gray-300 text-sm">Insurance industry veteran with deep regulatory knowledge</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+  {/* Horizontal Scroll Container */}
+  <div className="flex overflow-x-auto space-x-6 pb-6 scrollbar-hide snap-x snap-mandatory">
+    {[
+      {
+        name: 'Sobiya Shaikh',
+        role: 'Project Team Leader',
+        img: '/Team/Sobiya_Shaikh.png',
+        linkedin: 'https://www.linkedin.com/in/sobiyashaikh/',
+      },
+      {
+        name: 'Sakshi Nehe',
+        role: 'Project Team Member',
+        img: '/Team/Sakshi_Nehe.jpg',
+        linkedin: 'https://www.linkedin.com/in/sakshi-nehe/',
+      },
+      {
+        name: 'Arundhati Sarvadnya',
+        role: 'Project Team Member',
+        img: '/Team/Arundhati_Sarvadnya.jpg',
+        linkedin: 'http://www.linkedin.com/in/arundhati-sarvadnya/',
+      },
+      {
+        name: 'Diksha Shejwal',
+        role: 'Project Team Member',
+        img: '/Team/Diksha_Shejwal.jpg',
+        linkedin: 'https://www.linkedin.com/in/diksha-shejwal/',
+      },
+    ].map((member, i) => (
+      <Card
+        key={i}
+        className={`min-w-[280px] sm:min-w-[320px] lg:min-w-[360px] glass shine border-white/10 hover:scale-105 hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)] transition-all duration-500 snap-center`}
+      >
+        <CardContent className="p-6 text-center">
+          <div className="relative w-32 h-32 mx-auto mb-4">
+            <img
+              src={member.img}
+              alt={member.name}
+              className="w-32 h-32 rounded-full object-cover border-2 border-white/20"
+            />
+            <a
+              href={member.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-1 right-1 bg-blue-500 p-2 rounded-full hover:bg-blue-600 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="white"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="none"
+                className="w-4 h-4"
+              >
+                <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.2V24H.4V8zm7.6 0h4v2.2h.06c.56-1.06 1.92-2.2 3.94-2.2 4.2 0 4.97 2.76 4.97 6.36V24h-4.2v-7.88c0-1.88-.04-4.3-2.62-4.3-2.64 0-3.04 2.06-3.04 4.18V24H8V8z" />
+              </svg>
+            </a>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-1">
+            {member.name}
+          </h3>
+          <p className="text-gray-400 text-sm mb-2">{member.role}</p>
+          <p className="text-gray-300 text-sm">{member.bio}</p>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+</div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
