@@ -51,9 +51,9 @@ const CustomerDashboard = () => {
 
   // Dynamic user object for sidebar/profile
   const user = {
-    name: customer?.name || "Customer",
+    name: customer?.customer_name || "Customer",
     role: "Customer",
-    email: customer?.email || "N/A",
+    email: customer?.customer_email || "N/A",
     wallet: address,
     company: customer?.company || "EthSure Insurance",
   };

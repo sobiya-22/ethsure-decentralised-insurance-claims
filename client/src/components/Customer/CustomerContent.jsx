@@ -50,7 +50,7 @@ const CustomerContent = ({ customer, kycStatus, onPayEMIClick, currentView, setC
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
                   Customer <span className="gradient-text">Dashboard</span>
                 </h1>
-                <p className="text-xl text-gray-300">Welcome back, {customer?.customer_name}</p>
+                <p className="text-xl text-gray-300">Welcome back, {customer?.customer_name || "Customer"}</p>
               </div>
             </div>
           </div>
