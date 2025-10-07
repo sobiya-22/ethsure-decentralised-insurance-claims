@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { X, User, Shield, DollarSign, FileText, CheckCircle } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView } from '@/constants/agentConstants';
+import { InlineLoader } from '@/components/ui/Loader';
 
 const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false }) => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
   const getCurrentView = () => getAgentCurrentView(location);
 
   const content = (
-    <div className="text-white w-full space-y-8 pt-20">
+    <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 xs:gap-6">
         <div className="space-y-2 xs:space-y-3">
           <div className="flex items-center gap-3 xs:gap-4">
@@ -100,7 +101,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
       <div className="space-y-6 animate-fadeInUp">
         {currentStep === 1 && (
           <div className="space-y-6">
-            <Card className="glass border-white/10 hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+            <Card className="glass border-white/10 hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white"><User className="w-5 h-5" />Select Customer</CardTitle>
               </CardHeader>
@@ -134,7 +135,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
 
         {currentStep === 2 && (
           <div className="space-y-6">
-            <Card className="glass border-white/10 hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+            <Card className="glass border-white/10 hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white"><Shield className="w-5 h-5" />Policy Details</CardTitle>
               </CardHeader>
@@ -188,7 +189,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
 
         {currentStep === 3 && (
           <div className="space-y-6">
-            <Card className="glass border-white/10 hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+            <Card className="glass border-white/10 hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white"><DollarSign className="w-5 h-5" />Payment & Risk Assessment</CardTitle>
               </CardHeader>
@@ -214,7 +215,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
               </CardContent>
             </Card>
 
-            <Card className="glass border-white/10 hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+            <Card className="glass border-white/10 hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white"><FileText className="w-5 h-5" />Policy Summary</CardTitle>
               </CardHeader>
@@ -243,7 +244,7 @@ const CreatePolicyModal = ({ isOpen, onClose, customers = [], withLayout = false
               </Button>
             ) : (
               <Button onClick={handleSubmit} disabled={isSubmitting} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl">
-                {isSubmitting ? 'Creating Policy...' : 'Create Policy'}
+                {isSubmitting ? <InlineLoader /> : 'Create Policy'}
               </Button>
             )}
           </div>

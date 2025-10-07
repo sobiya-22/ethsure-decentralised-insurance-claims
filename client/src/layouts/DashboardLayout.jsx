@@ -17,7 +17,7 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
   const handleUpdateProfile = (updatedData) => console.log('Profile updated:', updatedData);
 
   return (
-    <div className="min-h-screen bg-gray-900 relative pt-4">
+    <div className="min-h-screen relative pt-4">
       <div className="fixed inset-0 bg-grid opacity-100 pointer-events-none"></div>
       <div className="fixed top-20 left-20 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
       
@@ -41,17 +41,17 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
           topOffsetClass="top-20"
         />
         {!profileOpen && !fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} p-4 sm:p-6 lg:p-8 xl:p-12 pt-32 sm:pt-36 lg:pt-40`}>
-            <div className="max-w-7xl mx-auto">{children}</div>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} p-2 sm:p-4 lg:p-6 xl:p-8 pt-32 sm:pt-36 lg:pt-40 bg-transparent`}>
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {!profileOpen && fullPageView && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto max-h-screen`}>
-            <div className="max-w-8xl mx-auto">{children}</div>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-2 sm:p-4 lg:p-6 xl:p-8 overflow-hidden max-h-screen bg-transparent`}>
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {profileOpen && (
-          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto max-h-screen`}>
+          <main className={`flex-1 ${widthClass === 'w-76' ? 'ml-76' : 'ml-60'} pt-24 sm:pt-28 lg:pt-32 p-2 sm:p-4 lg:p-6 xl:p-8 overflow-y-auto max-h-screen bg-transparent`}>
             <div className="max-w-8xl mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
@@ -69,17 +69,17 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
           topOffsetClass="top-20"
         />
         {!profileOpen && !fullPageView && (
-          <main className="flex-1 ml-56 p-4 sm:p-6 pt-32 sm:pt-36">
-            <div className="max-w-6xl mx-auto">{children}</div>
+          <main className="flex-1 ml-56 p-2 sm:p-4 pt-32 sm:pt-36 bg-transparent">
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {!profileOpen && fullPageView && (
-          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-4 sm:p-6 overflow-y-auto max-h-screen">
-            <div className="max-w-6xl mx-auto">{children}</div>
+          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-2 sm:p-4 overflow-hidden max-h-screen bg-transparent">
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {profileOpen && (
-          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-4 sm:p-6 overflow-y-auto max-h-screen">
+          <main className="flex-1 ml-56 pt-24 sm:pt-28 p-2 sm:p-4 overflow-y-auto max-h-screen bg-transparent">
             <div className="max-w-6xl mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>
@@ -90,17 +90,17 @@ const DashboardLayout = ({ children, sidebarItems = [], user = { name: "John Doe
       {/* Mobile/Small Tablet Layout */}
       <div className="md:hidden">
         {!profileOpen && !fullPageView && (
-          <main className="p-3 xs:p-4 sm:p-6 pt-32 xs:pt-36">
-            <div className="max-w-full mx-auto">{children}</div>
+          <main className="p-2 xs:p-3 sm:p-4 pt-32 xs:pt-36 bg-transparent">
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {!profileOpen && fullPageView && (
-          <main className="pt-24 sm:pt-28 p-3 xs:p-4 sm:p-6 overflow-y-auto max-h-screen">
-            <div className="max-w-full mx-auto">{children}</div>
+          <main className="pt-24 sm:pt-28 p-2 xs:p-3 sm:p-4 overflow-hidden max-h-screen bg-transparent">
+            <div className="max-w-full mx-auto no-scrollbar">{children}</div>
           </main>
         )}
         {profileOpen && (
-          <main className="pt-24 sm:pt-28 p-3 xs:p-4 sm:p-6 overflow-y-auto max-h-screen">
+          <main className="pt-24 sm:pt-28 p-2 xs:p-3 sm:p-4 overflow-y-auto max-h-screen bg-transparent">
             <div className="max-w-full mx-auto">
               <Profile user={user} onUpdateProfile={handleUpdateProfile} onClose={() => setProfileOpen(false)} />
             </div>

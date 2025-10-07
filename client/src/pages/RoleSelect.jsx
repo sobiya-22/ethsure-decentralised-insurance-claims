@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageShell from '../components/PageShell';
+import { InlineLoader } from '../components/ui/Loader';
 // import { IdentityTokenButton } from '../lib/web3auth/auth';
 const RoleSelect = () => {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ const RoleSelect = () => {
             onClick={handleConfirm}
             className="bg-blue-600 hover:bg-blue-700 text-lg px-10 py-4"
           >
-            {loading ? "Processing..." : "Continue"}
+            {loading ? <InlineLoader /> : "Continue"}
           </Button>
           {!walletAddress && (
             <p className="text-red-400 text-sm mt-2">

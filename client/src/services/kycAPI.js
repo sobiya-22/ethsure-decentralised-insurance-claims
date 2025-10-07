@@ -18,9 +18,6 @@ const resendKYCOTP = async (wallet_address) => {
   return res;
 };
 
-// Check KYC status
-import api from "./api";
-
 // ✅ Check KYC status
 export const checkKYCStatus = async (wallet_address, user_role) => {
   const res = await api.post("/kyc/status", {
@@ -30,4 +27,4 @@ export const checkKYCStatus = async (wallet_address, user_role) => {
   return res.data;
 };
 
-export { sendKYCOTP, verifyKYCOTP, resendKYCOTP, checkKYCStatus };
+export { sendKYCOTP, verifyKYCOTP, resendKYCOTP };

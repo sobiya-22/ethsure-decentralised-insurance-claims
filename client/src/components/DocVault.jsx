@@ -56,7 +56,7 @@ const DocVault = ({ user }) => {
   const actionButtonClass = "border-white/20 text-white hover:bg-white/10 transition-all duration-200";
 
   return (
-    <div className="space-y-6 pt-20">
+    <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-3">

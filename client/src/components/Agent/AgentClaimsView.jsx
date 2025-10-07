@@ -39,7 +39,7 @@ const AgentClaimsView = ({ withLayout = false }) => {
   const getCurrentView = () => getAgentCurrentView(location);
 
   const content = (
-    <div className="space-y-6 pt-20">
+    <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ const AgentClaimsView = ({ withLayout = false }) => {
         ))}
       </div>
 
-      <Card className="hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+      <Card className="hover:border-blue-400/50 transition-all duration-300">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 font-bold"><FileText className="w-5 h-5 font-bold" />All Claims</CardTitle>

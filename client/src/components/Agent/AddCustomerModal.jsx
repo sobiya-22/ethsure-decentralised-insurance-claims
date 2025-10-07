@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { X, UserPlus, Shield, Phone } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, commonClasses } from '@/constants/agentConstants';
+import { InlineLoader } from '@/components/ui/Loader';
 
 const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false }) => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false
   const getCurrentView = () => 'customers';
 
   const content = (
-    <div className="text-white w-full space-y-8 pt-12">
+    <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">
@@ -125,7 +126,7 @@ const AddCustomerModal = ({ isOpen, onClose, onCustomerAdded, withLayout = false
 
         <div className="flex justify-end gap-3 pt-4">
           <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
-          <Button type="submit" disabled={isSubmitting} className={commonClasses.buttonClass}>{isSubmitting ? 'Adding Customer...' : 'Add Customer'}</Button>
+          <Button type="submit" disabled={isSubmitting} className={commonClasses.buttonClass}>{isSubmitting ? <InlineLoader /> : 'Add Customer'}</Button>
         </div>
       </form>
     </div>

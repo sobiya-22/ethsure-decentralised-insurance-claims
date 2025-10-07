@@ -1,14 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { getRoleFromToken, isLoggedIn } from "../utils/decodeJWT";
-import { useAuth } from "./AuthContext"; 
+import { useAuth } from "./AuthContext";
+import { FullPageLoader } from "../components/ui/Loader"; 
 
 export default function ProtectedRoute({ children, allowedRoles }) {
   const { token, loading } = useAuth();
 
   // Still restoring session , show loader
   if (loading) {
-    return <div>Loading...</div>; 
+    return <FullPageLoader message="Authenticating your session..." />; 
   }
 
   // Not logged in , redirect to login

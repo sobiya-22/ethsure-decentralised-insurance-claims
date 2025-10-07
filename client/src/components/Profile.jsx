@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Edit2, Save, X, User, Shield, FileText, Settings, Bell, Lock, Upload, AlertCircle, Key, Eye, EyeOff, Fingerprint, Copy, Check } from 'lucide-react';
 import DocVault from './DocVault';
+import { CardLoader } from '@/components/ui/Loader';
 import { getCustomer, updateCustomer } from '../services/customerAPI';
 import { getAgent, updateAgent } from '../services/agentAPI';
 
@@ -385,17 +386,14 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
 
   if (loading) {
     return (
-      <div className="text-white w-full space-y-8 pt-12 flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading profile...</p>
-        </div>
+      <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 flex items-center justify-center min-h-[400px]">
+        <CardLoader />
       </div>
     );
   }
 
   return (
-    <div className="text-white w-full space-y-8 pt-20">
+    <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-8">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-3">

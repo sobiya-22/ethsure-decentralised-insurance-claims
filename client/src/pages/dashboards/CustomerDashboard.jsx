@@ -5,6 +5,7 @@ import PayEMIContent from "@/components/Customer/PayEMIContent";
 import PoliciesContent from "@/components/Customer/PoliciesContent";
 import AgentKYCForm from "@/components/AgentKYCForm";
 import DocVault from "@/components/DocVault";
+import { FullPageLoader } from "@/components/ui/Loader";
 import { Users, FileText, Folder, CreditCard } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
   const [kycStatus, setKycStatus] = useState(null);
   const [currentView, setCurrentView] = useState("overview");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -24,7 +26,7 @@ const CustomerDashboard = () => {
         navigate("/");
         return;
       }
-        // setLoading(true);
+        setLoading(true);
       try {
         const response = await getCustomer(address.toLowerCase());
         const customerData = response.data?.data?.customer || response.data?.data;
@@ -42,14 +44,14 @@ const CustomerDashboard = () => {
       } catch (err) {
         console.error("Error fetching customer:", err);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchCustomerData();
   }, [isConnected, address, navigate]);
 
-  // if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+  if (loading) return <FullPageLoader message="Loading your customer dashboard..." />;
 
   // Dynamic user object for sidebar/profile
   const user = {

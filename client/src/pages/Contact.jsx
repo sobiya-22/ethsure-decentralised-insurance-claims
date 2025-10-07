@@ -10,8 +10,7 @@ import { sendContactEmail } from '@/utils/email';
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
+    setTimeout(() => setIsVisible(true), 100);
   }, []);
 
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -33,22 +32,34 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen text-white w-full relative overflow-hidden pt-20">
+    <div className="min-h-screen text-white w-full relative overflow-y-auto pt-20 no-scrollbar">
       <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl pointer-events-none" />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+        <div className={`text-center mb-8 sm:mb-12 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-            Get in <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">Touch</span>
+            Get in <span className="gradient-text">Touch</span>
           </h1>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 mb-8">
             Have questions about our services? Want to learn more about blockchain insurance? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </p>
+          
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <div className="glass border border-white/10 rounded-full px-4 py-2 text-sm text-gray-200">
+              📧 Quick Response
+            </div>
+            <div className="glass border border-white/10 rounded-full px-4 py-2 text-sm text-gray-200">
+              🔒 Secure Communication
+            </div>
+            <div className="glass border border-white/10 rounded-full px-4 py-2 text-sm text-gray-200">
+              💬 24/7 Support
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <Card className={`glass shine border-white/10 hover-scale-105 hover-glow-cyan transform transition-all duration-500 relative z-10 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-50px] opacity-0'}`} style={{ transitionDelay: '200ms' }}>
             <CardHeader>
@@ -90,7 +101,7 @@ const Contact = () => {
 
           <div className={`space-y-8 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[50px] opacity-0'}`} style={{ transitionDelay: '400ms' }}>
             <div className="transform transition-all duration-700 ease-out hover:scale-105">
-              <h2 className="text-3xl font-bold text-white mb-6">Contact Information</h2>
+              <h2 className="text-3xl font-bold gradient-text mb-6">Contact Information</h2>
               <p className="text-gray-300 text-lg mb-8">
                 We're here to help and answer any questions you might have. We look forward to hearing from you.
               </p>

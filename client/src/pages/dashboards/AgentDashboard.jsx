@@ -4,6 +4,7 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import AgentContent from "@/components/Agent/AgentContent";
 import KYCForm from "@/components/KYCForm";
 import DocVault from "@/components/DocVault";
+import { FullPageLoader } from "@/components/ui/Loader";
 import { Home, Users, FileText, Folder } from "lucide-react";
 import { useAccount } from "wagmi";
 
@@ -71,16 +72,15 @@ const AgentDashboard = () => {
     }
   }, [location.search]);
 
-  if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+  if (loading) return <FullPageLoader message="Loading your agent dashboard..." />;
 
   // Dynamic user object
   const user = {
-    name: agent?.name || "Agent",
+    name: agent?.agent_name || agent?.name || "Agent",
     role: "Agent",
-    email: agent?.email || "agent@example.com",
+    email: agent?.agent_email || agent?.email || "agent@example.com",
     wallet: address,
     company: agent?.company || "EthSure",
-    // TODO: add more dynamic fields if available in backend
   };
 
   const sidebarItems = [
@@ -96,7 +96,6 @@ const AgentDashboard = () => {
     if (path.includes('/claims')) return 'claims';
     return currentView;
   };
-
 
   const renderContent = () => {
     switch (currentView) {
@@ -116,7 +115,11 @@ const AgentDashboard = () => {
       case 'docvault':
         return <DocVault user={user} />;
       default:
-        return <AgentContent onNavigateToCustomers={() => navigate('/agent/customers')} customers={customers} />;
+        return <AgentContent 
+          agent={agent} 
+          onNavigateToCustomers={() => navigate('/agent/customers')} 
+          customers={customers} 
+        />;
     }
   };
 

@@ -19,9 +19,8 @@ const PayEMIContent = () => {
     return <PaymentMethodContent onBack={() => setShowPaymentMethods(false)} />;
   }
   return (
-    <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-blue-400/10 to-blue-500/15 blur-3xl" />
-      <div className="relative z-10 space-y-6 pt-20">
+    <div className="text-white w-full relative bg-transparent">
+      <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -39,9 +38,8 @@ const PayEMIContent = () => {
             </div>
           </div>
         </div>
-        <Card className="border-blue-500/40 bg-gradient-to-r from-blue-500/15 via-blue-500/10 to-blue-500/15 hover:border-blue-400/60 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-blue-500/5 to-blue-500/5 animate-pulse"></div>
-          <CardContent className="p-6 relative z-10">
+        <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
+          <CardContent className="p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-500/20 border border-blue-500/30 group-hover:from-blue-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
                 <AlertCircle className="w-6 h-6 text-blue-400 group-hover:text-blue-300 transition-colors duration-300 animate-pulse" />
@@ -64,7 +62,7 @@ const PayEMIContent = () => {
                 </div>
               </div>
               <Button 
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transition-all duration-300 transition-all duration-300 px-6 py-3 text-base font-semibold rounded-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                 onClick={() => setShowPaymentMethods(true)}
               >
                 <CreditCard className="w-4 h-4 mr-2" />
@@ -76,7 +74,7 @@ const PayEMIContent = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-2">
           {stats.map((stat, index) => (
-            <Card key={index} className="glass shine group hover:scale-[1.02] transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10">
+            <Card key={index} className="glass shine group hover:scale-[1.02] transition-all duration-300 hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
@@ -94,7 +92,7 @@ const PayEMIContent = () => {
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-2">
           <div className="xl:col-span-2">
-            <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300 hover:scale-[1.01]">
+            <Card className="glass shine hover:border-blue-400/50 transition-all duration-300 hover:scale-[1.01]">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" />Payment Options</CardTitle>
@@ -121,18 +119,12 @@ const PayEMIContent = () => {
                     </div>
                     <div className="pt-4 border-t border-white/10">
                       <h4 className="text-white font-medium mb-3">Payment Methods</h4>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 gap-3">
                         <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-center hover:bg-white/10 hover:border-blue-400/30 transition-all duration-300 hover:scale-[1.02] group">
                           <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30 transition-colors duration-300">
                             <CreditCard className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                           </div>
                           <p className="text-white text-sm group-hover:text-blue-100 transition-colors duration-300">Credit Card</p>
-                        </div>
-                        <div className="p-3 rounded-lg bg-white/5 border border-white/10 text-center hover:bg-white/10 hover:border-purple-400/30 transition-all duration-300 hover:scale-[1.02] group">
-                          <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/30 transition-colors duration-300">
-                            <Wallet className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
-                          </div>
-                          <p className="text-white text-sm group-hover:text-purple-100 transition-colors duration-300">Crypto Wallet</p>
                         </div>
                       </div>
                     </div>
@@ -142,7 +134,7 @@ const PayEMIContent = () => {
             </Card>
           </div>
           <div className="space-y-6">
-            <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+            <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2"><History className="w-5 h-5" />Payment History</CardTitle>
               </CardHeader>

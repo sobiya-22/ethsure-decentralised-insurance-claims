@@ -13,9 +13,8 @@ const CompanyContent = () => {
   const claimsData = defaultClaimsData;
 
   return (
-    <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 pt-20">
+    <div className="text-white w-full relative bg-transparent">
+      <div className="px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="space-y-2">
@@ -34,7 +33,6 @@ const CompanyContent = () => {
               <p className="text-sm text-gray-400">Wallet Address</p>
               <p className="text-white font-mono text-sm">{company.wallet}</p>
             </div>
-            <div className="p-2 rounded-lg glass"><Wallet className="w-6 h-6 text-emerald-400" /></div>
           </div>
         </div>
 

@@ -16,7 +16,7 @@ const PoliciesContent = () => {
   ];
 
   return (
-    <div className="text-white w-full space-y-8 pt-20">
+    <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">

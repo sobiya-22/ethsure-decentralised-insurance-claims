@@ -71,11 +71,8 @@ const AgentContent = ({
 
 
   return (
-    <div className="text-white w-full relative">
-      {/* Background Grid */}
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/15 via-blue-400/10 to-blue-500/15 blur-3xl" />
-      
-      <div className="relative z-10 space-y-6 pt-20">
+    <div className="text-white w-full relative bg-transparent">
+      <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
@@ -88,7 +85,7 @@ const AgentContent = ({
                   Agent <span className="gradient-text">Dashboard</span>
                 </h1>
                 <p className="text-xl text-gray-300">
-                  Welcome back, {agent.name}
+                  Welcome back, {agent?.agent_name || agent?.name || "Agent"}
                 </p>
               </div>
             </div>
@@ -103,9 +100,8 @@ const AgentContent = ({
         </div>
 
       {/* KYC Alert */}
-      <Card className="border-cyan-500/40 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-purple-500/15 hover:border-cyan-400/60 hover:shadow-xl hover:shadow-cyan-500/20 transition-all duration-300 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 animate-pulse"></div>
-        <CardContent className="p-6 relative z-10">
+      <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
+        <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-all duration-300 shadow-lg">
               <AlertCircle className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors duration-300 animate-pulse" />
@@ -129,7 +125,7 @@ const AgentContent = ({
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stats.map((stat, index) => (
-          <Card key={index} className="glass shine group hover:scale-105 transition-transform duration-200">
+          <Card key={index} className="glass shine hover:border-blue-400/50 transition-all duration-300 group hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
@@ -153,7 +149,7 @@ const AgentContent = ({
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Claims Management - Takes 2 columns */}
         <div className="xl:col-span-2 space-y-6">
-          <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+          <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 font-bold">
@@ -207,7 +203,7 @@ const AgentContent = ({
         {/* Sidebar - Takes 1 column */}
         <div className="space-y-6">
           {/* Customer Portfolio */}
-          <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+          <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2 font-bold">
@@ -218,37 +214,42 @@ const AgentContent = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {agent.customers.map((customer) => (
-                  <div
-                    key={customer.id}
-                    className="p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer group"
-                    onClick={() => handleViewCustomer(customer)}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-white text-sm">{customer.name}</span>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          customer.status === 'Active' ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/30' : 'text-gray-300 bg-gray-700/50'
-                        }`}>
-                          {customer.status}
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewCustomer(customer);
-                          }}
-                        >
-                          <Eye className="w-3 h-3" />
-                        </Button>
+                {customers && customers.length > 0 ? (
+                  customers.map((customer, index) => (
+                    <div
+                      key={customer.id || index}
+                      className="p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer group"
+                      onClick={() => handleViewCustomer(customer)}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-white text-sm">{customer.customer_name || customer.name || `Customer ${index + 1}`}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-1 rounded-full text-xs font-medium text-emerald-400 bg-emerald-500/20 border border-emerald-500/30">
+                            Active
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewCustomer(customer);
+                            }}
+                          >
+                            <Eye className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
+                      <p className="text-white/70 text-xs mb-1">{customer.policy_type || "Insurance Policy"}</p>
+                      <p className="text-gray-300 text-sm font-semibold">{customer.premium_amount || "Premium Amount"}</p>
                     </div>
-                    <p className="text-white/70 text-xs mb-1">{customer.policy}</p>
-                    <p className="text-gray-300 text-sm font-semibold">{customer.premium}</p>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-400">No customers assigned yet</p>
                   </div>
-                ))}
+                )}
                 <Button 
                   variant="outline" 
                   className="w-full mt-4" 
@@ -259,7 +260,7 @@ const AgentContent = ({
                     }
                   }}
                 >
-                  View All Customers ({agent.customers.length})
+                  View All Customers ({customers?.length || 0})
                 </Button>
               </div>
             </CardContent>
@@ -267,7 +268,7 @@ const AgentContent = ({
 
 
           {/* Quick Actions */}
-          <Card className="glass shine hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+          <Card className="glass shine hover:border-blue-400/50 transition-all duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-bold">
                 <Plus className="w-5 h-5 font-bold" />

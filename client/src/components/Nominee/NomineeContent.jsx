@@ -13,16 +13,15 @@ const NomineeContent = () => {
   };
 
   return (
-    <div className="text-white w-full relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-gray-500/20 via-gray-400/10 to-gray-500/20 blur-3xl" />
-      <div className="relative z-10 pt-20">
+    <div className="text-white w-full relative bg-transparent">
+      <div className="px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl lg:text-4xl font-bold leading-tight mb-6 text-white">Nominee <span className="gradient-text">Dashboard</span></h1>
           <button onClick={() => window.location.assign('/')} className="button-pill glass nav-link">Logout</button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="glass shine ui-card lg:col-span-2 hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+          <Card className="glass shine ui-card lg:col-span-2 hover:border-blue-400/50 transition-all duration-300">
             <CardHeader><CardTitle className="font-bold">Policies You Are Nominee For</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -43,7 +42,7 @@ const NomineeContent = () => {
           </Card>
         </div>
 
-        <Card className="glass shine ui-card hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+        <Card className="glass shine ui-card hover:border-blue-400/50 transition-all duration-300">
           <CardHeader><CardTitle className="font-bold">What can a nominee do?</CardTitle></CardHeader>
           <CardContent>
             <ul className="list-disc pl-6 space-y-1 text-white">
