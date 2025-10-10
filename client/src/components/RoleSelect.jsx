@@ -14,8 +14,7 @@ const RoleSelect = () => {
     const roles = [
         { id: 'customer', name: 'Customer' },
         { id: 'agent', name: 'Agent' },
-        // { id: 'nominee', name: 'Nominee' },
-
+        { id: 'nominee', name: 'Nominee' },
         // ---! do not add any company in role select,
         // since there's one company there acc creation should be hidden!---
     ];
@@ -31,7 +30,7 @@ const RoleSelect = () => {
             let profile_photo_url = userInfo?.profileImage;
             console.log(wallet_address, " ", name, " ", selectedRole, " ", profile_photo_url);
             const res = await assignRole(wallet_address, selectedRole, name, profile_photo_url);
-            console.log(res);
+            // console.log(res);
             navigate(`/${res}-dashboard`);
         }
     };

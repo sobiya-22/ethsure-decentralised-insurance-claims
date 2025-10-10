@@ -6,8 +6,8 @@ export const getRoleFromToken = () => {
 
   try {
     const decoded = jwtDecode(token); // full token object
-      console.log("Decoded token:", decoded);
-      console.log('Decoded role: ', decoded?.sub.role);
+      // console.log("Decoded token:", decoded);
+      // console.log('Decoded role: ', decoded?.sub.role);
     return decoded.sub?.role || null; // access role inside sub
   } catch (err) {
     console.error("Invalid token", err);

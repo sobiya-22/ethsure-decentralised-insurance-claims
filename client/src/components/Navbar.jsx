@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
+import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser, useWeb3Auth } from "@web3auth/modal/react";
 import { useAccount } from 'wagmi';
 import { useAuth } from "../context/AuthContext";
 import { Menu, X } from 'lucide-react';
@@ -12,24 +12,25 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { login, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  const connectUser = async() => {
+  const { user } = useAuth();
+  const connectUser = async () => {
     try {
       const res = await login();
       if (res) {
         navigate(`./${res.role}-dashboard`);
-      } 
+        console.log('Stored user data context', user);
+      }
     } catch (error) {
       console.error("Connection failed:", error);
     }
   };
-    const logou = () => {
-      try {
-        logout();
-        navigate("/");
-      } catch (error) {
-        console.error("Disconnection failed:", error);
-      }
+  const logou = () => {
+    try {
+      logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Disconnection failed:", error);
+    }
   }
   return (
     <nav className="glass-effect border-b border-white/10 fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full">
@@ -40,7 +41,7 @@ const Navbar = () => {
           </div>
           <span className="text-lg xs:text-xl sm:text-2xl font-bold gradient-text">EthSure</span>
         </div>
-        
+
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-2">
           <Link to="/" className="nav-link px-3 xl:px-4 py-2 text-sm xl:text-base rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Home</Link>
@@ -48,7 +49,7 @@ const Navbar = () => {
           <Link to="/services" className="nav-link px-3 xl:px-4 py-2 text-sm xl:text-base rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Services</Link>
           <Link to="/contact" className="nav-link px-3 xl:px-4 py-2 text-sm xl:text-base rounded-full border border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300">Contact</Link>
         </div>
-        
+
         {/* Action buttons */}
         <div className="flex items-center space-x-2 xs:space-x-3">
           {!isConnected && (
@@ -76,7 +77,7 @@ const Navbar = () => {
               Get Started
             </Button>
           </Link>
-          
+
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -86,7 +87,7 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      
+
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-white/10">

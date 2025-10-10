@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const BASE_URL = import.meta.env.VITE_BASE_URL;
-    console.log('Prinit base url: ', BASE_URL);
     // Restore session
     // useEffect(() => {
     //     const restoreSession = async () => {
@@ -61,7 +60,8 @@ export const AuthProvider = ({ children }) => {
 
             localStorage.setItem("token", res.data.token);
             setToken(res.data.token);
-            setUser(res.data);
+            setUser(res.data.userData);
+            console.log('token: ',token,'\nStored user data context', res.data);
             return { success: true, role: res.data.role };
         } catch (err) {
             console.error("Login failed:", err);
@@ -82,10 +82,11 @@ export const AuthProvider = ({ children }) => {
             name,
             profile_photo_url,
         });
-
+        navigate(`./${role}-dashboard`);
         localStorage.setItem("token", res.data.token);
         setToken(res.data.token);
-        setUser(res.data);
+        setUser(res.data.userData);
+        console.log('Stored user data context', user);
         return res.data.role;
     };
 
@@ -96,7 +97,9 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         navigate("/");
     };
-
+    useEffect(() => {
+        
+    });
     return (
         <AuthContext.Provider value={{
             user, token, login, assignRole, logout, connecting

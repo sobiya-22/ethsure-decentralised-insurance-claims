@@ -7,7 +7,10 @@ export default defineConfig({
         react(),
     ],
     server: {
-        port: 5173
+        port: 5173,
+        // headers: {
+        //     'Content-Security-Policy': "script-src 'self' 'unsafe-eval' https://client.crisp.chat https://www.googletagmanager.com https://*.web3auth.io https://browser.sentry-cdn.com https://js.sentry-cdn.com blob:",
+        // },
     },
     resolve: {
         alias: {
