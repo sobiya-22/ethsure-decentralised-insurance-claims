@@ -28,16 +28,13 @@ import DocVault from "./components/DocVault";
 import PaymentMethodContent from "./components/Customer/PaymentMethodContent";
 import PoliciesContent from "./components/Customer/PoliciesContent";
 import PayEMIContent from "./components/Customer/PayEMIContent";
-//admin
-// import AdminDashboard from "./pages/dashboards/AdminDashboard";
+
 import "./App.css";
 
 function App() {
   return (
       <Routes>
         <Route path="/" element={<Landing />} />
-
-        {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
@@ -63,9 +60,9 @@ function App() {
         <Route
           path="/company-dashboard"
           element={
-            // <ProtectedRoute allowedRoles={["company"]}>
+            <ProtectedRoute allowedRoles={["company"]}>
               <CompanyDashboard />
-            // </ProtectedRoute> 
+            </ProtectedRoute> 
           }
         />
 

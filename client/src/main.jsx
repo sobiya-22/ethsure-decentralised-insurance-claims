@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
-import { Provider } from "./context/Provider"; // your custom Provider
-
+import { Provider } from "./context/Provider"; 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider>

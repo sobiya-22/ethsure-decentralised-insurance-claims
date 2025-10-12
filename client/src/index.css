@@ -1,4 +1,5 @@
 @import './responsive.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,14 +20,14 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
 }
 #root { min-height: 100vh; width: 100%; }
 body {
-  background:
-    repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
-    repeating-linear-gradient(-45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
-    radial-gradient(1200px 600px at 50% -200px, rgba(59,130,246,0.10), transparent 60%),
+  background: 
+    repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px),
+    repeating-linear-gradient(-45deg, transparent, transparent 19px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px),
     linear-gradient(135deg, #0b1220 0%, #121826 50%, #0b0f1a 100%);
-  background-size: 40px 40px, 40px 40px, auto, auto;
-  background-position: 0 0, 0 0, 0 0, 0 0;
+  background-size: 40px 40px, 40px 40px, auto;
+  background-position: 0 0, 0 0, 0 0;
 }
+
 
 :root {
   --background: #111827; --foreground: #ffffff; --primary: #3b82f6; --primary-foreground: #ffffff;
