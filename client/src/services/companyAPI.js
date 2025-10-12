@@ -1,20 +1,58 @@
 import api from "./api";
 
+/* ---------- AGENT MANAGEMENT ---------- */
 
-// Approve agent association (company side)
-export const approveAgentAssociation = async (agent_wallet_address) => {
-  const res = await api.post("/company/approve-association", { agent_wallet_address });
-  return res;
+//Get all agents (any status)
+export const getAllAgents = async (company_wallet_address) => {
+  return await api.post("/company/agents", { company_wallet_address });
 };
 
-// Reject agent association (company side)
-export const rejectAgentAssociation = async (agent_wallet_address) => {
-  const res = await api.post("/company/reject-association", { agent_wallet_address });
-  return res;
+// Get agents with pending KYC
+export const getPendingKYCAgents = async (company_wallet_address) => {
+  return await api.post("/company/agents", {
+    company_wallet_address,
+    status: "pending_kyc",
+  });
 };
 
-// Get pending agent association requests
-export const getPendingAgentRequests = async () => {
-  const res = await api.get("/company/pending-association-requests");
-  return res;
+//Get approved agents
+export const getApprovedAgents = async (company_wallet_address) => {
+  return await api.post("/company/agents", {
+    company_wallet_address,
+    status: "approved",
+  });
+};
+
+// "pending_approval" = verified but not approved
+export const getPendingApprovalAgents = async (company_wallet_address) => {
+  return await api.post("/company/agents", {
+    company_wallet_address,
+    status: "pending_approval",
+  });
+};
+
+//Get rejected agents
+export const getRejectedAgents = async (company_wallet_address) => {
+  return await api.post("/company/agents", {
+    company_wallet_address,
+    status: "rejected",
+  });
+};
+
+//Approve specific agent
+export const approveAgent = async (company_wallet_address, agent_wallet_address) => {
+  return await api.patch("/company/agent-approval", {
+    company_wallet_address,
+    agent_wallet_address,
+    approve: true,
+  });
+};
+
+//Reject specific agent
+export const rejectAgent = async (company_wallet_address, agent_wallet_address) => {
+  return await api.patch("/company/agent-approval", {
+    company_wallet_address,
+    agent_wallet_address,
+    approve: false,
+  });
 };

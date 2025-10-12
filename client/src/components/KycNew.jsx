@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,9 +9,16 @@ import { useAccount } from "wagmi";
 import { InlineLoader } from "@/components/ui/Loader";
 
 // Import your service APIs
-import { submitAgentKYC } from "@/services/agentAPI";
 import { submitCustomerKYC } from "@/services/customerAPI";
-import { sendKYCOTP, verifyKYCOTP, resendKYCOTP } from "@/services/kycAPI";
+import { submitAgentKYC } from "@/services/agentAPI";
+import { 
+  sendCustomerKYCOTP, 
+  verifyCustomerKYCOTP, 
+  resendCustomerKYCOTP,
+  sendAgentKYCOTP,
+  verifyAgentKYCOTP,
+  resendAgentKYCOTP
+} from "@/services/kycAPI";
 
 const KycNew = ({ role = "customer", onClose }) => {
   const navigate = useNavigate();
@@ -31,36 +38,62 @@ const KycNew = ({ role = "customer", onClose }) => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [sendingOtp, setSendingOtp] = useState(false);
   const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
 
   // CSS classes for consistent styling
   const cardClass = "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-white/10 shadow-xl rounded-2xl overflow-hidden hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300";
   const inputClass = "w-full bg-gray-800 border border-gray-600 text-white placeholder:text-gray-400 p-3 text-base rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-200 focus:outline-none";
   const buttonClass = "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-8 py-3 text-lg rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed";
 
+  // Timer for resend OTP
+  useEffect(() => {
+    let interval;
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendTimer]);
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setErrors(prev => ({ ...prev, [field]: "" }));
   };
 
-  // OTP Functions
+  // OTP Functions based on role
   const handleSendOTP = async () => {
     if (!formData.phone.trim()) {
       setErrors(prev => ({ ...prev, phone: "Phone number is required to send OTP" }));
       return;
     }
 
+    if (!/^\d{10}$/.test(formData.phone)) {
+      setErrors(prev => ({ ...prev, phone: "Please enter a valid 10-digit phone number" }));
+      return;
+    }
+
     setSendingOtp(true);
     try {
-      const response = await sendKYCOTP(address.toLowerCase(), role, formData.phone);
-      if (response.data.success) {
+      const walletAddress = address.toLowerCase();
+      let response;
+
+      if (role === "agent") {
+        response = await sendAgentKYCOTP(walletAddress, formData.phone);
+      } else {
+        response = await sendCustomerKYCOTP(walletAddress, formData.phone);
+      }
+
+      if (response.success) {
         setOtpSent(true);
+        setResendTimer(60); // 60 seconds timer
         alert("OTP sent successfully to your mobile number!");
       } else {
-        alert("Failed to send OTP. Please try again.");
+        alert(response.message || "Failed to send OTP. Please try again.");
       }
     } catch (error) {
       console.error("OTP send error:", error);
-      alert("An error occurred while sending OTP. Please try again.");
+      alert(error.response?.data?.message || "An error occurred while sending OTP. Please try again.");
     } finally {
       setSendingOtp(false);
     }
@@ -72,18 +105,31 @@ const KycNew = ({ role = "customer", onClose }) => {
       return;
     }
 
+    if (otp.length !== 6) {
+      alert("Please enter a valid 6-digit OTP");
+      return;
+    }
+
     setVerifyingOtp(true);
     try {
-      const response = await verifyKYCOTP(address.toLowerCase(), otp);
-      if (response.data.success) {
+      const walletAddress = address.toLowerCase();
+      let response;
+
+      if (role === "agent") {
+        response = await verifyAgentKYCOTP(walletAddress, otp);
+      } else {
+        response = await verifyCustomerKYCOTP(walletAddress, otp);
+      }
+
+      if (response.success) {
         setOtpVerified(true);
         alert("OTP verified successfully!");
       } else {
-        alert("Invalid OTP. Please try again.");
+        alert(response.message || "Invalid OTP. Please try again.");
       }
     } catch (error) {
       console.error("OTP verify error:", error);
-      alert("An error occurred while verifying OTP. Please try again.");
+      alert(error.response?.data?.message || "An error occurred while verifying OTP. Please try again.");
     } finally {
       setVerifyingOtp(false);
     }
@@ -92,15 +138,25 @@ const KycNew = ({ role = "customer", onClose }) => {
   const handleResendOTP = async () => {
     setSendingOtp(true);
     try {
-      const response = await resendKYCOTP(address.toLowerCase());
-      if (response.data.success) {
+      const walletAddress = address.toLowerCase();
+      let response;
+
+      if (role === "agent") {
+        response = await resendAgentKYCOTP(walletAddress);
+      } else {
+        response = await resendCustomerKYCOTP(walletAddress);
+      }
+
+      if (response.success) {
+        setResendTimer(60); // Reset timer to 60 seconds
+        setOtp(""); // Clear previous OTP
         alert("OTP resent successfully!");
       } else {
-        alert("Failed to resend OTP. Please try again.");
+        alert(response.message || "Failed to resend OTP. Please try again.");
       }
     } catch (error) {
       console.error("OTP resend error:", error);
-      alert("An error occurred while resending OTP. Please try again.");
+      alert(error.response?.data?.message || "An error occurred while resending OTP. Please try again.");
     } finally {
       setSendingOtp(false);
     }
@@ -147,20 +203,20 @@ const KycNew = ({ role = "customer", onClose }) => {
         response = await submitCustomerKYC(kycData);
       }
 
-      if (response.data.success) {
+      if (response.data.success || response.success) {
         alert("KYC submitted successfully!");
         if (onClose) {
           onClose();
         } else {
-          // If no onClose callback, navigate to customer dashboard
-          navigate("/customer-dashboard");
+          // Navigate based on role
+          navigate(role === "agent" ? "/agent-dashboard" : "/customer-dashboard");
         }
       } else {
-        alert("Failed to submit KYC. Please try again.");
+        alert(response.data.message || response.message || "Failed to submit KYC. Please try again.");
       }
     } catch (error) {
       console.error("KYC submission error:", error);
-      alert("An error occurred while submitting KYC. Please try again.");
+      alert(error.response?.data?.message || "An error occurred while submitting KYC. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -203,6 +259,8 @@ const KycNew = ({ role = "customer", onClose }) => {
                     <p className="text-gray-400 text-sm">Please provide your basic details for verification</p>
                   </div>
                 </div>
+
+                {/* OTP Verification Card */}
                 {otpSent && !otpVerified && (
                   <Card className="glass border border-blue-500/30">
                     <CardContent className="p-6">
@@ -242,11 +300,17 @@ const KycNew = ({ role = "customer", onClose }) => {
                         <div className="flex justify-center">
                           <Button
                             onClick={handleResendOTP}
-                            disabled={sendingOtp}
+                            disabled={sendingOtp || resendTimer > 0}
                             variant="outline"
                             className="text-blue-400 border-blue-400/30 hover:bg-blue-400/10 px-4 py-2 rounded-lg transition-all duration-200"
                           >
-                            {sendingOtp ? <InlineLoader /> : "Resend OTP"}
+                            {sendingOtp ? (
+                              <InlineLoader />
+                            ) : resendTimer > 0 ? (
+                              `Resend OTP in ${resendTimer}s`
+                            ) : (
+                              "Resend OTP"
+                            )}
                           </Button>
                         </div>
                       </div>
@@ -299,8 +363,8 @@ const KycNew = ({ role = "customer", onClose }) => {
                      {!otpSent ? (
                        <Button
                          onClick={handleSendOTP}
-                         disabled={sendingOtp || !formData.phone.trim()}
-                         className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-4 py-3 rounded-xl transition-all duration-200 disabled:opacity-50"
+                         disabled={sendingOtp || !formData.phone.trim() || formData.phone.length !== 10}
+                         className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-4 py-3 rounded-xl transition-all duration-200 disabled:opacity-50 whitespace-nowrap"
                        >
                          {sendingOtp ? (
                            <InlineLoader />
@@ -311,7 +375,7 @@ const KycNew = ({ role = "customer", onClose }) => {
                      ) : (
                        <div className="flex items-center gap-2 px-3 py-3 rounded-xl bg-green-500/20 border border-green-500/30">
                          <Check className="w-4 h-4 text-green-400" />
-                         <span className="text-green-400 text-sm font-medium">OTP Sent</span>
+                         <span className="text-green-400 text-sm font-medium whitespace-nowrap">OTP Sent</span>
                        </div>
                      )}
                    </div>
