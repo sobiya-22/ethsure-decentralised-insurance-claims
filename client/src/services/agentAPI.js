@@ -20,7 +20,7 @@ export const getAgentPolicyRequests = async (wallet_address) => {
   return await api.post("/agent/policy-requests", { wallet_address });
 };
 
-//GET ALL POLICIES ASSIGNED TO AGENT
-export const getAllAgentPolicies = async (wallet_address) => {
-  return await api.post("/agent/all-policies", { wallet_address });
-};
+// //GET ALL POLICIES ASSIGNED TO AGENT
+// export const getAllAgentPolicies = async (wallet_address) => {
+//   return await api.post("/agent/all-policies", { wallet_address });
+// };
