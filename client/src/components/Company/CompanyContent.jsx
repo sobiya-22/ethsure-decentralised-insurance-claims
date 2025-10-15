@@ -28,12 +28,6 @@ const CompanyContent = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <p className="text-sm text-gray-400">Wallet Address</p>
-              <p className="text-white font-mono text-sm">{company.wallet}</p>
-            </div>
-          </div>
         </div>
 
         {/* Key Metrics */}

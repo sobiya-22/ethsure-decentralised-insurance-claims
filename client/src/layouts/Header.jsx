@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatFullWalletAddress } from '@/lib/utils';
 
 const Header = ({ user, onProfileClick }) => (
   <header className="glass-effect border-b border-white/10 fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -19,7 +20,7 @@ const Header = ({ user, onProfileClick }) => (
             </div>
           </button>
           <div className="text-white text-xs sm:text-sm hidden xs:block font-mono break-all">
-            {user?.wallet || '0x0000000000000000000000000000000000000000'}
+            {formatFullWalletAddress(user?.wallet)}
           </div>
         </div>
       </div>

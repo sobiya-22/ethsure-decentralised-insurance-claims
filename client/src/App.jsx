@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
+import { ToastProvider } from "./components/ui/toast-provider";
 
 // import Signup from "./pages/Signup";
 import CustomerDashboard from "./pages/dashboards/CustomerDashboard";
@@ -33,6 +34,7 @@ import "./App.css";
 
 function App() {
   return (
+    <ToastProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/about" element={<About />} />
@@ -108,7 +110,8 @@ function App() {
         onClose={() => window.history.back()} 
         />} />
 
-      </Routes>
+        </Routes>
+      </ToastProvider>
   );
 }
 

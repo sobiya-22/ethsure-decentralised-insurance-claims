@@ -18,6 +18,122 @@ html, body, #root, * {
 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
+
+/* Custom scrollbar for PolicyForm */
+.policy-form-scroll::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.policy-form-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.policy-form-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.policy-form-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure input fields are properly styled and functional */
+.policy-form input[type="text"],
+.policy-form input[type="email"],
+.policy-form input[type="tel"],
+.policy-form input[type="date"],
+.policy-form input[type="number"],
+.policy-form textarea {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.policy-form input[type="text"]:focus,
+.policy-form input[type="email"]:focus,
+.policy-form input[type="tel"]:focus,
+.policy-form input[type="date"]:focus,
+.policy-form input[type="number"]:focus,
+.policy-form textarea:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+  outline: none !important;
+}
+
+/* Select component styling */
+.policy-form [data-radix-select-content] {
+  background-color: #1f2937 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.policy-form [data-radix-select-item] {
+  color: white !important;
+}
+
+.policy-form [data-radix-select-item]:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.policy-form [data-radix-select-item][data-highlighted] {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Force input fields to be interactive */
+.policy-form input,
+.policy-form textarea {
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Ensure no overlays are blocking inputs */
+.policy-form * {
+  pointer-events: auto !important;
+}
+
+.policy-form input:focus,
+.policy-form textarea:focus {
+  pointer-events: auto !important;
+  z-index: 999 !important;
+}
+
+/* Override any global styles that might prevent input */
+.policy-form input[type="text"],
+.policy-form input[type="email"],
+.policy-form input[type="tel"],
+.policy-form input[type="date"],
+.policy-form input[type="number"],
+.policy-form textarea {
+  margin: 0 !important;
+  padding: 0.5rem !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  width: 100% !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: white !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  outline: none !important;
+  resize: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+.policy-form input[type="text"]:focus,
+.policy-form input[type="email"]:focus,
+.policy-form input[type="tel"]:focus,
+.policy-form input[type="date"]:focus,
+.policy-form input[type="number"]:focus,
+.policy-form textarea:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+  outline: none !important;
+}
 #root { min-height: 100vh; width: 100%; }
 body {
   background: 

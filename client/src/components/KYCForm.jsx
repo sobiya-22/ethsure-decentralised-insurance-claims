@@ -7,16 +7,33 @@ import { Input } from "@/components/ui/input";
 import { User, FileText, Check, AlertCircle, Smartphone, Key, Clock } from "lucide-react";
 import { useAccount } from "wagmi";
 
-import { 
-  sendCustomerKYCOTP, 
-  verifyCustomerKYCOTP, 
+import {
+  sendCustomerKYCOTP,
+  verifyCustomerKYCOTP,
   resendCustomerKYCOTP,
   sendAgentKYCOTP,
   verifyAgentKYCOTP,
   resendAgentKYCOTP
 } from "@/services/kycAPI";
-import { submitAgentKYC } from "@/services/agentAPI";
-import { submitCustomerKYC } from "@/services/customerAPI";
+
+// Wrapper functions to maintain compatibility with existing code
+const submitAgentKYC = async (kycData) => {
+  try {
+    await sendAgentKYCOTP(kycData.wallet_address, kycData.agent_phone);
+    return { success: true, message: "KYC process initiated" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const submitCustomerKYC = async (kycData) => {
+  try {
+    await sendCustomerKYCOTP(kycData.wallet_address, kycData.customer_phone);
+    return { success: true, message: "KYC process initiated" };
+  } catch (error) {
+    throw error;
+  }
+};
 
 const KYCForm = ({ role = "customer" }) => {
   const navigate = useNavigate();

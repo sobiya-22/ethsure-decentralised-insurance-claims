@@ -9,12 +9,12 @@ import { Home, Users, FileText, Folder } from "lucide-react";
 import { useAccount } from "wagmi";
 
 import {
-  getAgent,
-  checkAgentKYCStatus,
-  getAllAgents,
+  getAgentDetails,
+  getAllAgentPolicies,
 } from "../../services/agentAPI"; 
 
-import { getAllCustomers } from "../../services/customerAPI";
+import { getCustomer } from "../../services/customerAPI";
+import { checkAgentKYCStatus } from "../../services/kycAPI";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
@@ -36,8 +36,14 @@ const AgentDashboard = () => {
 
       try {
         // Get agent profile
-        const agentRes = await getAgent(address.toLowerCase());
+        const agentRes = await getAgentDetails(address.toLowerCase());
         const agentData = agentRes.data?.data;
+
+        console.log(" Agent Dashboard Debug:");
+        console.log("  - Full response:", agentRes);
+        console.log("  - Agent data:", agentData);
+        console.log("  - Agent name:", agentData?.agent_name);
+
         setAgent(agentData);
 
         // Check agent KYC status
@@ -50,7 +56,7 @@ const AgentDashboard = () => {
         }
 
         // Fetch all customers for agent dashboard
-        const customerRes = await getAllCustomers();
+        const customerRes = await getCustomer();
         setCustomers(customerRes.data?.data || []);
 
       } catch (err) {
@@ -85,15 +91,23 @@ const AgentDashboard = () => {
 
   const sidebarItems = [
     { id: 'overview', icon: Home, label: 'Overview', onClick: () => setCurrentView('overview') },
-    { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
-    { id: 'claims', icon: FileText, label: 'Claims', onClick: () => navigate('/agent/claims') },
+    // Commented out customers navigation - replaced with policy management
+    // { id: 'customers', icon: Users, label: 'Customers', onClick: () => navigate('/agent/customers') },
+    { id: 'policy-management', icon: FileText, label: 'Policy Management', onClick: () => setCurrentView('policy-management') },
+    // Commented out policy requests - redundant with overview
+    // { id: 'policy-requests', icon: FileText, label: 'Policy Requests', onClick: () => setCurrentView('overview') },
     { id: 'docvault', icon: Folder, label: 'DocVault', onClick: () => setCurrentView('docvault') },
   ];
 
   const getCurrentView = () => {
     const path = location.pathname;
-    if (path.includes('/customers')) return 'customers';
-    if (path.includes('/claims')) return 'claims';
+    // Commented out customers handling - replaced with policy management
+    // if (path.includes('/customers')) return 'customers';
+    if (path.includes('/policy-management')) return 'policy-management';
+    // Commented out claims handling - now focusing on policy requests
+    // if (path.includes('/claims')) return 'claims';
+    // Commented out policy requests handling - redundant with overview
+    // if (path.includes('/policy-requests')) return 'policy-requests';
     return currentView;
   };
 
@@ -114,6 +128,42 @@ const AgentDashboard = () => {
         );
       case 'docvault':
         return <DocVault user={user} />;
+      case 'policy-management':
+        return (
+          <div className="text-white w-full relative bg-transparent">
+            <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg glass">
+                      <FileText className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                        Policy <span className="gradient-text">Management</span>
+                      </h1>
+                      <p className="text-xl text-gray-300">
+                        Manage your active policies and claim settlements
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Placeholder content for policy management */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="glass border border-blue-500/30 p-6 rounded-lg">
+                  <h3 className="text-xl font-bold text-white mb-4">Active Policies</h3>
+                  <p className="text-gray-400">Your active policies will be displayed here.</p>
+                </div>
+                <div className="glass border border-green-500/30 p-6 rounded-lg">
+                  <h3 className="text-xl font-bold text-white mb-4">Claim Settlements</h3>
+                  <p className="text-gray-400">Claim settlement information will be displayed here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return <AgentContent 
           agent={agent} 

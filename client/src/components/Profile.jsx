@@ -7,7 +7,8 @@ import { Edit2, Save, X, User, Shield, FileText, Settings, Bell, Lock, Upload, A
 import DocVault from './DocVault';
 import { CardLoader } from '@/components/ui/Loader';
 import { getCustomer, updateCustomer } from '../services/customerAPI';
-import { getAgent, updateAgent } from '../services/agentAPI';
+import { getAgentDetails, updateAgentProfile } from '../services/agentAPI';
+import { formatWalletAddress, formatFullWalletAddress } from '@/lib/utils';
 
 const Profile = ({ user, onUpdateProfile, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,6 +35,12 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
         if (user.role.toLowerCase() === 'customer') {
           response = await getCustomer(user.wallet.toLowerCase());
           const customerData = response.data?.data?.customer || response.data?.data || {};
+          
+          console.log("🔍 Profile Customer Debug:");
+          console.log("  - Full response:", response);
+          console.log("  - Customer data:", customerData);
+          console.log("  - Customer name:", customerData.customer_name);
+          
           setFormData({
             name: customerData.customer_name || '',
             email: customerData.customer_email || '',
@@ -53,8 +60,14 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
             riskProfile: customerData.risk_profile || 'Medium'
           });
         } else if (user.role.toLowerCase() === 'agent') {
-          response = await getAgent(user.wallet.toLowerCase());
+          response = await getAgentDetails(user.wallet.toLowerCase());
           const agentData = response.data?.data || {};
+          
+          console.log("🔍 Profile Agent Debug:");
+          console.log("  - Full response:", response);
+          console.log("  - Agent data:", agentData);
+          console.log("  - Agent name:", agentData.agent_name);
+          
           setFormData({
             name: agentData.agent_name || '',
             email: agentData.agent_email || '',
@@ -142,7 +155,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
           // experience: formData.experience,
           // risk_profile: formData.riskProfile
         };
-        response = await updateAgent(user.wallet.toLowerCase(), updateData);
+        response = await updateAgentProfile(user.wallet.toLowerCase(), updateData);
       }
 
       if (response && onUpdateProfile) {
@@ -540,11 +553,8 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                       </Label>
                       <div className="flex items-center gap-3 mt-2">
                         <p className="text-white p-4 bg-white/5 rounded-xl font-mono text-sm flex-1 border border-white/10">
-                          {showWallet ? formData.wallet : `${formData.wallet?.slice(0, 8)}...${formData.wallet?.slice(-6)}`}
+                          {formatFullWalletAddress(formData.wallet)}
                         </p>
-                        <Button variant="ghost" size="sm" onClick={() => setShowWallet(!showWallet)} className="text-gray-400 hover:text-white p-3 rounded-xl transition-all duration-200">
-                          {showWallet ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                        </Button>
                       </div>
                     </div>
                   </div>
