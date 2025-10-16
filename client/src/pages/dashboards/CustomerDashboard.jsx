@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import CustomerContent from "@/components/Customer/CustomerContent";
 import PayEMIContent from "@/components/Customer/PayEMIContent";
 import PoliciesContent from "@/components/Customer/PoliciesContent";
 import AgentKYCForm from "@/components/AgentKYCForm";
+import PolicyForm from "@/components/PolicyForm";
 import DocVault from "@/components/DocVault";
 import { FullPageLoader } from "@/components/ui/Loader";
 import { Users, FileText, Folder, CreditCard } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
-import { getCustomer, checkCustomerKYCStatus } from "../../services/customerAPI";
+import { getCustomer } from "../../services/customerAPI";
+import { checkCustomerKYCStatus } from "../../services/kycAPI";
 
 const CustomerDashboard = () => {
   const { address, isConnected } = useAccount();
@@ -19,6 +21,31 @@ const CustomerDashboard = () => {
   const [kycStatus, setKycStatus] = useState(null);
   const [currentView, setCurrentView] = useState("overview");
   const [loading, setLoading] = useState(true);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const customerContentRef = useRef(null);
+
+  // Handler for opening PolicyForm
+  const handleCreatePolicy = (agent) => {
+    setSelectedAgent(agent);
+    setCurrentView("policy-form");
+  };
+
+  // Handler for PolicyForm success
+  const handlePolicySuccess = (policyData) => {
+    console.log("Policy created successfully:", policyData);
+    setCurrentView("overview");
+    setSelectedAgent(null);
+    // Call CustomerContent's handlePolicySuccess to update the state
+    if (customerContentRef.current?.handlePolicySuccess) {
+      customerContentRef.current.handlePolicySuccess(policyData);
+    }
+  };
+
+  // Handler for closing PolicyForm
+  const handleClosePolicyForm = () => {
+    setCurrentView("overview");
+    setSelectedAgent(null);
+  };
 
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -30,6 +57,11 @@ const CustomerDashboard = () => {
       try {
         const response = await getCustomer(address.toLowerCase());
         const customerData = response.data?.data?.customer || response.data?.data;
+
+        console.log(" Customer Dashboard Debug:");
+        console.log("  - Full response:", response);
+        console.log("  - Customer data:", customerData);
+        console.log("  - Customer name:", customerData?.customer_name);
 
         setCustomer(customerData);
 
@@ -79,22 +111,34 @@ const CustomerDashboard = () => {
         return <DocVault user={user} />;
       case "kyc":
         return <AgentKYCForm />;
+      case "policy-form":
+        return (
+          <PolicyForm 
+            agent={selectedAgent}
+            customer={customer}
+            onClose={handleClosePolicyForm}
+            onSuccess={handlePolicySuccess}
+          />
+        );
       default:
         console.log({customer});
         return (
           <CustomerContent
+            ref={customerContentRef}
             customer={customer}
             kycStatus={kycStatus}
             onPayEMIClick={() => setCurrentView("pay-emi")}
             currentView={currentView}
             setCurrentView={setCurrentView}
             onKYCSubmit={() => setCurrentView("kyc")}
+            onCreatePolicy={handleCreatePolicy}
+            onPolicySuccess={handlePolicySuccess}
           />
         );
     }
   };
   {/*remove double sidebar */}
-  const isFullPageView = ["kyc"].includes(currentView);
+  const isFullPageView = ["kyc", "policy-form"].includes(currentView);
 
   return (
     <DashboardLayout

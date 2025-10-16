@@ -2,7 +2,7 @@ import api from "./api";
 
 //create policy  
 export const createPolicy = async (policyData) => {
-  return await api.post("/policy/create", policyData);
+  return await api.post("api/policy/create", policyData);
 };
 
 //Get all policies (no filter)

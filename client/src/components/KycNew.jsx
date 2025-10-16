@@ -8,9 +8,6 @@ import { User, Phone, CreditCard, FileText, Check, AlertCircle, Shield, Clock } 
 import { useAccount } from "wagmi";
 import { InlineLoader } from "@/components/ui/Loader";
 
-// Import your service APIs
-import { submitCustomerKYC } from "@/services/customerAPI";
-import { submitAgentKYC } from "@/services/agentAPI";
 import { 
   sendCustomerKYCOTP, 
   verifyCustomerKYCOTP, 
@@ -19,6 +16,25 @@ import {
   verifyAgentKYCOTP,
   resendAgentKYCOTP
 } from "@/services/kycAPI";
+
+// Wrapper functions to maintain compatibility with existing code
+const submitAgentKYC = async (kycData) => {
+  try {
+    await sendAgentKYCOTP(kycData.wallet_address, kycData.agent_phone);
+    return { success: true, message: "KYC process initiated" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const submitCustomerKYC = async (kycData) => {
+  try {
+    await sendCustomerKYCOTP(kycData.wallet_address, kycData.customer_phone);
+    return { success: true, message: "KYC process initiated" };
+  } catch (error) {
+    throw error;
+  }
+};
 
 const KycNew = ({ role = "customer", onClose }) => {
   const navigate = useNavigate();

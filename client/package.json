@@ -35,7 +35,7 @@
     "clsx": "^2.1.1",
     "ethers": "^6.15.0",
     "ethr-did": "^3.0.38",
-    "framer-motion": "^12.23.22",
+    "framer-motion": "^12.23.24",
     "jose": "^6.1.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.539.0",
