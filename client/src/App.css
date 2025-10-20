@@ -1,11 +1,11 @@
 /* App.css - Enhanced responsive app styles */
 
 /* Smooth Scrolling for Better Mobile Experience */
-html {
+/* html {
   scroll-behavior: smooth;
 }
 
-/* Responsive Container Styles */
+
 .app-container {
   width: 100%;
   min-height: 100vh;
@@ -19,7 +19,7 @@ html {
   margin: 0;
 }
 
-/* Responsive Background Elements */
+
 .background-responsive {
   position: fixed;
   top: 0;
@@ -30,7 +30,7 @@ html {
   pointer-events: none;
 }
 
-/* Enhanced Mobile Layout */
+
 @media (max-width: 768px) {
   .mobile-optimized {
     padding-left: 0.5rem;
@@ -47,12 +47,12 @@ html {
   }
   
   .mobile-content-spacing {
-    padding-top: 4rem; /* Account for fixed header */
+    padding-top: 4rem; 
     padding-bottom: 1rem;
   }
 }
 
-/* Tablet Layout Adjustments */
+
 @media (min-width: 769px) and (max-width: 1024px) {
   .tablet-optimized {
     padding-left: 1rem;
@@ -60,7 +60,7 @@ html {
   }
   
   .tablet-sidebar {
-    width: 14rem; /* 224px */
+    width: 14rem;
   }
   
   .tablet-main {
@@ -68,7 +68,7 @@ html {
   }
 }
 
-/* Desktop Layout Enhancements */
+
 @media (min-width: 1025px) {
   .desktop-optimized {
     padding-left: 2rem;
@@ -76,7 +76,7 @@ html {
   }
   
   .desktop-sidebar {
-    width: 16rem; /* 256px */
+    width: 16rem;
   }
   
   .desktop-main {
@@ -84,7 +84,7 @@ html {
   }
 }
 
-/* Responsive Glass Effects */
+
 .glass-responsive {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -99,7 +99,7 @@ html {
   }
 }
 
-/* Responsive Animation Performance */
+
 @media (prefers-reduced-motion: reduce) {
   .motion-reduce {
     animation: none !important;
@@ -107,7 +107,7 @@ html {
   }
 }
 
-/* High Performance Animations */
+
 @media (prefers-reduced-motion: no-preference) {
   .animation-performance {
     will-change: transform, opacity;
@@ -116,7 +116,7 @@ html {
   }
 }
 
-/* Responsive Typography Scale */
+
 @media (max-width: 320px) {
   .text-xs-responsive { font-size: 0.75rem; }
   .text-sm-responsive { font-size: 0.875rem; }
@@ -149,7 +149,7 @@ html {
   .text-xl-responsive { font-size: 1.25rem; }
 }
 
-/* Responsive Spacing System */
+
 .spacing-responsive {
   padding: 0.75rem;
 }
@@ -172,7 +172,7 @@ html {
   }
 }
 
-/* Responsive Grid System */
+
 .grid-responsive {
   display: grid;
   gap: 1rem;
@@ -200,7 +200,7 @@ html {
   }
 }
 
-/* Responsive Button States */
+
 @media (hover: none) {
   .no-hover .hover\:scale-105:hover {
     transform: none;
@@ -211,7 +211,7 @@ html {
   }
 }
 
-/* Touch Device Optimizations */
+
 @media (pointer: coarse) {
   .touch-target {
     min-height: 44px;
@@ -223,7 +223,7 @@ html {
   }
 }
 
-/* Responsive Scrollbar Styling */
+
 @media (max-width: 640px) {
   .scrollbar-thin::-webkit-scrollbar {
     width: 4px;
@@ -239,14 +239,13 @@ html {
   }
 }
 
-/* Enhanced Focus Indicators for Keyboard Navigation */
+
 .focus-enhanced:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
-/* Responsive Loading States */
 .skeleton-responsive {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
@@ -263,7 +262,7 @@ html {
   }
 }
 
-/* Dark mode responsive adjustments */
+
 @media (prefers-color-scheme: dark) {
   .dark-mode-responsive {
     background-color: #0f172a;
@@ -276,7 +275,7 @@ html {
   }
 }
 
-/* Print-friendly styles */
+
 @media print {
   .print-hidden {
     display: none !important;
@@ -289,4 +288,4 @@ html {
   .print-break-after {
     page-break-after: always;
   }
-}
+} */

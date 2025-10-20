@@ -11,7 +11,7 @@ import { Users, FileText, Folder, CreditCard } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { getCustomer } from "../../services/customerAPI";
-import { checkCustomerKYCStatus } from "../../services/kycAPI";
+// import { checkCustomerKYCStatus } from "../../services/kycAPI";
 
 const CustomerDashboard = () => {
   const { address, isConnected } = useAccount();
@@ -56,23 +56,17 @@ const CustomerDashboard = () => {
         setLoading(true);
       try {
         const response = await getCustomer(address.toLowerCase());
-        const customerData = response.data?.data?.customer || response.data?.data;
+        const customerData = response.data?.data;
 
         console.log(" Customer Dashboard Debug:");
-        console.log("  - Full response:", response);
         console.log("  - Customer data:", customerData);
-        console.log("  - Customer name:", customerData?.customer_name);
+        // console.log("  - Customer data:", customerData);
+        // console.log("  - Customer name:", customerData?.customer_name);
 
         setCustomer(customerData);
 
-        const kycRes = await checkCustomerKYCStatus(address.toLowerCase());
-        setKycStatus(kycRes.data?.kyc_status);
-
-        // Don't automatically navigate to KYC, let user decide from dashboard
-        // if (kycRes.data?.kyc_status === "pending") {
-        //   setCurrentView("kyc");
-        //   return;
-        // }
+        setKycStatus(customerData.kyc_status);
+        
       } catch (err) {
         console.error("Error fetching customer:", err);
       } finally {
@@ -121,7 +115,7 @@ const CustomerDashboard = () => {
           />
         );
       default:
-        console.log({customer});
+        // console.log({customer});
         return (
           <CustomerContent
             ref={customerContentRef}

@@ -7,26 +7,26 @@ export const createPolicy = async (policyData) => {
 
 //Get all policies (no filter)
 export const getAllPolicies = async () => {
-  return await api.get("/policy/all-policies");
+  return await api.get("api/policy/all-policies");
 };
 
 //Get policies by customer wallet
 export const getCustomerPolicies = async (customer_wallet) => {
-  return await api.get("/policy/all-policies", {
+  return await api.get("api/policy/all-policies", {
     params: { customer_wallet },
   });
 };
 
 // Get policies by agent wallet
 export const getAgentPolicies = async (agent_wallet) => {
-  return await api.get("/policy/all-policies", {
+  return await api.get("api/policy/all-policies", {
     params: { agent_wallet },
   });
 };
 
 //Get policies by status only
 export const getPoliciesByStatus = async (status) => {
-  return await api.get("/policy/all-policies", {
+  return await api.get("api/policy/all-policies", {
     params: { status },
   });
 };

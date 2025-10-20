@@ -132,7 +132,7 @@ const CustomerKYCForm = () => {
       console.log("Submitting Customer KYC:", payload);
       await submitCustomerKYC(payload);
       alert("KYC submitted successfully!");
-      navigate("/customer-dashboard");
+      navigate("/customer/dashboard");
     } catch (err) {
       console.error("KYC submission failed:", err);
       alert("Submission failed. Please try again.");

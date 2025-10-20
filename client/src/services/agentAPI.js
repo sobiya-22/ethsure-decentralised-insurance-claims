@@ -27,5 +27,5 @@ export const getAllAgentPolicies = async (wallet_address) => {
 
 //GET APPROVED AGENTS (for customers to choose from)
 export const getApprovedAgents = async () => {
-  return await api.post("api/agent/approved");
+  return await api.get("api/agent/all-agents?status=approved");
 };

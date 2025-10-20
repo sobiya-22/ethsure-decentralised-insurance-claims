@@ -1,37 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useWeb3AuthConnect, useWeb3AuthDisconnect, useWeb3AuthUser, useWeb3Auth } from "@web3auth/modal/react";
-import { useAccount } from 'wagmi';
-import { useAuth } from "../context/AuthContext";
 import { Menu, X } from 'lucide-react';
+import { useAuth } from "../hooks/useAuth";
+import { userStore } from '../context/userContext';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const Navbar = () => {
-  const { connect, isConnected } = useWeb3AuthConnect();
-  const { web3Auth } = useWeb3Auth();
-  const { disconnect } = useWeb3AuthDisconnect();
-  const navigate = useNavigate();
-  const { login, logout } = useAuth();
+  const { signupUser, loginUser, logoutUser } = useAuth();
+  // const user = userStore((state) => state.user);
+  const isAuth = userStore((state) => state.isAuth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user } = useAuth();
-  const connectUser = async () => {
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const res = await loginUser();
+    console.log(res.user);
+    navigate(`/${res.user.role}/dashboard`);
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/");
+  };
+  const handleSignup = async () => {
     try {
-      const res = await login();
-      if (res) {
-        navigate(`./${res.role}-dashboard`);
-        console.log('Stored user data context', user);
-      }
-    } catch (error) {
-      console.error("Connection failed:", error);
+      await signupUser();
+      navigate('/role-select');
+    } catch (err) {
+      console.error("Signup failed:", err);
     }
   };
-  const logou = () => {
-    try {
-      logout();
-      navigate("/");
-    } catch (error) {
-      console.error("Disconnection failed:", error);
-    }
-  }
+
+
   return (
     <nav className="glass-effect border-b border-white/10 fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full">
       <div className="flex justify-between items-center h-16 sm:h-18 lg:h-20 px-3 xs:px-4 sm:px-6">
@@ -52,19 +53,18 @@ const Navbar = () => {
 
         {/* Action buttons */}
         <div className="flex items-center space-x-2 xs:space-x-3">
-          {!isConnected && (
+          {!isAuth ? (
             <Button
-              onClick={connectUser}
+              onClick={handleLogin}
               variant="outline"
               size="sm"
               className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 rounded-full px-3 xs:px-4 lg:px-6 py-1.5 xs:py-2 text-xs xs:text-sm"
             >
               Login
             </Button>
-          )}
-          {isConnected && (
+          ) : (
             <Button
-              onClick={logou}
+              onClick={handleLogout}
               variant="outline"
               size="sm"
               className="border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 transition-all duration-300 rounded-full px-3 xs:px-4 lg:px-6 py-1.5 xs:py-2 text-xs xs:text-sm"
@@ -72,11 +72,12 @@ const Navbar = () => {
               Logout
             </Button>
           )}
-          <Link to="/signup">
-            <Button size="sm" className="btn-primary px-3 xs:px-4 lg:px-6 py-1.5 xs:py-2 text-xs xs:text-sm rounded-full font-semibold">
-              Get Started
-            </Button>
-          </Link>
+          <Button
+            onClick={handleSignup}
+            size="sm"
+            className="btn-primary px-3 xs:px-4 lg:px-6 py-1.5 xs:py-2 text-xs xs:text-sm rounded-full font-semibold">
+            Get Started
+          </Button>
 
           {/* Mobile Menu Button */}
           <button

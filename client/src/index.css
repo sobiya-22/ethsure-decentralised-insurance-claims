@@ -1,25 +1,39 @@
-@import './responsive.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+#root {
+  min-height: 100vh;
+  width: 100%;
+  background: transparent;
+}
+body {
+  background: 
+    repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.02) 21px),
+    repeating-linear-gradient(-45deg, transparent, transparent 19px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.02) 21px),
+    linear-gradient(135deg, #0b1220 0%, #121826 50%, #0b0f1a 100%);
+  background-size: 40px 40px, 40px 40px, auto;
+  background-position: 0 0, 0 0, 0 0;
+  color: white;
+  min-height: 100vh;
+  width: 100%;
+}
 
 
-@layer base {
+/* @layer base {
   body { font-family: 'Inter', sans-serif; }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body, #root { height: 100%; width: 100%; margin: 0; padding: 0; overflow-x: hidden; }
 html, body, #root, * { 
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  
+  scrollbar-width: none; 
 }
 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none; 
 }
 
-/* Custom scrollbar for PolicyForm */
+
 .policy-form-scroll::-webkit-scrollbar {
   display: block;
   width: 8px;
@@ -38,7 +52,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Ensure input fields are properly styled and functional */
+
 .policy-form input[type="text"],
 .policy-form input[type="email"],
 .policy-form input[type="tel"],
@@ -61,7 +75,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
   outline: none !important;
 }
 
-/* Select component styling */
+
 .policy-form [data-radix-select-content] {
   background-color: #1f2937 !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -79,7 +93,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Force input fields to be interactive */
+
 .policy-form input,
 .policy-form textarea {
   pointer-events: auto !important;
@@ -89,7 +103,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
   -ms-user-select: text !important;
 }
 
-/* Ensure no overlays are blocking inputs */
+
 .policy-form * {
   pointer-events: auto !important;
 }
@@ -100,7 +114,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar, *::-
   z-index: 999 !important;
 }
 
-/* Override any global styles that might prevent input */
+
 .policy-form input[type="text"],
 .policy-form input[type="email"],
 .policy-form input[type="tel"],
@@ -156,13 +170,13 @@ body {
 @layer utilities {
   .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
   
-  /* Hide scrollbars */
+
   .no-scrollbar {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
   }
   .no-scrollbar::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
+    display: none; 
   }
   .shine { position: relative; overflow: hidden; }
   .shine::before {
@@ -176,7 +190,7 @@ body {
     50% { opacity: 1; }
     100% { transform: translateX(100%) translateY(100%) rotate(-45deg); opacity: 0; }
   }
-  /* Diamond/triangular grid pattern - consistent across all pages */
+
   .bg-grid {
     background-image: 
       repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255, 255, 255, 0.02) 20px, rgba(255, 255, 255, 0.02) 21px),
@@ -332,7 +346,7 @@ html { scroll-behavior: smooth; }
 .hover-glow-cyan-subtle { transition: all 0.3s ease; }
 .hover-glow-cyan-subtle:hover { border-color: rgba(59, 130, 246, 0.25); box-shadow: 0 0 8px rgba(59, 130, 246, 0.2); background-color: rgba(255, 255, 255, 0.06); }
 
-/* Hide scrollbar but keep scroll functionality */
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -341,10 +355,10 @@ html { scroll-behavior: smooth; }
   scrollbar-width: none;
 }
 
-/* Press/active dim interaction for common interactive elements */
+
 button, a, .glass, .card, .sidebar-item, .nav-link, .btn-primary, .button-pill, [role="button"] {
   transition: filter 150ms ease;
 }
 button:active, a:active, .glass:active, .card:active, .sidebar-item:active, .nav-link:active, .btn-primary:active, .button-pill:active, [role="button"]:active {
   filter: brightness(0.85);
-}
+} */

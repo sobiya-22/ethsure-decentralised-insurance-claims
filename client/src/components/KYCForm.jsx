@@ -247,7 +247,7 @@ const KYCForm = ({ role = "customer" }) => {
 
       if (response.data.success || response.success) {
         alert("KYC submitted successfully!");
-        navigate(role === "agent" ? "/agent-dashboard" : "/customer-dashboard");
+        navigate(role === "agent" ? "/agent-dashboard" : "/customer/dashboard");
       } else {
         alert(response.data.message || response.message || "Submission failed. Please try again.");
       }

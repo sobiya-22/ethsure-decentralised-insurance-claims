@@ -1,117 +1,115 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Landing from "./pages/Landing";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastProvider } from "./components/ui/toast-provider";
+import { toast } from "react-hot-toast";
+import { userStore } from "./context/userContext";
 
-// import Signup from "./pages/Signup";
-import CustomerDashboard from "./pages/dashboards/CustomerDashboard";
-import AgentDashboard from "./pages/dashboards/AgentDashboard";
-import CompanyDashboard from "./pages/dashboards/CompanyDashboard";
-import NomineeDashboard from "./pages/dashboards/NomineeDashboard";
+// Common Pages
+import Landing from "./pages/Landing";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
-import RoleSelect from "./components/RoleSelect";
-import ProtectedRoute from "./context/ProtectedRoute";
-// Dashboard Components
-import AgentCustomerView from "./components/Agent/AgentCustomerView";
-import AgentClaimsView from "./components/Agent/AgentClaimsView";
-import CreatePolicyModal from "./components/Agent/CreatePolicyModal";
-import AddCustomerModal from "./components/Agent/AddCustomerModal";
-import CustomerKYCForm from "./components/CustomerKYCForm";
-import AgentKYCForm from "./components/AgentKYCForm";
-// Company Components
-import CompanyAgentsView from "./components/Company/CompanyAgentsView";
-import CompanyCustomersView from "./components/Company/CompanyCustomersView";
-import CompanyPoliciesView from "./components/Company/CompanyPoliciesView";
-import CompanyClaimsView from "./components/Company/CompanyClaimsView";
 import DocVault from "./components/DocVault";
-import PaymentMethodContent from "./components/Customer/PaymentMethodContent";
-import PoliciesContent from "./components/Customer/PoliciesContent";
-import PayEMIContent from "./components/Customer/PayEMIContent";
+import RoleSelect from "./components/RoleSelect";
 
-import "./App.css";
+// Layouts
+import DashboardLayout from "./layouts/DashboardLayout";
+
+// Customer Pages
+import CustomerOverview from "./pages/dashboards/customer/CustomerOverview";
+import PayEMI from "./pages/dashboards/customer/PayEMI";
+import PaymentMethod from "./pages/dashboards/customer/PaymentMethod";
+import Policies from "./pages/dashboards/customer/Policies";
+
+// Agent Pages
+import AgentOverview from "./pages/dashboards/agent/AgentOverview";
+import PolicyManagement from "./pages/dashboards/agent/PolicyManagement";
+
+// Company Pages
+import CompanyOverview from "./pages/dashboards/company/CompanyOverview";
+import AgentManagement from "./pages/dashboards/company/AgentManagement";
+import CustomerManagement from "./pages/dashboards/company/CustomerManagement";
+import ClaimManagement from "./pages/dashboards/company/ClaimManagement";
+
+// UI Icons
+import { Users, FileText, Folder, CreditCard, Home } from "lucide-react";
 
 function App() {
+  const { isAuth, user } = userStore();
+
+  // Sidebar items
+  const customerSidebarItems = [
+    { id: "overview", icon: Users, label: "Overview", path: "/customer/dashboard" },
+    { id: "policies", icon: FileText, label: "Policies", path: "/customer/policies" },
+    { id: "pay-emi", icon: CreditCard, label: "Pay EMI", path: "/customer/pay-emi" },
+    { id: "docvault", icon: Folder, label: "DocVault", path: "/customer/docvault" },
+  ];
+
+  const agentSidebarItems = [
+    { id: "overview", icon: Home, label: "Overview", path: "/agent/dashboard" },
+    { id: "policy-management", icon: FileText, label: "Policy Management", path: "/agent/customers" },
+    { id: "docvault", icon: Folder, label: "DocVault", path: "/agent/docvault" },
+  ];
+
+  const companySidebarItems = [
+    { id: "overview", icon: Home, label: "Overview", path: "/company/dashboard" },
+    { id: "agent-management", icon: FileText, label: "All Agents", path: "/company/all-agents" },
+    { id: "customer-management", icon: Folder, label: "All Customers", path: "/company/all-customers" },
+    { id: "claim-management", icon: Folder, label: "Claims", path: "/company/claims" },
+  ];
+
+  // Simple role protection (without ProtectedRoute component)
+  const requireRole = (role, children) => {
+    if (!isAuth) return <Navigate to="/" replace />;
+    if (user?.role !== role) {
+      // toast.error(`Access denied for ${role} route`);
+      return <Navigate to="/" replace />;
+    }
+    return children;
+  };
+
   return (
-    <ToastProvider>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/role-select" element={<RoleSelect />} />
-        <Route
-          path="/customer-dashboard"
-          element={
-           <ProtectedRoute allowedRoles={["customer"]}>
-              <CustomerDashboard />
-           </ProtectedRoute>
-          }
-        />
+    <Routes>
+      {/* Public routes */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/docvault" element={<DocVault />} />
+      <Route path="/role-select" element={<RoleSelect/>}/>
+      {/* Customer Dashboard Group */}
+      <Route
+        path="/customer"
+        element={requireRole("customer", <DashboardLayout sidebarItems={customerSidebarItems} />)}
+      >
+        <Route path="dashboard" element={<CustomerOverview />} />
+        <Route path="policies" element={<Policies />} />
+        <Route path="pay-emi" element={<PayEMI />} />
+        <Route path="payment-methods" element={<PaymentMethod />} />
+        <Route path="docvault" element={<DocVault />} />
+      </Route>
 
-        <Route
-          path="/agent-dashboard"
-          element={
-          <ProtectedRoute allowedRoles={["agent"]}>
-              <AgentDashboard />
-           </ProtectedRoute>
-          }
-        />
+      {/* Agent Dashboard Group */}
+      <Route
+        path="/agent"
+        element={requireRole("agent", <DashboardLayout sidebarItems={agentSidebarItems} />)}
+      >
+        <Route path="dashboard" element={<AgentOverview />} />
+        <Route path="customers" element={<PolicyManagement />} />
+        <Route path="docvault" element={<DocVault />} />
+      </Route>
 
-        <Route
-          path="/company-dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["company"]}>
-              <CompanyDashboard />
-            </ProtectedRoute> 
-          }
-        />
-
-        {/* Company Dashboard Routes */}
-        <Route path="/company/agents" element={<CompanyAgentsView withLayout={true} />} />
-        <Route path="/company/customers" element={<CompanyCustomersView withLayout={true} />} />
-        <Route path="/company/policies" element={<CompanyPoliciesView withLayout={true} />} />
-        <Route path="/company/claims" element={<CompanyClaimsView withLayout={true} />} />
-
-        <Route
-          path="/nominee-dashboard"
-          element={
-            //<ProtectedRoute allowedRoles={["nominee"]}>
-              <NomineeDashboard />
-            //</ProtectedRoute>
-          }
-        />
-
-        {/* Agent Dashboard Routes */}
-        <Route path="/agent/customers" element={<AgentCustomerView withLayout={true} />} />
-        <Route path="/agent/claims" element={<AgentClaimsView withLayout={true} />} />
-        <Route path="/agent/create-policy" element={<CreatePolicyModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
-        <Route path="/agent/add-customer" element={<AddCustomerModal isOpen={true} onClose={() => window.history.back()} withLayout={true} />} />
-        <Route 
-        path="/agent/kyc" 
-        element={
-        <AgentKYCForm 
-        role="agent"
-        isOpen={true} 
-        onClose={() => window.history.back()} withLayout={true} 
-        />} />
-        {/* Customer Dashboard Routes */}
-        <Route path="/customer/pay-emi" element={<PayEMIContent />} />
-        <Route path="/customer/payment-methods" element={<PaymentMethodContent onBack={() => window.history.back()} />} />
-        <Route path="/customer/policies" element={<PoliciesContent />} />
-
-        <Route 
-        path="/customer/kyc" 
-        element={
-        <CustomerKYCForm
-        role = "customer"
-        isOpen={true} 
-        onClose={() => window.history.back()} 
-        />} />
-
-        </Routes>
-      </ToastProvider>
+      {/* Company Dashboard Group */}
+      <Route
+        path="/company"
+        element={requireRole("company", <DashboardLayout sidebarItems={companySidebarItems} />)}
+      >
+        <Route path="dashboard" element={<CompanyOverview />} />
+        <Route path="all-agents" element={<AgentManagement />} />
+        <Route path="all-customers" element={<CustomerManagement />} />
+        <Route path="claims" element={<ClaimManagement />} />
+      </Route>
+    </Routes>
   );
 }
 

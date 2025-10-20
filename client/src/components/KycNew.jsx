@@ -225,7 +225,7 @@ const KycNew = ({ role = "customer", onClose }) => {
           onClose();
         } else {
           // Navigate based on role
-          navigate(role === "agent" ? "/agent-dashboard" : "/customer-dashboard");
+          navigate(role === "agent" ? "/agent-dashboard" : "/customer/dashboard");
         }
       } else {
         alert(response.data.message || response.message || "Failed to submit KYC. Please try again.");

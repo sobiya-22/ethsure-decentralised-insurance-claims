@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Users, Eye, Edit, Trash2, Plus, Search, Download, Home, FileText, Briefcase, Shield, Folder, X } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 
-const CompanyAgentsView = ({ withLayout = false }) => {
+const AgentManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -245,4 +245,4 @@ const CompanyAgentsView = ({ withLayout = false }) => {
 
   return content;
 };
-export default CompanyAgentsView;
+export default AgentManagement;

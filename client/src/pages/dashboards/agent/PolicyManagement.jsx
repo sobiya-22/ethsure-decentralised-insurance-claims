@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, UserPlus, Clock, Mail, Phone, MapPin, Calendar, Eye } from "lucide-react";
-import CustomerDetailsModal from "./CustomerDetailsModal";
+// import CustomerDetailsModal from "./CustomerDetailsModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, defaultCustomers, getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 
-const AgentCustomerView = ({ withLayout = false }) => {
+const PolicyManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -301,4 +301,4 @@ const AgentCustomerView = ({ withLayout = false }) => {
   return content;
 };
 
-export default AgentCustomerView;
+export default PolicyManagement;

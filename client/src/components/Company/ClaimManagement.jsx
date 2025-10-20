@@ -8,7 +8,7 @@ import { Folder, Eye, Shield, Search, X, Download, AlertCircle } from 'lucide-re
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { defaultCompanyUser, getCompanySidebarItems, getStatusColor, getTypeColor, defaultClaimsData, commonClasses } from '@/constants/companyConstants';
 
-const CompanyClaimsView = ({ withLayout = false }) => {
+const ClaimManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -222,4 +222,4 @@ const CompanyClaimsView = ({ withLayout = false }) => {
   }
   return content;
 };
-export default CompanyClaimsView;
+export default ClaimManagement;

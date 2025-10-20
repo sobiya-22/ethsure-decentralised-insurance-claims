@@ -8,12 +8,10 @@ import Navbar from '@/components/Navbar';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen text-white w-full relative overflow-y-auto pt-20 no-scrollbar">
-      <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" />
-
+    <div className="text-white w-full relative overflow-y-auto pt-20 no-scrollbar">
+      {/* <div className="absolute -top-24 -right-24 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-blue-500/20 via-emerald-400/10 to-purple-500/20 blur-3xl" /> */}
       <Navbar/>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
+      <div className="w-full max-w-screen-xl mx-auto py-12 sm:py-16 lg:py-24 px-4 sm:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 glass text-xs uppercase tracking-wider text-gray-300 px-3 py-1 rounded-full">

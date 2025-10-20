@@ -4,19 +4,23 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { UserCheck, Eye, Home, Users, FileText, Briefcase, Shield, Folder, Search, X, Download } from 'lucide-react';
+import { Users, Eye, Edit, Trash2, Plus, Search, Download, Home, FileText, Briefcase, Shield, Folder, X } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 
-const CompanyCustomersView = ({ withLayout = false }) => {
+const AgentManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [agentFilter, setAgentFilter] = useState('All');
+  const [locationFilter, setLocationFilter] = useState('All');
 
-  const customersData = [
-    { id: 1, name: "John Doe", email: "john.doe@email.com", phone: "+1-555-1001", location: "New York, NY", policies: 3, totalPremium: "₹1,92,000", status: "Active", verified: true, joinDate: "2023-02-15", lastPayment: "2024-01-15", agent: { name: "Agent Smith", email: "smith@ethsure.com", phone: "+1-555-0123", verified: true, performance: "95%" }, customerPolicies: [{ id: 1, policyNumber: "POL-2024-001", type: "Life Insurance", premium: "₹16,000/month", coverage: "₹80,00,000", status: "Active", startDate: "2024-01-15", endDate: "2025-01-15" }, { id: 2, policyNumber: "POL-2024-002", type: "Health Insurance", premium: "₹12,000/month", coverage: "₹40,00,000", status: "Active", startDate: "2023-07-01", endDate: "2024-07-01" }] },
-    { id: 2, name: "Jane Smith", email: "jane.smith@email.com", phone: "+1-555-1002", location: "Los Angeles, CA", policies: 2, totalPremium: "₹1,44,000", status: "Active", verified: true, joinDate: "2023-03-01", lastPayment: "2024-01-20", agent: { name: "Agent Doe", email: "doe@ethsure.com", phone: "+1-555-0124", verified: true, performance: "88%" }, customerPolicies: [{ id: 1, policyNumber: "POL-2024-003", type: "Auto Insurance", premium: "₹8,000/month", coverage: "₹16,00,000", status: "Active", startDate: "2024-01-01", endDate: "2025-01-01" }] },
-    { id: 3, name: "Mike Johnson", email: "mike.johnson@email.com", phone: "+1-555-1003", location: "Chicago, IL", policies: 1, totalPremium: "₹64,000", status: "Pending", verified: false, joinDate: "2024-01-25", lastPayment: "N/A", agent: { name: "Agent Johnson", email: "johnson@ethsure.com", phone: "+1-555-0125", verified: false, performance: "92%" }, customerPolicies: [] }
+  const agentsData = [
+    { id: 1, name: "Agent Smith", email: "smith@ethsure.com", phone: "+1-555-0123", location: "New York, NY", customers: 12, status: "Active", verified: true, performance: "95%", joinDate: "2023-01-15", totalPolicies: 45, totalClaims: 8, successRate: "98%" },
+    { id: 2, name: "Agent Doe", email: "doe@ethsure.com", phone: "+1-555-0124", location: "Los Angeles, CA", customers: 9, status: "Active", verified: true, performance: "88%", joinDate: "2023-03-20", totalPolicies: 32, totalClaims: 5, successRate: "94%" },
+    { id: 3, name: "Agent Johnson", email: "johnson@ethsure.com", phone: "+1-555-0125", location: "Chicago, IL", customers: 15, status: "Pending", verified: false, performance: "92%", joinDate: "2024-01-10", totalPolicies: 28, totalClaims: 3, successRate: "96%" },
+    { id: 4, name: "Agent Brown", email: "brown@ethsure.com", phone: "+1-555-0126", location: "Miami, FL", customers: 7, status: "Active", verified: true, performance: "91%", joinDate: "2023-06-15", totalPolicies: 22, totalClaims: 4, successRate: "93%" },
+    { id: 5, name: "Agent Wilson", email: "wilson@ethsure.com", phone: "+1-555-0127", location: "Seattle, WA", customers: 0, status: "Requesting", verified: false, performance: "N/A", joinDate: "2024-02-01", totalPolicies: 0, totalClaims: 0, successRate: "N/A" },
+    { id: 6, name: "Agent Davis", email: "davis@ethsure.com", phone: "+1-555-0128", location: "Austin, TX", customers: 0, status: "Waiting Verification", verified: false, performance: "N/A", joinDate: "2024-02-05", totalPolicies: 0, totalClaims: 0, successRate: "N/A" },
+    { id: 7, name: "Agent Miller", email: "miller@ethsure.com", phone: "+1-555-0129", location: "Denver, CO", customers: 0, status: "Requesting", verified: false, performance: "N/A", joinDate: "2024-02-10", totalPolicies: 0, totalClaims: 0, successRate: "N/A" }
   ];
 
   const user = { name: "Insurance Admin", role: "Company", email: "company@ethsure.com", wallet: "0x1234...abcd", company: "EthSure Insurance" };
@@ -32,29 +36,31 @@ const CompanyCustomersView = ({ withLayout = false }) => {
   const getStatusColor = (status) => {
     const colors = {
       "Active": "text-emerald-400 bg-emerald-500/20 border border-emerald-500/30",
-      "Pending": "text-amber-400 bg-amber-500/20 border border-amber-500/30"
+      "Pending": "text-amber-400 bg-amber-500/20 border border-amber-500/30",
+      "Requesting": "text-blue-400 bg-blue-500/20 border border-blue-500/30",
+      "Waiting Verification": "text-purple-400 bg-purple-500/20 border border-purple-500/30"
     };
     return colors[status] || "text-gray-400 bg-gray-700/50";
   };
 
-  const uniqueAgents = useMemo(() => [...new Set(customersData.map(customer => customer.agent.name))].sort(), [customersData]);
-  const uniqueStatuses = useMemo(() => [...new Set(customersData.map(customer => customer.status))].sort(), [customersData]);
+  const uniqueLocations = useMemo(() => [...new Set(agentsData.map(agent => agent.location))].sort(), [agentsData]);
+  const uniqueStatuses = useMemo(() => [...new Set(agentsData.map(agent => agent.status))].sort(), [agentsData]);
 
-  const filteredCustomers = useMemo(() => {
-    return customersData.filter(customer => {
-      const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           customer.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'All' || customer.status === statusFilter;
-      const matchesAgent = agentFilter === 'All' || customer.agent.name === agentFilter;
-      return matchesSearch && matchesStatus && matchesAgent;
+  const filteredAgents = useMemo(() => {
+    return agentsData.filter(agent => {
+      const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           agent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           agent.location.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'All' || agent.status === statusFilter;
+      const matchesLocation = locationFilter === 'All' || agent.location === locationFilter;
+      return matchesSearch && matchesStatus && matchesLocation;
     });
-  }, [customersData, searchTerm, statusFilter, agentFilter]);
+  }, [agentsData, searchTerm, statusFilter, locationFilter]);
 
   const clearFilters = () => {
     setSearchTerm('');
     setStatusFilter('All');
-    setAgentFilter('All');
+    setLocationFilter('All');
   };
 
   const content = (
@@ -63,12 +69,17 @@ const CompanyCustomersView = ({ withLayout = false }) => {
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg glass"><UserCheck className="w-6 h-6 text-cyan-400" /></div>
+            <div className="p-2 rounded-lg glass"><Users className="w-6 h-6 text-cyan-400" /></div>
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold leading-tight"><span className="text-white">Customer</span> <span className="gradient-text">Overview</span></h1>
-              <p className="text-xl text-gray-300">View and manage all customers across the company</p>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight"><span className="text-white">Agent</span> <span className="gradient-text">Management</span></h1>
+              <p className="text-xl text-gray-300">Oversee all registered insurance agents</p>
             </div>
           </div>
+        </div>
+        <div className="flex gap-3">
+          <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-6 py-3 rounded-xl transition-all duration-200 hover:scale-105">
+            <Plus className="w-5 h-5 mr-2" />Add Agent
+          </Button>
         </div>
       </div>
 
@@ -78,10 +89,10 @@ const CompanyCustomersView = ({ withLayout = false }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Total Customers</p>
-                <p className="text-2xl font-bold text-white">{customersData.length}</p>
+                <p className="text-gray-400 text-sm">Total Agents</p>
+                <p className="text-2xl font-bold text-white">{agentsData.length}</p>
               </div>
-              <UserCheck className="w-8 h-8 text-cyan-400" />
+              <Users className="w-8 h-8 text-cyan-400" />
             </div>
           </CardContent>
         </Card>
@@ -89,8 +100,8 @@ const CompanyCustomersView = ({ withLayout = false }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Active Customers</p>
-                <p className="text-2xl font-bold text-white">{customersData.filter(c => c.status === 'Active').length}</p>
+                <p className="text-gray-400 text-sm">Active Agents</p>
+                <p className="text-2xl font-bold text-white">{agentsData.filter(a => a.status === 'Active').length}</p>
               </div>
               <Shield className="w-8 h-8 text-emerald-400" />
             </div>
@@ -101,7 +112,7 @@ const CompanyCustomersView = ({ withLayout = false }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Pending Verification</p>
-                <p className="text-2xl font-bold text-white">{customersData.filter(c => c.status === 'Pending').length}</p>
+                <p className="text-2xl font-bold text-white">{agentsData.filter(a => a.status === 'Pending' || a.status === 'Waiting Verification').length}</p>
               </div>
               <Shield className="w-8 h-8 text-amber-400" />
             </div>
@@ -111,8 +122,8 @@ const CompanyCustomersView = ({ withLayout = false }) => {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Total Premium</p>
-                <p className="text-2xl font-bold text-white">₹6,88,000</p>
+                <p className="text-gray-400 text-sm">Avg Performance</p>
+                <p className="text-2xl font-bold text-white">92%</p>
               </div>
               <Shield className="w-8 h-8 text-purple-400" />
             </div>
@@ -129,7 +140,7 @@ const CompanyCustomersView = ({ withLayout = false }) => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   type="text"
-                  placeholder="Search customers by name, email, or location..."
+                  placeholder="Search agents by name, email, or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
@@ -146,19 +157,19 @@ const CompanyCustomersView = ({ withLayout = false }) => {
                 ))}
               </select>
               <select
-                value={agentFilter}
-                onChange={(e) => setAgentFilter(e.target.value)}
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
                 className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 min-w-[150px]"
               >
-                <option value="All" className="bg-gray-800">All Agents</option>
-                {uniqueAgents.map(agent => (
-                  <option key={agent} value={agent} className="bg-gray-800">{agent}</option>
+                <option value="All" className="bg-gray-800">All Locations</option>
+                {uniqueLocations.map(location => (
+                  <option key={location} value={location} className="bg-gray-800">{location}</option>
                 ))}
               </select>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-300 text-sm">{filteredCustomers.length} of {customersData.length} customers</span>
-              {(searchTerm || statusFilter !== 'All' || agentFilter !== 'All') && (
+              <span className="text-gray-300 text-sm">{filteredAgents.length} of {agentsData.length} agents</span>
+              {(searchTerm || statusFilter !== 'All' || locationFilter !== 'All') && (
                 <Button variant="outline" size="sm" onClick={clearFilters} className="border-white/20 text-white hover:bg-white/10">
                   <X className="w-4 h-4 mr-2" />Clear Filters
                 </Button>
@@ -171,39 +182,44 @@ const CompanyCustomersView = ({ withLayout = false }) => {
         </CardContent>
       </Card>
 
-      {/* Customers List */}
+      {/* Agents List */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-white">
-            {filteredCustomers.length === customersData.length ? 'All Customers' : `Filtered Customers (${filteredCustomers.length})`}
+            {filteredAgents.length === agentsData.length ? 'All Agents' : `Filtered Agents (${filteredAgents.length})`}
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredCustomers.map((customer) => (
-            <Card key={customer.id} className="glass border-white/10 hover:border-cyan-400/50 transition-all duration-300">
+          {filteredAgents.map((agent) => (
+            <Card key={agent.id} className="glass border-white/10 hover:border-cyan-400/50 transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">{customer.name.split(' ').map(n => n[0]).join('')}</span>
+                      <span className="text-white font-bold text-lg">{agent.name.split(' ').map(n => n[0]).join('')}</span>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">{customer.name}</h3>
-                      <p className="text-gray-400 text-sm">{customer.email}</p>
+                      <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
+                      <p className="text-gray-400 text-sm">{agent.email}</p>
                     </div>
                   </div>
-                  <Badge variant="outline" className={getStatusColor(customer.status)}>{customer.status}</Badge>
+                  <Badge variant="outline" className={getStatusColor(agent.status)}>{agent.status}</Badge>
                 </div>
                 <div className="space-y-2 text-gray-300 text-sm">
-                  <p>Phone: {customer.phone}</p>
-                  <p>Location: {customer.location}</p>
-                  <p>Policies: {customer.policies}</p>
-                  <p>Total Premium: <span className="font-medium text-white">{customer.totalPremium}</span></p>
-                  <p>Agent: <span className="font-medium text-white">{customer.agent.name}</span></p>
+                  <p>Phone: {agent.phone}</p>
+                  <p>Location: {agent.location}</p>
+                  <p>Customers: {agent.customers}</p>
+                  <p>Performance: <span className="font-medium text-white">{agent.performance}</span></p>
                 </div>
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-end gap-3">
                   <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
-                    <Eye className="w-4 h-4 mr-2" />View Details
+                    <Eye className="w-4 h-4 mr-2" />View
+                  </Button>
+                  <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/10">
+                    <Edit className="w-4 h-4 mr-2" />Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="border-red-400/20 text-red-300 hover:bg-red-500/10 hover:border-red-400/30 hover:text-red-200 transition-all duration-200">
+                    <Trash2 className="w-4 h-4 mr-2" />Delete
                   </Button>
                 </div>
               </CardContent>
@@ -219,7 +235,7 @@ const CompanyCustomersView = ({ withLayout = false }) => {
       <DashboardLayout
         sidebarItems={sidebarItems}
         user={user}
-        currentView="customers"
+        currentView="agents"
         fullPageView={false}
       >
         {content}
@@ -229,4 +245,4 @@ const CompanyCustomersView = ({ withLayout = false }) => {
 
   return content;
 };
-export default CompanyCustomersView;
+export default AgentManagement;

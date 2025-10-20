@@ -8,7 +8,6 @@ import DocVault from './DocVault';
 import { CardLoader } from '@/components/ui/Loader';
 import { getCustomer, updateCustomer } from '../services/customerAPI';
 import { getAgentDetails, updateAgentProfile } from '../services/agentAPI';
-import { formatWalletAddress, formatFullWalletAddress } from '@/lib/utils';
 
 const Profile = ({ user, onUpdateProfile, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -553,7 +552,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
                       </Label>
                       <div className="flex items-center gap-3 mt-2">
                         <p className="text-white p-4 bg-white/5 rounded-xl font-mono text-sm flex-1 border border-white/10">
-                          {formatFullWalletAddress(formData.wallet)}
+                          {formData.wallet}
                         </p>
                       </div>
                     </div>

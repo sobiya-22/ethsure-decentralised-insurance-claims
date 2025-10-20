@@ -1,37 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWeb3AuthConnect, useWeb3AuthUser,useWeb3Auth } from "@web3auth/modal/react";
-import { getWalletAddress } from '../utils/blockchainOperations';
-import {useAuth} from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
+import { userStore } from '../context/userContext';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const navigate = useNavigate();
-    const { isConnected } = useWeb3AuthConnect();
-    const { userInfo } = useWeb3AuthUser();
-    const { web3Auth } = useWeb3Auth();
-    const { assignRole } = useAuth();
-    console.log(userInfo);
+
     const roles = [
         { id: 'customer', name: 'Customer' },
         { id: 'agent', name: 'Agent' },
-        { id: 'nominee', name: 'Nominee' },
-        // ---! do not add any company in role select,
-        // since there's one company there acc creation should be hidden!---
+        // { id: 'nominee', name: 'Nominee' },
     ];
+    const isAuth = userStore((state) => state.isAuth);
+    const login = userStore((state) => state.login);
+    
+    useEffect(() => {
+        if (isAuth) {
+            navigate("/");
+        }
+    }, [isAuth]);
 
     const handleRoleSelect = (roleId) => {
         setSelectedRole(roleId);
         console.log('Selected role:', roleId);
     };
-    const handleContinue = async() => {
+
+    const handleContinue = async () => {
         if (selectedRole) {
-            let wallet_address = await getWalletAddress(web3Auth);
-            let name = userInfo?.name;
-            let profile_photo_url = userInfo?.profileImage;
-            console.log(wallet_address, " ", name, " ", selectedRole, " ", profile_photo_url);
-            const res = await assignRole(wallet_address, selectedRole, name, profile_photo_url);
-            // console.log(res);
-            navigate(`/${res}-dashboard`);
+            await signupUser(selectedRole);
         }
     };
 
@@ -46,7 +42,7 @@ const RoleSelect = () => {
                             <span className="text-lg sm:text-xl lg:text-2xl font-bold text-white">E</span>
                         </div>
                         <h2 className="text-white text-2xl sm:text-3xl font-bold mb-2">
-                            {userInfo?.name}
+                            USER
                         </h2>
                         <p className="text-gray-300 text-sm sm:text-base">
                             Select your role:

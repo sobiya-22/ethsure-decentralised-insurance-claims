@@ -1,21 +1,41 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, FileText, CreditCard, Folder, AlertCircle, CheckCircle, Clock, Wallet, Users, Star, ArrowRight } from "lucide-react";
+import {
+  Shield, FileText, CreditCard, Folder, AlertCircle, CheckCircle,
+  Clock, Wallet, Users, Star, ArrowRight
+} from "lucide-react";
 import KycNew from "@/components/KycNew";
 import { InlineLoader } from "@/components/ui/Loader";
-import { formatFullWalletAddress } from "@/lib/utils";
 import { getApprovedAgents } from "@/services/agentAPI";
-
-const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, currentView, onKYCSubmit, onCreatePolicy, onPolicySuccess }, ref) => {
+import { getCustomerPolicies } from "@/services/policyAPI";
+const Overview = forwardRef(({ customer, kycStatus, onPayEMIClick, currentView,
+  onKYCSubmit, onCreatePolicy, onPolicySuccess }, ref) => {
   const [showAgents, setShowAgents] = useState(false);
   const [agents, setAgents] = useState([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
   const [showKYC, setShowKYC] = useState(false);
+  const [myPolicies, setMyPolicies] = useState(null);
   const [hasPolicyRequest, setHasPolicyRequest] = useState(false);
 
-  // Check if customer has no policies
-  const hasNoPolicies = !customer?.policies || customer?.policies?.length === 0 || customer?.activePolicies === 0;
+
+  useEffect(() => {
+    const fetchPolicies = async () => {
+      if (!customer?.wallet_address) return;
+      try {
+        const response = await getCustomerPolicies(customer.wallet_address);
+        console.log("My policies:", response.data.policies);
+        setMyPolicies(response.data.policies);
+        // if (myPolicies.length === 0) {
+        //   hasNoPolicies = true;
+        // }
+      } catch (err) {
+        console.error("Error fetching policies:", err);
+      }
+    };
+
+    fetchPolicies();
+  }, [customer]);
 
   // Function to handle policy form opening
   const handleCreatePolicy = (agent) => {
@@ -34,15 +54,10 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
 
   // Function to fetch verified agents
   const handleGetPolicy = async () => {
-    // Check if customer already has a policy request
-    if (hasPolicyRequest) {
-      // Don't show alert, just return - the success message will be shown on dashboard
-      return;
-    }
-
     setLoadingAgents(true);
     try {
       const response = await getApprovedAgents();
+      // console.log(response);
       setAgents(response.data?.data || []);
       setShowAgents(true);
     } catch (error) {
@@ -101,15 +116,24 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
             </div>
             <div className="flex items-center gap-2 xs:gap-3">
               <div className="flex items-center gap-1 xs:gap-2 px-2 xs:px-3 py-1 xs:py-1.5 rounded-full glass border border-cyan-500/30">
-                <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 text-cyan-400" />
-                <span className="text-xs xs:text-sm text-cyan-400 font-medium">Verified</span>
+                {/* <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 text-cyan-400" /> */}
+                <span
+                  className={`text-xs xs:text-sm font-medium ${kycStatus === "pending"
+                    ? "text-red-500"
+                    : kycStatus === "verified"
+                      ? "text-green-500"
+                      : "text-gray-400"
+                    }`}
+                >
+                  {kycStatus}
+                </span>
+
               </div>
             </div>
           </div>
 
           {/* KYC Alert */}
-          {/* KYC Alert */}
-          {kycStatus !== "verified" && (
+          {kycStatus === "pending" && (
             <Card className="glass border border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-blue-500/10">
               <CardContent className="p-4">
                 <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3">
@@ -123,7 +147,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
                     </p>
                   </div>
                   <div className="flex-shrink-0">
-                    <Button 
+                    <Button
                       className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 cursor-pointer z-10 relative"
                       onClick={() => setShowKYC(true)}
                       type="button"
@@ -179,7 +203,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
           )}
 
           {/* Get Policy Section */}
-          {!hasPolicyRequest && (
+          {Array.isArray(myPolicies) && myPolicies.length === 0 && (
             <Card className="glass hover:border-green-400/50 transition-all duration-300 hover:scale-[1.01]">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2">
@@ -201,7 +225,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
                   </div>
 
                   {/* Plan Details */}
-                  <div className="space-y-4">
+                  {/* <div className="space-y-4">
                     <h4 className="text-white font-semibold text-lg">What are Endorsement Plans?</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {planFeatures.map((feature, index) => (
@@ -214,22 +238,22 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Pricing and CTA */}
                   <div className="space-y-4">
                     <div className="text-center p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20">
                       <h3 className="text-2xl font-bold text-white mb-2">Starting from ₹2,500<span className="text-gray-400 text-lg font-normal">/month</span></h3>
                       <p className="text-gray-400 text-sm mb-3">Flexible premium options available</p>
-                      <div className="flex items-center justify-center gap-4 text-sm text-gray-300">
+                      {/* <div className="flex items-center justify-center gap-4 text-sm text-gray-300">
                         <span>✓ Life Insurance</span>
                         <span>✓ Health Coverage</span>
                         <span>✓ Accident Protection</span>
-                      </div>
+                      </div> */}
                     </div>
-                    
+
                     <div className="flex justify-center">
-                      <Button 
+                      <Button
                         onClick={handleGetPolicy}
                         disabled={loadingAgents}
                         className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 cursor-pointer relative z-10 px-8 py-3 text-lg"
@@ -271,7 +295,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
                           <div>
                             <p className="text-white font-semibold">{getAgentName(agent, index)}</p>
                             <p className="text-gray-400 text-sm">{getAgentEmail(agent)}</p>
-                            <p className="text-gray-500 text-xs">Wallet: {formatFullWalletAddress(agent.wallet_address)}</p>
+                            <p className="text-gray-500 text-xs">Wallet: {(agent.wallet_address)}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -279,7 +303,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
                             <span className="text-yellow-400 text-sm font-medium">4.8</span>
                           </div>
-                          <Button 
+                          <Button
                             onClick={() => handleCreatePolicy(agent)}
                             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 cursor-pointer relative z-10 px-6 py-2 text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/30 border-0"
                             type="button"
@@ -305,7 +329,7 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
           )}
 
           {/* Policy Overview */}
-          {hasNoPolicies && (
+          {!myPolicies && (
             <div className="col-span-full">
               <Card className="glass border border-blue-500/30">
                 <CardContent className="p-6">
@@ -321,4 +345,4 @@ const CustomerContent = forwardRef(({ customer, kycStatus, onPayEMIClick, curren
   );
 });
 
-export default CustomerContent;
+export default Overview;
