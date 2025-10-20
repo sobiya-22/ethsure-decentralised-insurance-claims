@@ -1,28 +1,18 @@
-// import React from "react";
-// import { Navigate } from "react-router-dom";
-// import { getRoleFromToken, isLoggedIn } from "../utils/decodeJWT";
-// import { useAuth } from "./AuthContext";
-// import { FullPageLoader } from "../components/ui/Loader"; 
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
-// export default function ProtectedRoute({ children, allowedRoles }) {
-//   const { token, loading } = useAuth();
+const ProtectedRoute = ({ user, isAuth, role, children }) => {
+  useEffect(() => {
+    if (isAuth && user?.role !== role) {
+      toast.error(`Access denied for ${role} route`);
+    }
+  }, [isAuth, user, role]);
 
-//   // Still restoring session , show loader
-//   if (loading) {
-//     return <FullPageLoader message="Authenticating your session..." />; 
-//   }
+  if (!isAuth) return <Navigate to="/" replace />;
+  if (user?.role !== role) return <Navigate to="/" replace />;
 
-//   // Not logged in , redirect to login
-//   if (!token || !isLoggedIn()) {
-//     return <Navigate to="/login" replace />;
-//   }
+  return children;
+};
 
-//   // Role validation
-//   const role = getRoleFromToken();
-
-//   if (allowedRoles && !allowedRoles.includes(role)) {
-//     return <Navigate to="/role-select" replace />;
-//   }
-
-//   return children;
-// }
+export default ProtectedRoute;

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { ToastProvider } from "./components/ui/toast-provider";
 import { toast } from "react-hot-toast";
 import { userStore } from "./context/userContext";
+import ProtectedRoute from "./context/ProtectedRoute";
 
 // Common Pages
 import Landing from "./pages/Landing";
@@ -35,7 +36,8 @@ import ClaimManagement from "./pages/dashboards/company/ClaimManagement";
 import { Users, FileText, Folder, CreditCard, Home } from "lucide-react";
 
 function App() {
-  const { isAuth, user } = userStore();
+  const isAuth = userStore((state) => state.isAuth);
+  const user = userStore((state) => state.user);
 
   // Sidebar items
   const customerSidebarItems = [
@@ -62,7 +64,7 @@ function App() {
   const requireRole = (role, children) => {
     if (!isAuth) return <Navigate to="/" replace />;
     if (user?.role !== role) {
-      // toast.error(`Access denied for ${role} route`);
+      toast.error(`Access denied for ${role} route`);
       return <Navigate to="/" replace />;
     }
     return children;
@@ -76,11 +78,15 @@ function App() {
       <Route path="/services" element={<Services />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/docvault" element={<DocVault />} />
-      <Route path="/role-select" element={<RoleSelect/>}/>
+      <Route path="/role-select" element={<RoleSelect />} />
       {/* Customer Dashboard Group */}
       <Route
         path="/customer"
-        element={requireRole("customer", <DashboardLayout sidebarItems={customerSidebarItems} />)}
+        element={
+          <ProtectedRoute role="customer" isAuth={isAuth} user={user}>
+            <DashboardLayout sidebarItems={customerSidebarItems} />
+          </ProtectedRoute>
+        }
       >
         <Route path="dashboard" element={<CustomerOverview />} />
         <Route path="policies" element={<Policies />} />
@@ -92,7 +98,11 @@ function App() {
       {/* Agent Dashboard Group */}
       <Route
         path="/agent"
-        element={requireRole("agent", <DashboardLayout sidebarItems={agentSidebarItems} />)}
+        element={
+          <ProtectedRoute role="agent" isAuth={isAuth} user={user}>
+            <DashboardLayout sidebarItems={agentSidebarItems} />
+          </ProtectedRoute>
+        }
       >
         <Route path="dashboard" element={<AgentOverview />} />
         <Route path="customers" element={<PolicyManagement />} />
@@ -102,13 +112,18 @@ function App() {
       {/* Company Dashboard Group */}
       <Route
         path="/company"
-        element={requireRole("company", <DashboardLayout sidebarItems={companySidebarItems} />)}
+        element={
+          <ProtectedRoute role="company" isAuth={isAuth} user={user}>
+            <DashboardLayout sidebarItems={companySidebarItems} />
+          </ProtectedRoute>
+        }
       >
         <Route path="dashboard" element={<CompanyOverview />} />
         <Route path="all-agents" element={<AgentManagement />} />
         <Route path="all-customers" element={<CustomerManagement />} />
         <Route path="claims" element={<ClaimManagement />} />
       </Route>
+
     </Routes>
   );
 }
