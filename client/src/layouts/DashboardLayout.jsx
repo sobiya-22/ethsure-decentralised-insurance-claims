@@ -18,7 +18,7 @@ const DashboardLayout = ({ sidebarItems = [] }) => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg border border-white/20 hover:border-white/40 hover:bg-white/10 transition backdrop-blur-sm bg-gray-900/95"
+        className="fixed top-4 left-4 md:hidden p-2 rounded-lg border border-white/20 hover:border-white/40 hover:bg-white/10 transition backdrop-blur-sm bg-gray-900/95"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -29,10 +29,10 @@ const DashboardLayout = ({ sidebarItems = [] }) => {
       {/* Main area */}
       <div className="flex-1 flex flex-col min-h-screen md:ml-64 transition-all duration-300">
         {/* Header */}
-        <Header user={user} />
+        <Header />
 
         {/* Content */}
-        <main className="flex-1 p-4 sm:p-6 md:p-8 mt-16 md:mt-0 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 pt-16" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <Outlet />
         </main>
       </div>

@@ -1,16 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const Header = ({ user }) => {
+import { userStore } from '../context/userContext';
+import { User } from 'lucide-react';
+const Header = () => {
   const navigate = useNavigate();
-
+  const user = userStore((state) => state.user);
   const handleProfileClick = () => {
-    navigate('./profile');
+    navigate('/profile');
   };
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 
+      className="fixed top-0 left-0 right-0 border-b border-white/10 
                  backdrop-blur-xl bg-gradient-to-r from-gray-900/98 via-gray-800/95 to-gray-900/98 
                  shadow-lg transition-all duration-300"
     >
@@ -29,7 +30,7 @@ const Header = ({ user }) => {
           {/* Profile Section */}
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="hidden sm:block text-white text-xs sm:text-sm font-mono truncate max-w-[160px]">
-              {user?.wallet}
+              {user?.wallet_address}
             </div>
             <button
               onClick={handleProfileClick}
@@ -40,13 +41,7 @@ const Header = ({ user }) => {
                               bg-gradient-to-r from-blue-500 to-purple-500 
                               rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  {user?.name
-                    ? user.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')
-                        .toUpperCase()
-                    : 'U'}
+                  <User/>
                 </span>
               </div>
             </button>

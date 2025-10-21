@@ -8,7 +8,7 @@ const Sidebar = ({ items = [], isOpen, setIsOpen }) => {
   const { logoutUser } = useAuth();
 
   const handleLogout = async () => {
-    await logout();
+    await logoutUser();
     setIsOpen(false);
   };
 
@@ -40,13 +40,13 @@ const Sidebar = ({ items = [], isOpen, setIsOpen }) => {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-50 h-full w-80 md:w-72 
+        className={`fixed left-0 top-0 h-full w-80 md:w-72 
           glass border-r border-white/10 p-3 pt-24 shadow-2xl 
           transition-transform duration-300 ease-out backdrop-blur-xl
           bg-gradient-to-b from-gray-900/98 via-gray-800/95 to-gray-900/98

@@ -44,6 +44,10 @@ export const useAuth = () => {
             toast.success("Signup successful!");
             return res.data;
         } catch (err) {
+            let msg = err?.response?.data?.message;
+            if (msg === 'User already exists') {
+                await logoutUser();
+            }
             toast.error(err?.response?.data?.message || "Signup failed");
             console.error("Signup failed:", err);
             throw err;

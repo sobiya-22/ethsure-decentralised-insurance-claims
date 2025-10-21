@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Edit2, Save, X, User, Shield, FileText, Settings, Bell, Lock, Upload, AlertCircle, Key, Eye, EyeOff, Fingerprint, Copy, Check } from 'lucide-react';
 import DocVault from './DocVault';
-import { CardLoader } from '@/components/ui/Loader';
 import { getCustomer, updateCustomer } from '../services/customerAPI';
 import { getAgentDetails, updateAgentProfile } from '../services/agentAPI';
 
@@ -399,7 +398,7 @@ const Profile = ({ user, onUpdateProfile, onClose }) => {
   if (loading) {
     return (
       <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 flex items-center justify-center min-h-[400px]">
-        <CardLoader />
+        Loading...
       </div>
     );
   }

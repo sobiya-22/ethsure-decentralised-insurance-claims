@@ -7,7 +7,7 @@ import { getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 // import CustomerDetailsModal from "./CustomerDetailsModal";
 // import PolicyRequestDetailsModal from "./PolicyRequestDetailsModal";
 import { getAgentPolicyRequests } from "@/services/agentAPI";
-import { InlineLoader } from "@/components/ui/Loader";
+// import { InlineLoader } from "@/components/ui/Loader";
 
 const AgentOverview = ({
   onNavigateToCustomers,

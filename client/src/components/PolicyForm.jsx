@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { X, User, Calendar, Phone, Mail, MapPin, CreditCard, FileText } from "lucide-react";
 import { createPolicy } from "@/services/policyAPI";
-import { InlineLoader } from "@/components/ui/Loader";
+// import { InlineLoader } from "@/components/ui/Loader";
 import { useToast } from "@/components/ui/toast-provider";
 
 const PolicyForm = ({ agent, customer, onClose, onSuccess, isReadOnly = false }) => {

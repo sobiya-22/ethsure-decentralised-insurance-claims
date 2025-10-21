@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { ToastProvider } from "./components/ui/toast-provider";
+// import { ToastProvider } from "./components/ui/toast-provider";
 import { toast } from "react-hot-toast";
 import { userStore } from "./context/userContext";
 import ProtectedRoute from "./context/ProtectedRoute";
@@ -12,7 +12,8 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import DocVault from "./components/DocVault";
 import RoleSelect from "./components/RoleSelect";
-
+import UserKYCForm from "./components/UserKYCForm";
+import Profile from "./components/Profile";
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -34,6 +35,7 @@ import ClaimManagement from "./pages/dashboards/company/ClaimManagement";
 
 // UI Icons
 import { Users, FileText, Folder, CreditCard, Home } from "lucide-react";
+
 
 function App() {
   const isAuth = userStore((state) => state.isAuth);
@@ -60,15 +62,6 @@ function App() {
     { id: "claim-management", icon: Folder, label: "Claims", path: "/company/claims" },
   ];
 
-  // Simple role protection (without ProtectedRoute component)
-  const requireRole = (role, children) => {
-    if (!isAuth) return <Navigate to="/" replace />;
-    if (user?.role !== role) {
-      toast.error(`Access denied for ${role} route`);
-      return <Navigate to="/" replace />;
-    }
-    return children;
-  };
 
   return (
     <Routes>
@@ -79,6 +72,7 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/docvault" element={<DocVault />} />
       <Route path="/role-select" element={<RoleSelect />} />
+      <Route path="/profile" element={<Profile/>}/>
       {/* Customer Dashboard Group */}
       <Route
         path="/customer"
@@ -88,11 +82,13 @@ function App() {
           </ProtectedRoute>
         }
       >
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<CustomerOverview />} />
         <Route path="policies" element={<Policies />} />
         <Route path="pay-emi" element={<PayEMI />} />
         <Route path="payment-methods" element={<PaymentMethod />} />
         <Route path="docvault" element={<DocVault />} />
+        <Route path="kyc" element={<UserKYCForm/>}/>
       </Route>
 
       {/* Agent Dashboard Group */}
@@ -104,6 +100,7 @@ function App() {
           </ProtectedRoute>
         }
       >
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AgentOverview />} />
         <Route path="customers" element={<PolicyManagement />} />
         <Route path="docvault" element={<DocVault />} />
@@ -118,6 +115,7 @@ function App() {
           </ProtectedRoute>
         }
       >
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<CompanyOverview />} />
         <Route path="all-agents" element={<AgentManagement />} />
         <Route path="all-customers" element={<CustomerManagement />} />

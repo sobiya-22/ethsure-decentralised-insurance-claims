@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Folder, Eye, Shield, Search, X, Download, AlertCircle } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
-import { defaultCompanyUser, getCompanySidebarItems, getStatusColor, getTypeColor, defaultClaimsData, commonClasses } from '@/constants/companyConstants';
+// import { defaultCompanyUser, getCompanySidebarItems, getStatusColor, getTypeColor, defaultClaimsData, commonClasses } from '@/constants/companyConstants';
 
 const ClaimManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const ClaimManagement = ({ withLayout = false }) => {
   const [typeFilter, setTypeFilter] = useState('All');
 
   const claimsData = defaultClaimsData;
-  const user = defaultCompanyUser;
+  const user = null;
   const sidebarItems = getCompanySidebarItems(navigate);
 
   const uniqueTypes = useMemo(() => [...new Set(claimsData.map(claim => claim.type))].sort(), [claimsData]);

@@ -5,14 +5,14 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Users, UserPlus, Clock, Mail, Phone, MapPin, Calendar, Eye } from "lucide-react";
 // import CustomerDetailsModal from "./CustomerDetailsModal";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, defaultCustomers, getStatusColor, getPriorityColor } from "@/constants/agentConstants";
+// import { defaultAgentUser, getAgentSidebarItems, getAgentCurrentView, defaultCustomers, getStatusColor, getPriorityColor } from "@/constants/agentConstants";
 
 const PolicyManagement = ({ withLayout = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
-  const [customers, setCustomers] = useState(defaultCustomers);
+  const [customers, setCustomers] = useState(null);
 
   const handleViewCustomer = (customer) => {
     setSelectedCustomer(customer);

@@ -8,6 +8,7 @@ export const userStore = create(
       isAuth: false,
       login: (user) => set(() => ({ user, isAuth: true })),
       logout: () => set(() => ({ user: null, isAuth: false })),
+      setUser: (updatedUser) => set((state) => ({ user: updatedUser })),
     }),
     {
       name: "user-storage",

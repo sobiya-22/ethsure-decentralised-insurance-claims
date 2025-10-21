@@ -2,15 +2,15 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, FileText, AlertCircle, Wallet, Building2, UserCheck, Award } from "lucide-react";
-import { defaultCompanyUser, getStatusColor, defaultAgentsData, defaultCustomersData, defaultPoliciesData, defaultRequestingPoliciesData, defaultClaimsData } from '@/constants/companyConstants';
+// import { defaultCompanyUser, getStatusColor, defaultAgentsData, defaultCustomersData, defaultPoliciesData, defaultRequestingPoliciesData, defaultClaimsData } from '@/constants/companyConstants';
 
 const CompanyOverview = () => {
-  const company = defaultCompanyUser;
-  const agentsData = defaultAgentsData;
-  const customersData = defaultCustomersData;
-  const policiesData = defaultPoliciesData;
-  const requestingPoliciesData = defaultRequestingPoliciesData;
-  const claimsData = defaultClaimsData;
+  const company = null;
+  const agentsData = null;
+  const customersData = null;
+  const policiesData = null;
+  const requestingPoliciesData = null;
+  const claimsData = null;
 
   return (
     <div className="text-white w-full relative bg-transparent">
