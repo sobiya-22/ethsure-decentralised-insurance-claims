@@ -1,13 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Shield, FileText, Calendar, DollarSign, User, Phone, Mail, CheckCircle, Download, Eye, CreditCard, BarChart3 } from 'lucide-react';
-import { getStatusColor, getTypeColor, defaultPolicies } from '@/constants/customerConstants';
+import { Shield, DollarSign, CreditCard, FileText } from 'lucide-react';
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import { userStore } from "@/context/userContext";
+import { defaultPolicies } from '@/constants/customerConstants';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL; 
 
 const Policies = () => {
+  const [policies, setPolicies] = useState(defaultPolicies);
   const [selectedPolicy, setSelectedPolicy] = useState(null);
-  const policies = defaultPolicies;
+  const [showAgents, setShowAgents] = useState(false);
+  const user = userStore((state) => state.user);
+
+  // Modal state (optional)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePolicyClick = (policy) => {
+    setSelectedPolicy(policy);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPolicy(null);
+  };
+
+  // Fetch policies from API
+  useEffect(() => {
+    const handleMyPolicies = async () => {
+      if (!user?.wallet_address) return;
+
+      try {
+        const res = await axios.get(`${BASE_URL}/api/policy/all-policies`, {
+          params: { customer_wallet_address: user.wallet_address },
+        });
+
+        if (res.data.success) {
+          const mappedPolicies = res.data.policies.map((p) => ({
+            id: p._id,
+            name: p.fullName,
+            agent_wallet: p.agent_wallet_address,
+            premiumAmount: p.premium_amount,
+            maturityDate: new Date(p.expiryDate).toLocaleDateString(),
+            nominee: p.nominee?.nominee_name || "N/A",
+            status: p.status || 'created',
+            coverage_amount: p.coverage_amount || 2000000, // default coverage
+            policy_duration: p.duration || 10,
+          }));
+          setPolicies(mappedPolicies);
+          console.log("Fetched Policies:", mappedPolicies);
+        } else {
+          toast.error(res.data.message || "No policies found.");
+        }
+      } catch (err) {
+        console.error("Error fetching policies:", err);
+        toast.error("Failed to fetch policies.");
+      }
+    };
+
+    handleMyPolicies();
+  }, [user]);
+
   const stats = [
     { title: "Total Policies", value: policies.length.toString(), icon: Shield, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
     { title: "Active Coverage", value: "₹50,000", icon: DollarSign, color: "from-blue-500/20 to-blue-400/20", iconColor: "text-blue-400" },
@@ -17,6 +73,7 @@ const Policies = () => {
 
   return (
     <div className="text-white w-full space-y-8 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
+      {/* Header & Stats */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         <div className="space-y-3">
           <div className="flex items-center gap-4">
@@ -28,9 +85,11 @@ const Policies = () => {
           </div>
         </div>
       </div>
+
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <Card key={index} className="glass shine border-white/10 hover-scale-105 hover-glow-cyan group">
+        {stats.map((stat, idx) => (
+          <Card key={idx} className="glass shine border-white/10 hover-scale-105 hover-glow-cyan group">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div><p className="text-white/60 text-sm">{stat.title}</p><p className="text-2xl font-bold text-white">{stat.value}</p></div>
@@ -41,104 +100,69 @@ const Policies = () => {
         ))}
       </div>
 
+      {/* Policies Table */}
       <div className="space-y-6">
-        {policies.map((policy) => (
-          <Card key={policy.id} className="glass shine border-white/10 hover-scale-105 hover-glow-cyan">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-gray-500/20 to-gray-500/20"><Shield className="w-6 h-6 text-gray-400" /></div>
-                  <div><CardTitle className="text-2xl font-bold text-white">{policy.name}</CardTitle><p className="text-white/60">Policy #{policy.id}</p></div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Badge className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(policy.type)}`}>{policy.type}</Badge>
-                  <Badge className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(policy.status)}`}>{policy.status}</Badge>
-                  <Button variant="outline" onClick={() => setSelectedPolicy(selectedPolicy === policy.id ? null : policy.id)} className="hover:bg-white/10">{selectedPolicy === policy.id ? 'Hide Details' : 'View Details'}</Button>
-                </div>
+        <Card className="bg-gradient-to-br from-gray-900/80 via-gray-800/80 to-gray-900/80 border border-white/10 shadow-2xl rounded-2xl backdrop-blur-sm hover:border-cyan-400/30 hover:shadow-[0_0_40px_rgba(6,182,212,0.15)] transition-all duration-500">
+          <CardHeader className="pb-6 border-b border-white/10">
+            <CardTitle className="flex items-center gap-3 text-white text-2xl font-bold">
+              <div className="p-2 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20">
+                <Shield className="w-6 h-6 text-green-400" />
               </div>
-            </CardHeader>
-            
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="space-y-2"><div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Premium</span></div><p className="text-white font-semibold text-lg">{policy.premium}/month</p></div>
-                <div className="space-y-2"><div className="flex items-center gap-2"><Shield className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Coverage</span></div><p className="text-white font-semibold text-lg">{policy.coverage}</p></div>
-                <div className="space-y-2"><div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Valid Until</span></div><p className="text-white font-semibold text-lg">{policy.endDate}</p></div>
-              </div>
-              <div className="p-4 rounded-lg bg-white/5 border border-white/10 mb-6">
-                <h4 className="text-white font-semibold mb-3 flex items-center gap-2"><User className="w-4 h-4" />Agent Information</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-2"><User className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Name:</span><span className="text-white font-medium">{policy.agent.name}</span></div>
-                  <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Email:</span><span className="text-white font-medium">{policy.agent.email}</span></div>
-                  <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-white/60" /><span className="text-white/60 text-sm">Phone:</span><span className="text-white font-medium">{policy.agent.phone}</span></div>
-                </div>
-              </div>
-
-              {selectedPolicy === policy.id && (
-                <div className="space-y-6 animate-fadeInUp">
-                  <div><h4 className="text-white font-semibold mb-3 flex items-center gap-2"><CheckCircle className="w-4 h-4" />Policy Benefits</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {policy.benefits.map((benefit, index) => (
-                        <div key={index} className="flex items-center gap-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                          <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" /><span className="text-white text-sm">{benefit}</span>
+              My Insurance Policies
+              <span className="text-sm font-normal text-gray-400 bg-white/5 px-3 py-1 rounded-full">
+                {policies.length} {policies.length === 1 ? 'Policy' : 'Policies'}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-b border-white/10">
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Policy ID</th>
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Agent</th>
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Premium</th>
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Coverage</th>
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Maturity</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {policies.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center">
+                        <div className="flex flex-col items-center justify-center space-y-3">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/10">
+                            <Shield className="w-8 h-8 text-gray-500" />
+                          </div>
+                          <h3 className="text-lg font-semibold text-gray-400 mb-1">No Policies Found</h3>
+                          <p className="text-gray-500 text-sm">You don't have any insurance policies yet.</p>
+                          <Button onClick={() => setShowAgents(true)} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 mt-2 px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105">
+                            Get Your First Policy
+                          </Button>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div><h4 className="text-white font-semibold mb-3 flex items-center gap-2"><FileText className="w-4 h-4" />Recent Claims</h4>
-                    <div className="space-y-3">
-                      {policy.claims.map((claim, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
-                          <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-gradient-to-r from-gray-500/20 to-gray-500/20"><FileText className="w-4 h-4 text-gray-400" /></div>
-                            <div><p className="text-white font-medium">{claim.id} - {claim.description}</p><p className="text-white/60 text-sm">{claim.date} • {claim.amount}</p></div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Badge className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(claim.status)}`}>{claim.status}</Badge>
-                            <Button size="sm" variant="outline"><Eye className="w-4 h-4 mr-1" />View</Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div><h4 className="text-white font-semibold mb-3 flex items-center gap-2"><Download className="w-4 h-4" />Policy Documents</h4>
-                    <div className="space-y-3">
-                      {policy.documents.map((doc, index) => (
-                        <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
-                          <div className="flex items-center gap-4">
-                            <div className="p-2 rounded-lg bg-gradient-to-r from-gray-500/20 to-gray-500/20"><FileText className="w-4 h-4 text-gray-400" /></div>
-                            <div><p className="text-white font-medium">{doc.name}</p><p className="text-white/60 text-sm">{doc.type} • Uploaded {doc.uploaded}</p></div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Badge className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(doc.status)}`}>{doc.status}</Badge>
-                            <Button size="sm" variant="outline"><Download className="w-4 h-4 mr-1" />Download</Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-4 pt-4 border-t border-white/10">
-                    <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"><CreditCard className="w-4 h-4 mr-2" />Pay Premium</Button>
-                    <Button variant="outline" className="hover:bg-white/10"><FileText className="w-4 h-4 mr-2" />Submit Claim</Button>
-                    <Button variant="outline" className="hover:bg-white/10"><BarChart3 className="w-4 h-4 mr-2" />View Analytics</Button>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {policies.length === 0 && (
-        <Card className="glass shine border-white/10 text-center py-12">
-          <CardContent>
-            <div className="p-6 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 w-24 h-24 mx-auto mb-6 flex items-center justify-center"><Shield className="w-12 h-12 text-blue-400" /></div>
-            <h3 className="text-2xl font-bold text-white mb-4">No Policies Found</h3>
-            <p className="text-white/60 mb-6">You don't have any active insurance policies yet.</p>
-            <Button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"><Shield className="w-4 h-4 mr-2" />Get Your First Policy</Button>
+                      </td>
+                    </tr>
+                  ) : (
+                    policies.map((policy, idx) => (
+                      <tr key={policy.id || idx} onClick={() => handlePolicyClick(policy)} className="group hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-l-4 hover:border-l-cyan-400/50">
+                        <td className="px-6 py-4">POL_{policy.id}</td>
+                        <td className="px-6 py-4">{policy.agent_wallet || 'Unknown Agent'}</td>
+                        <td className="px-6 py-4">₹{policy.premiumAmount?.toLocaleString()}</td>
+                        <td className="px-6 py-4">₹{policy.coverage_amount?.toLocaleString()}</td>
+                        <td className="px-6 py-4">{policy.status}</td>
+                        <td className="px-6 py-4">{policy.maturityDate}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
-      )}
+      </div>
     </div>
   );
 };
+
 export default Policies;

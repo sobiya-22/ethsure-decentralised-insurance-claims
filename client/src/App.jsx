@@ -22,6 +22,7 @@ import CustomerOverview from "./pages/dashboards/customer/CustomerOverview";
 import PayEMI from "./pages/dashboards/customer/PayEMI";
 import PaymentMethod from "./pages/dashboards/customer/PaymentMethod";
 import Policies from "./pages/dashboards/customer/Policies";
+import PolicyForm from "./components/PolicyForm";
 
 // Agent Pages
 import AgentOverview from "./pages/dashboards/agent/AgentOverview";
@@ -35,6 +36,7 @@ import ClaimManagement from "./pages/dashboards/company/ClaimManagement";
 
 // UI Icons
 import { Users, FileText, Folder, CreditCard, Home } from "lucide-react";
+
 
 
 function App() {
@@ -88,7 +90,8 @@ function App() {
         <Route path="pay-emi" element={<PayEMI />} />
         <Route path="payment-methods" element={<PaymentMethod />} />
         <Route path="docvault" element={<DocVault />} />
-        <Route path="kyc" element={<UserKYCForm/>}/>
+        <Route path="kyc" element={<UserKYCForm />} />
+        <Route path="buy-plan" element={<PolicyForm/>}/>
       </Route>
 
       {/* Agent Dashboard Group */}
@@ -104,6 +107,7 @@ function App() {
         <Route path="dashboard" element={<AgentOverview />} />
         <Route path="customers" element={<PolicyManagement />} />
         <Route path="docvault" element={<DocVault />} />
+        <Route path="kyc" element={<UserKYCForm/>}/>
       </Route>
 
       {/* Company Dashboard Group */}
