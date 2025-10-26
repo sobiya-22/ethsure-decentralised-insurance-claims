@@ -13,6 +13,7 @@ export const useAuth = () => {
 
     const login = userStore((state) => state.login);
     const logout = userStore((state) => state.logout);
+    const setUser = userStore((state) => state.logout);
 
     const connectWeb3 = async () => {
         if (!web3Auth) throw new Error("Web3Auth not initialized");
@@ -21,7 +22,7 @@ export const useAuth = () => {
         const info = await web3Auth.getUserInfo();
         const wallet_address = await getWalletAddress(provider);
         const did = await createEthrDID(web3Auth);
-
+        console.log("info: ", info);
         return {
             wallet_address,
             email: info?.email,
@@ -31,7 +32,7 @@ export const useAuth = () => {
         };
     };
 
-    const signupUser = async (role = "customer") => {
+    const signupUser = async (role) => {
         try {
             const userData = await connectWeb3();
 
@@ -42,6 +43,7 @@ export const useAuth = () => {
 
             login(res.data.user);
             toast.success("Signup successful!");
+            await logoutUser();
             return res.data;
         } catch (err) {
             let msg = err?.response?.data?.message;
@@ -67,8 +69,10 @@ export const useAuth = () => {
             toast.success(res.data.message);
             return res.data;
         } catch (err) {
+            // if(err?.response?.data?.message === "Account does not exist. Please sign up first.")
             toast.error(err?.response?.data?.message);
             console.error("Login failed:", err);
+            await logoutUser();
             throw err;
         }
     };
@@ -79,6 +83,7 @@ export const useAuth = () => {
     };
 
     return {
+        connectWeb3,
         signupUser,
         loginUser,
         logoutUser,

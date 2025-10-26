@@ -27,7 +27,7 @@ import PolicyForm from "./components/PolicyForm";
 // Agent Pages
 import AgentOverview from "./pages/dashboards/agent/AgentOverview";
 import PolicyManagement from "./pages/dashboards/agent/PolicyManagement";
-
+import AgentAssociationForm from "./pages/dashboards/agent/AgentAssociationForm";
 // Company Pages
 import CompanyOverview from "./pages/dashboards/company/CompanyOverview";
 import AgentManagement from "./pages/dashboards/company/AgentManagement";
@@ -107,7 +107,8 @@ function App() {
         <Route path="dashboard" element={<AgentOverview />} />
         <Route path="customers" element={<PolicyManagement />} />
         <Route path="docvault" element={<DocVault />} />
-        <Route path="kyc" element={<UserKYCForm/>}/>
+        <Route path="kyc" element={<UserKYCForm />} />
+        <Route path="associate-company" element={<AgentAssociationForm/>} />
       </Route>
 
       {/* Company Dashboard Group */}

@@ -7,7 +7,7 @@ import { userStore } from '../context/userContext';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Navbar = () => {
-  const { signupUser, loginUser, logoutUser } = useAuth();
+  const { connectWeb3, loginUser, logoutUser } = useAuth();
   // const user = userStore((state) => state.user);
   const isAuth = userStore((state) => state.isAuth);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,8 +25,9 @@ const Navbar = () => {
   };
   const handleSignup = async () => {
     try {
-      await signupUser();
+      await connectWeb3();
       navigate('/role-select');
+      
     } catch (err) {
       console.error("Signup failed:", err);
     }

@@ -169,7 +169,7 @@ const UserKYCForm = () => {
         toast.success("KYC completed successfully!");
         const updatedUserRes = await axios.get(`${BASE_URL}/api/users/${user.wallet_address}`);
         setUser(updatedUserRes.data.user);
-        navigate("/customer/dashboard");
+        navigate(`/${user?.role}/dashboard`);
       } else {
         toast.error(res.data.message || "Failed to submit KYC");
       }

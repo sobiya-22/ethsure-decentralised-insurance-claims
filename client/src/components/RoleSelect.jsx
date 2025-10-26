@@ -5,7 +5,7 @@ import { userStore } from '../context/userContext';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const navigate = useNavigate();
-
+    const {signupUser} = useAuth();
     const roles = [
         { id: 'customer', name: 'Customer' },
         { id: 'agent', name: 'Agent' },
