@@ -5,11 +5,11 @@ import { userStore } from '../context/userContext';
 const RoleSelect = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const navigate = useNavigate();
-    const {signupUser} = useAuth();
+    const {signupUser,logoutUser} = useAuth();
     const roles = [
         { id: 'customer', name: 'Customer' },
         { id: 'agent', name: 'Agent' },
-        // { id: 'nominee', name: 'Nominee' },
+        { id: 'company', name: 'Company' },
     ];
     const isAuth = userStore((state) => state.isAuth);
     const login = userStore((state) => state.login);
@@ -28,6 +28,7 @@ const RoleSelect = () => {
     const handleContinue = async () => {
         if (selectedRole) {
             await signupUser(selectedRole);
+            await logoutUser();
         }
     };
 

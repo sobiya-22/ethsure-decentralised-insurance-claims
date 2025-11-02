@@ -105,9 +105,9 @@ export const getStatusColor = (status) => {
     case "Active": return "text-emerald-400 bg-emerald-500/20 border border-emerald-500/30";
     case "Pending": return "text-amber-400 bg-amber-500/20 border border-amber-500/30";
     case "Under Review": return "text-gray-300 bg-gray-700/50";
-    case "Documentation Pending": return "text-gray-300 bg-gray-700/50";
+    case "agentApproved": return "text-yellow-300 bg-gray-700/50";
     case "Ready for Approval": return "text-gray-300 bg-gray-700/50";
-    case "Approved": return "text-gray-300 bg-gray-700/50";
+    case "Approved": return "text-green-300 bg-green-700/50";
     case "Rejected": return "text-gray-300 bg-gray-700/50";
     default: return "text-gray-400 bg-gray-700/50";
   }

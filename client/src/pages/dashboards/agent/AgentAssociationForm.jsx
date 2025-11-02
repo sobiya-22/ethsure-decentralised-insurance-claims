@@ -40,11 +40,9 @@ const AgentAssociationForm = () => {
   const secondaryButtonClass = "bg-gray-700 hover:bg-gray-600 border border-gray-600 px-8 py-3 text-lg rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-medium";
 
   useEffect(() => {
-    // Pre-fill agent data if available (remaingn)
     if (user?.agent) {
       setFormData(prev => ({
         ...prev,
-        license_number: user.agent.license_number || ""
       }));
     }
   }, [user]);
@@ -97,9 +95,9 @@ const AgentAssociationForm = () => {
     setIsSubmitting(true);
 
     try {
-      const payload = {
-        wallet_address: user.wallet_address,
-        company_name: "Ethsure", 
+      const data = {
+        agent_wallet_address: user.wallet_address,
+        company_name: "NexVault", 
         license_number: formData.license_number,
         experience_years: parseInt(formData.experience_years),
         specialization: formData.specialization,
@@ -109,9 +107,9 @@ const AgentAssociationForm = () => {
         terms_accepted: formData.terms_accepted
       };
 
-      console.log("Sending association request:", payload);
+      console.log("Sending association request:", data);
 
-      const res = await axios.post(`${BASE_URL}/api/agent/association-request`, payload);
+      const res = await axios.post(`${BASE_URL}/api/agent/send-association`, {data});
 
       if (res.data.success) {
         toast.success("Association request sent to Ethsure successfully!");
@@ -209,7 +207,7 @@ const AgentAssociationForm = () => {
                 <Label className="text-cyan-300 font-medium">Company</Label>
                 <p className="text-white font-semibold flex items-center gap-2">
                   <Shield className="w-4 h-4 text-amber-400" />
-                  Ethsure Insurance
+                  NexVault Secure Insurance
                 </p>
               </div>
             </div>
@@ -228,7 +226,7 @@ const AgentAssociationForm = () => {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <Label className="text-gray-300 font-medium">Insurance License Number *</Label>
+                  <Label className="text-gray-300 font-medium">IRDAI Insurance Agent License *</Label>
                   <Input
                     value={formData.license_number}
                     onChange={(e) => handleInputChange("license_number", e.target.value.toUpperCase())}

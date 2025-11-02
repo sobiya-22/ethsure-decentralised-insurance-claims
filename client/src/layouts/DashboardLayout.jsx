@@ -7,10 +7,10 @@ import { useAuth } from "../hooks/useAuth";
 
 const DashboardLayout = ({ sidebarItems = [] }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user } = useAuth(); // get user info from context
+  const { user } = useAuth();
 
   return (
-    <div className=" relative text-white flex flex-col md:flex-row">
+    <div className="relative text-white flex flex-col md:flex-row">
       {/* Background effects */}
       <div className="fixed inset-0 bg-grid opacity-100 pointer-events-none"></div>
       <div className="fixed top-20 left-20 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl animate-pulse-slow pointer-events-none"></div>
@@ -18,7 +18,7 @@ const DashboardLayout = ({ sidebarItems = [] }) => {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 md:hidden p-2 rounded-lg border border-white/20 hover:border-white/40 hover:bg-white/10 transition backdrop-blur-sm bg-gray-900/95"
+        className="fixed top-4 left-4 z-40 md:hidden p-2 rounded-lg border border-white/20 hover:border-white/40 hover:bg-white/10 transition backdrop-blur-sm bg-gray-900/95"
       >
         <Menu className="w-5 h-5" />
       </button>

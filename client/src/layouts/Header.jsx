@@ -2,16 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userStore } from '../context/userContext';
 import { User } from 'lucide-react';
+
 const Header = () => {
   const navigate = useNavigate();
   const user = userStore((state) => state.user);
+
   const handleProfileClick = () => {
     navigate('/profile');
   };
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 border-b border-white/10 
+      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 
                  backdrop-blur-xl bg-gradient-to-r from-gray-900/98 via-gray-800/95 to-gray-900/98 
                  shadow-lg transition-all duration-300"
     >
@@ -20,12 +22,16 @@ const Header = () => {
           {/* Logo Section */}
           <div className="flex items-center space-x-2 sm:space-x-3 fade-in text-white">
             <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 
-                            bg-gradient-to-r from-purple-500 to-green-500 
-                            rounded-xl flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-sm sm:text-base lg:text-lg">E</span>
+                  rounded-xl flex items-center justify-center shadow-md overflow-hidden">
+              <img
+                src="https://res.cloudinary.com/drcmowihw/image/upload/v1756992149/EthSure_ugpws3.png"
+                alt="EthSure Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-lg sm:text-2xl font-bold">EthSure</span>
           </div>
+
 
           {/* Profile Section */}
           <div className="flex items-center space-x-3 sm:space-x-4">
@@ -41,7 +47,7 @@ const Header = () => {
                               bg-gradient-to-r from-blue-500 to-purple-500 
                               rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  <User/>
+                  <User />
                 </span>
               </div>
             </button>

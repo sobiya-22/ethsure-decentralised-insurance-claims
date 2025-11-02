@@ -43,12 +43,13 @@ export const useAuth = () => {
 
             login(res.data.user);
             toast.success("Signup successful!");
-            await logoutUser();
+            await disconnect();
+            window.location.reload();
             return res.data;
         } catch (err) {
             let msg = err?.response?.data?.message;
             if (msg === 'User already exists') {
-                await logoutUser();
+                await disconnect();
             }
             toast.error(err?.response?.data?.message || "Signup failed");
             console.error("Signup failed:", err);
@@ -72,7 +73,7 @@ export const useAuth = () => {
             // if(err?.response?.data?.message === "Account does not exist. Please sign up first.")
             toast.error(err?.response?.data?.message);
             console.error("Login failed:", err);
-            await logoutUser();
+            await disconnect();
             throw err;
         }
     };
@@ -80,6 +81,8 @@ export const useAuth = () => {
     const logoutUser = async () => {
         await disconnect();
         logout();
+        console.log('Logged out successfully!');
+        toast.success('Logged out successfully');
     };
 
     return {

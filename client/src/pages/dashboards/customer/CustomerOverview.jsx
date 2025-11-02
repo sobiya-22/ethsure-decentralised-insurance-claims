@@ -6,7 +6,7 @@ import axios from "axios";
 import { userStore } from "@/context/userContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import PolicyDetailsModal from "@/components/PolicyDetailsModal";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const CustomerOverview = () => {
@@ -40,19 +40,9 @@ const CustomerOverview = () => {
         });
 
         if (res.data.success) {
-          // Map policies to table-friendly format
-          const mappedPolicies = res.data.policies.map((p) => ({
-            id: p._id,
-            name: p.fullName,
-            agentName: p.agent_wallet_address,
-            premiumAmount: p.premium_amount,
-            issueDate: p.issueDate,
-            maturityDate: new Date(p.expiryDate).toLocaleDateString(),
-            nominee: p.nominee?.nominee_name || "N/A",
-          }));
 
-          setPolicies(mappedPolicies);
-          console.log("Fetched Policies:", mappedPolicies);
+          setPolicies(res.data.policies);
+          console.log("Fetched Policies:", policies);
         } else {
           toast.error(res.data.message || "No policies found.");
         }
@@ -65,212 +55,6 @@ const CustomerOverview = () => {
     if (user?.wallet_address) handleMyPolicies();
   }, [user]);
 
-
-  const PolicyDetailsModal = ({ policy, isOpen, onClose }) => {
-    if (!isOpen || !policy) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-cyan-500/30 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20">
-                <Shield className="w-6 h-6 text-cyan-400" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">Policy Details</h2>
-                <p className="text-gray-400">Complete policy information</p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="text-gray-400 hover:text-white hover:bg-white/10 p-2 rounded-xl"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Policy Content */}
-          <div className="p-6 space-y-6">
-            {/* Policy Header */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-cyan-400">Policy Information</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Policy ID:</span>
-                    <span className="text-white font-mono">{policy.policy_number || `POL_${policy.id}`}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Status:</span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${policy.status === 'active'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : policy.status === 'created'
-                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : policy.status === 'claimed'
-                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                          : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                      }`}>
-                      {policy.status || 'created'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Issue Date:</span>
-                    <span className="text-white">{policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Expiry Date:</span>
-                    <span className="text-white">{policy.expiryDate ? new Date(policy.expiryDate).toLocaleDateString() : 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-cyan-400">Financial Details</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Coverage Amount:</span>
-                    <span className="text-white font-semibold">₹{(policy.coverage_amount || 0).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Premium Amount:</span>
-                    <span className="text-white font-semibold">₹{(policy.premium_amount || 0).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Premium Frequency:</span>
-                    <span className="text-white capitalize">{policy.premium_frequency || 'annual'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Policy Duration:</span>
-                    <span className="text-white">{policy.policy_duration || '10'} years</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Personal Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  Personal Details
-                </h3>
-                <div className="space-y-3 bg-white/5 rounded-xl p-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Full Name:</span>
-                    <span className="text-white">{policy.fullName || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Date of Birth:</span>
-                    <span className="text-white">{policy.dateOfBirth ? new Date(policy.dateOfBirth).toLocaleDateString() : 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Gender:</span>
-                    <span className="text-white">{policy.gender || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Marital Status:</span>
-                    <span className="text-white">{policy.maritalStatus || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  Contact Information
-                </h3>
-                <div className="space-y-3 bg-white/5 rounded-xl p-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Email:</span>
-                    <span className="text-white">{policy.email || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Phone:</span>
-                    <span className="text-white">{policy.phone || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Address:</span>
-                    <span className="text-white text-right max-w-[200px]">{policy.address || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Identification & Agent */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
-                  Identification
-                </h3>
-                <div className="space-y-3 bg-white/5 rounded-xl p-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Aadhar Number:</span>
-                    <span className="text-white font-mono">{policy.aadharNumber || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">PAN Number:</span>
-                    <span className="text-white font-mono">{policy.panNumber || 'N/A'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Annual Income:</span>
-                    <span className="text-white">₹{(policy.annualIncome || 0).toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Occupation:</span>
-                    <span className="text-white">{policy.occupation || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  Agent Information
-                </h3>
-                <div className="space-y-3 bg-white/5 rounded-xl p-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Agent Name:</span>
-                    <span className="text-white">{policy.agentName || 'Unknown Agent'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Agent Wallet:</span>
-                    <span className="text-white font-mono text-sm">
-                      {policy.agent_wallet_address || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Customer Wallet:</span>
-                    <span className="text-white font-mono text-sm">
-                      {policy.customer_wallet_address || 'N/A'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="flex justify-end gap-3 p-6 border-t border-white/10">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              Close
-            </Button>
-            <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700">
-              Download Policy Document
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  };
   const handleAgentList = async () => {
     try {
       setLoadingAgents(true);
@@ -311,25 +95,25 @@ const CustomerOverview = () => {
       title: "Active Policies",
       value: policies.length,
       icon: Shield,
-      change: "Coverage Active",
-      color: "from-emerald-500/20 to-emerald-400/20",
-      iconColor: "text-emerald-400",
+      color: "from-blue-500/20 to-cyan-400/20",
+      iconColor: "text-blue-400",
+      borderColor: "border-blue-500/30"
     },
     {
       title: "Total Claims",
       value: 0,
       icon: FileText,
-      change: "Claims Submitted",
-      color: "from-blue-500/20 to-blue-400/20",
-      iconColor: "text-blue-400",
+      color: "from-amber-500/20 to-yellow-400/20",
+      iconColor: "text-amber-400",
+      borderColor: "border-amber-500/30"
     },
     {
       title: "Premium Due",
       value: "₹2,500",
       icon: CreditCard,
-      change: "Monthly Payment",
-      color: "from-amber-500/20 to-amber-400/20",
-      iconColor: "text-amber-400",
+      color: "from-emerald-500/20 to-green-400/20",
+      iconColor: "text-emerald-400",
+      borderColor: "border-emerald-500/30"
     },
   ];
 
@@ -349,12 +133,26 @@ const CustomerOverview = () => {
             You don't have any active insurance policies yet.
           </p>
         </div>
-        <Button
-          onClick={handleAgentList}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 flex items-center gap-3 px-8 py-4 text-lg rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 font-medium"
-        >
-          Buy Plan <ArrowRight className="w-5 h-5" />
-        </Button>
+        {kycStatus === "pending" ? (
+          <Button
+            disabled
+            className="bg-gray-600/40 border border-gray-500/40 text-gray-300 cursor-not-allowed
+               flex items-center gap-3 px-8 py-4 text-lg rounded-xl opacity-70"
+          >
+            Complete KYC First
+            <AlertCircle className="w-5 h-5" />
+          </Button>
+        ) : kycStatus === 'verified' ? (
+          <Button
+            onClick={handleAgentList}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700
+               flex items-center gap-3 px-8 py-4 text-lg rounded-xl transition-all duration-300
+               hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25 font-medium"
+          >
+            Buy Plan <ArrowRight className="w-5 h-5" />
+          </Button>
+        ) : null}
+
       </CardContent>
     </Card>
   );
@@ -526,10 +324,10 @@ const CustomerOverview = () => {
                       <div className="flex items-center space-x-3">
                         <div>
                           <div className="text-white font-semibold text-sm font-mono group-hover:text-cyan-400 transition-colors duration-300">
-                            {policy.policy_number || `POL_${policy.id}`}
+                            {policy.policy_number || `POL_${policy._id}`}
                           </div>
                           <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
-                            Issued {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
+                            Created {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
                           </div>
                         </div>
                       </div>
@@ -538,10 +336,10 @@ const CustomerOverview = () => {
                       <div className="flex items-center space-x-3">
                         <div>
                           <div className="text-white font-medium text-sm group-hover:text-cyan-400 transition-colors duration-300">
-                            {policy.agentName || 'Unknown Agent'}
+                            {policy.agent_wallet_address || 'Unknown Agent'}
                           </div>
                           <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
-                            {policy.agent_wallet_address?.slice(0, 4)}...{policy.agent_wallet_address?.slice(-3)}
+                            {/* {policy.agent_wallet_address?.slice(0, 4)}...{policy.agent_wallet_address?.slice(-3)} */}
                           </div>
                         </div>
                       </div>
@@ -611,12 +409,7 @@ const CustomerOverview = () => {
         )}
       </CardContent>
 
-      {/* Policy Details Modal */}
-      <PolicyDetailsModal
-        policy={selectedPolicy}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      
     </Card>
   );
 
@@ -668,21 +461,26 @@ const CustomerOverview = () => {
         )}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {stats.map((stat, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {stats.map((stat, index) => (
             <Card
-              key={i}
-              className="bg-gradient-to-br from-gray-900/80 via-gray-800/80 to-gray-900/80 border border-white/10 shadow-xl rounded-2xl backdrop-blur-sm hover:border-cyan-400/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-300 hover:scale-105"
+              key={index}
+              className={`backdrop-blur-xl bg-${stat.color}/10 glass shine hover:border-cyan-400/50 transition-all duration-300 group border rounded-2xl ${stat.borderColor}`}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1.5">
+                    <p className="text-white/60 text-xs font-medium uppercase tracking-wide">
+                      {stat.title}
+                    </p>
+                    <p className="text-3xl font-bold text-white">
+                      {stat.value}
+                    </p>
+                  </div>
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} border ${stat.borderColor} transition-all duration-300 shadow-lg`}>
                     <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
                   </div>
-                  <span className="text-xs text-gray-400 font-medium">{stat.change}</span>
                 </div>
-                <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
-                <p className="text-sm text-gray-400 font-medium">{stat.title}</p>
               </CardContent>
             </Card>
           ))}
@@ -701,6 +499,12 @@ const CustomerOverview = () => {
 
 
       </div>
+      {/* Policy Details Modal */}
+      <PolicyDetailsModal
+        policy={selectedPolicy}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
