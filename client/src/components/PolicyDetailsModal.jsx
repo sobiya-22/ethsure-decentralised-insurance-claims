@@ -116,6 +116,62 @@ const PolicyDetailsModal = ({
       toast.error(error.response?.data?.message || "Failed to reject policy request");
     }
   };
+  const handleDiscard = async () => {
+    try {
+      toast.loading("Cancelling policy request...");
+
+      const response = await axios.post(
+        `${BASE_URL}/api/policy/update-status/${policy._id}`,
+        {
+          role:user.role,
+          wallet_address: user.wallet_address,
+          newStatus: 'cancelled'
+        }
+      );
+
+      toast.dismiss();
+
+      if (response.data.success) {
+        toast.success("Policy request cancelled");
+        onClose();
+        // if (onSuccess) onSuccess();
+      } else {
+        toast.error(response.data.message || "Failed to cancel policy");
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error("Error cancelling policy:", error);
+      toast.error(error.response?.data?.message || "Failed to cancel policy request");
+    }
+  };
+  const handleApproval = async () => {
+    try {
+      toast.loading("Approving policy request...");
+
+      const response = await axios.post(
+        `${BASE_URL}/api/policy/update-status/${policy._id}`,
+        {
+          role:user.role,
+          wallet_address: user.wallet_address,
+          newStatus: 'active'
+        }
+      );
+
+      toast.dismiss();
+
+      if (response.data.success) {
+        toast.success("Policy request approved");
+        onClose();
+        // if (onSuccess) onSuccess();
+      } else {
+        toast.error(response.data.message || "Failed to approve policy");
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error("Error approving policy:", error);
+      toast.error(error.response?.data?.message || "Failed to approve policy request");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/7 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
@@ -374,6 +430,24 @@ const PolicyDetailsModal = ({
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Approve Request
+              </Button>
+            </>
+          )}
+          {userRole === 'company' && (
+            <>
+              <Button 
+                onClick={handleDiscard}
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30"
+              >
+                <XCircle className="w-4 h-4 mr-2" />
+                Discard Policy
+              </Button>
+              <Button 
+                onClick={handleApproval}
+                className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/30"
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Approve Policy Request
               </Button>
             </>
           )}

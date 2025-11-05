@@ -163,7 +163,18 @@ const CompanyOverview = () => {
                         </thead>
 
                         <tbody>
-                          {agentRequests.map((agent) => (
+                          {agentRequests.length === 0 ? (
+                            <tr>
+                              <td colSpan="5" className="p-8 text-center">
+                                <div className="flex flex-col items-center gap-3 text-gray-400">
+                                  <Award className="w-12 h-12 opacity-50" />
+                                  <p className="text-lg font-medium">No Requesting Agents</p>
+                                  <p className="text-sm">Agent requests will appear here when submitted</p>
+                                </div>
+                              </td>
+                            </tr>
+                          ) :(
+                          agentRequests.map((agent) => (
                             <tr
                               key={agent._id}
                               className="border-t border-white/5 hover:bg-white/5 transition-colors"
@@ -206,7 +217,7 @@ const CompanyOverview = () => {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          )))}
                         </tbody>
                       </table>
                     </div>
@@ -229,7 +240,18 @@ const CompanyOverview = () => {
                         </thead>
 
                         <tbody>
-                          {upcomingCustomers.map((policy) => (
+                          {agentRequests.length === 0 ? (
+                            <tr>
+                              <td colSpan="5" className="p-8 text-center">
+                                <div className="flex flex-col items-center gap-3 text-gray-400">
+                                  <Users className="w-12 h-12 opacity-50" />
+                                  <p className="text-lg font-medium">No Policy requests from customers yet!</p>
+                                  <p className="text-sm">Customer Policy requests will appear here when submitted</p>
+                                </div>
+                              </td>
+                            </tr>
+                          ) :(
+                          upcomingCustomers.map((policy) => (
                             <tr
                               key={policy._id}
                               className="border-t border-white/5 hover:bg-white/5 transition-colors"
@@ -270,7 +292,7 @@ const CompanyOverview = () => {
                                 </Button>
                               </td>
                             </tr>
-                          ))}
+                          )))}
                         </tbody>
                       </table>
                     </div>
