@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Edit2, Save, X, User, Shield, Eye, EyeOff, Copy, Check, ArrowLeft, Mail, Phone, MapPin, Calendar, FileText, Fingerprint } from 'lucide-react';
 import { userStore } from '@/context/userContext';
+import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
@@ -10,36 +13,74 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  // const user = userStore((state) => state.user);
-  const user = {
-    wallet: "0x1234567890abcdef1234567890abcdef12345678",
-    role: "customer"
-  };
+  const user = userStore((state) => state.user);
 
   useEffect(() => {
     setFormData({
-      name: "Sobiya Shaikh",
-      email: "sobiya.shaikh@example.com",
-      phone: "+91 98765 43210",
-      address: "221B Baker Street, Mumbai, India",
-      dateOfBirth: "2002-08-15",
-      profilePhotoUrl: "",
-      idDocumentUrl: "",
-      kycStatus: "verified",
-      did: "did:ethr:0x1234567890abcdef1234567890abcdef12345678",
-      wallet: "0x1234567890abcdef1234567890abcdef12345678",
-      licenseNumber: "LIC-987654",
-      isApproved: true,
+      name: user?.customer?.customer_name || user?.agent?.agent_name || user?.company?.company_name,
+      email: user?.email,
+      phone: user?.customer?.customer_phone || user?.agent?.agent_phone,
+      address: user?.customer?.customer_address || user?.agent?.agent_address,
+      dateOfBirth: user?.customer?.date_of_birth || user?.agent?.date_of_birth,
+      profilePhotoUrl: user?.customer?.profile_photo_url || user?.agent?.profile_photo_url || user?.company?.profile_photo_url,
+      // idDocumentUrl: "",
+      kycStatus: user?.customer?.kyc_status || user?.agent?.kyc_status,
+      did: user?.customer?.customer_did || user?.agent?.agent_did || user?.company?.company_did,
+      wallet: user?.wallet_address,
+      licenseNumber: user?.agent?.license_number,
+      isApproved: user?.agent?.is_approved || "",
     });
     setLoading(false);
   }, []);
 
   const handleSave = async () => {
     setUpdating(true);
-    setTimeout(() => {
+
+    try {
+      const wallet = user?.wallet_address;
+      let payload = {};
+
+      if (user.role === "customer") {
+        payload = {
+          customer_name: formData.name,
+          customer_phone: formData.phone,
+          customer_email: formData.email,
+          address: formData.address,
+          dateOfBirth: formData.dateOfBirth
+        };
+      }
+
+      if (user.role === "agent") {
+        payload = {
+          agent_name: formData.name,
+          agent_phone: formData.phone,
+          agent_email: formData.email,
+          licenseNumber: formData.licenseNumber,
+          dateOfBirth: formData.dateOfBirth
+        };
+      }
+
+      if (user.role === "company") {
+        payload = {
+          company_name: formData.name,
+          company_email: formData.email,
+        };
+      }
+
+      const response = await axios.patch(
+        `${BASE_URL}/api/users/update-user/${wallet}`,
+        payload
+      );
+
+      userStore.setState({ user: response.data.user });
+
       setIsEditing(false);
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Failed to update profile");
+    } finally {
       setUpdating(false);
-    }, 1000);
+    }
   };
 
   const handleCancel = () => {
@@ -113,11 +154,10 @@ const Profile = () => {
         </div>
         <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
           <label className="text-sm font-medium text-gray-300 mb-2 block">Approval Status</label>
-          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold ${
-            formData.isApproved
+          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold ${formData.isApproved
               ? 'text-emerald-400 bg-emerald-500/20 border border-emerald-500/30'
               : 'text-amber-400 bg-amber-500/20 border border-amber-500/30'
-          }`}>
+            }`}>
             <Shield className="w-4 h-4" />
             {formData.isApproved ? 'Approved' : 'Pending Approval'}
           </span>
@@ -224,11 +264,10 @@ const Profile = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 py-4 border-b-2 font-medium transition-all duration-200 ${
-                  activeTab === tab.id
+                className={`flex items-center gap-2 py-4 border-b-2 font-medium transition-all duration-200 ${activeTab === tab.id
                     ? 'border-cyan-400 text-cyan-400'
                     : 'border-transparent text-gray-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <tab.icon className="w-5 h-5" /> {tab.label}
               </button>
@@ -382,7 +421,7 @@ const Profile = () => {
                       </div>
                     </div>
                     <span className={`px-4 py-2 rounded-lg font-semibold border ${getStatusColor(formData.kycStatus)}`}>
-                      {formData.kycStatus?.charAt(0).toUpperCase() + formData.kycStatus?.slice(1) || 'Pending'}
+                      {formData.kycStatus?.charAt(0).toUpperCase() + formData.kycStatus?.slice(1) || 'Not required'}
                     </span>
                   </div>
                 </div>
@@ -404,7 +443,7 @@ const Profile = () => {
                     <label className="text-sm font-medium text-gray-300 mb-3 block">DID Address</label>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg font-mono text-sm text-white break-all">
-                        {showDID ? formData.did : `${formData.did?.substring(0, 24)}...${formData.did?.substring(formData.did.length - 16)}`}
+                        {showDID ? formData.did : `${formData.did}`}
                       </div>
                       <button
                         onClick={() => setShowDID(!showDID)}
