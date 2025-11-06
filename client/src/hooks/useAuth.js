@@ -13,7 +13,7 @@ export const useAuth = () => {
 
     const login = userStore((state) => state.login);
     const logout = userStore((state) => state.logout);
-    const setUser = userStore((state) => state.logout);
+    const setUser = userStore((state) => state.setUser);
 
     const connectWeb3 = async () => {
         if (!web3Auth) throw new Error("Web3Auth not initialized");
@@ -41,7 +41,10 @@ export const useAuth = () => {
                 role,
             }, { withCredentials: true });
 
-            login(res.data.user);
+            login({
+                user: res.data.user,
+                blockchainInfo: res.data.blockchainInfo || null
+            });
             toast.success("Signup successful!");
             await disconnect();
             window.location.reload();
@@ -66,7 +69,10 @@ export const useAuth = () => {
                 wallet_address: userData.wallet_address,
             }, { withCredentials: true });
 
-            login(res.data.user);
+            login({
+                user: res.data.user,
+                blockchainInfo: res.data.blockchainInfo || null
+            });
             toast.success(res.data.message);
             return res.data;
         } catch (err) {

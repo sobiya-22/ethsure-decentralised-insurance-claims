@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Eye,Users, FileText, AlertCircle, Wallet, Building2, UserCheck, Award, Clock, CheckCircle } from "lucide-react";
+import { Eye, Users, FileText, AlertCircle, Wallet, Building2, UserCheck, Award, Clock, CheckCircle } from "lucide-react";
 import PolicyDetailsModal from '@/components/PolicyDetailsModal';
 import { getStatusColor } from '@/constants/agentConstants';
 import { userStore } from '@/context/userContext';
@@ -57,7 +57,7 @@ const CompanyOverview = () => {
   const stats = [
     {
       title: "Total Agents",
-      value: 0 ,
+      value: 0,
       icon: Users,
       color: "from-blue-500/20 to-cyan-400/20",
       iconColor: "text-blue-400",
@@ -65,7 +65,7 @@ const CompanyOverview = () => {
     },
     {
       title: "Total Customers",
-      value: 0 ,
+      value: 0,
       icon: UserCheck,
       color: "from-amber-500/20 to-yellow-400/20",
       iconColor: "text-amber-400",
@@ -173,51 +173,51 @@ const CompanyOverview = () => {
                                 </div>
                               </td>
                             </tr>
-                          ) :(
-                          agentRequests.map((agent) => (
-                            <tr
-                              key={agent._id}
-                              className="border-t border-white/5 hover:bg-white/5 transition-colors"
-                            >
-                              <td className="p-4">
-                                <div className="flex items-center gap-3">
-                                  <img
-                                    src={agent.profile_photo_url}
-                                    alt={agent.agent_name}
-                                    className="w-10 h-10 rounded-full object-cover border border-white/10"
-                                  />
-                                  <div>
-                                    <div className="text-white font-medium">{agent.agent_name}</div>
-                                    <div className="text-gray-400 text-sm">{agent.agent_email}</div>
-                                    <div className="text-gray-400 text-xs">{agent.agent_phone}</div>
+                          ) : (
+                            agentRequests.map((agent) => (
+                              <tr
+                                key={agent._id}
+                                className="border-t border-white/5 hover:bg-white/5 transition-colors"
+                              >
+                                <td className="p-4">
+                                  <div className="flex items-center gap-3">
+                                    <img
+                                      src={agent.profile_photo_url}
+                                      alt={agent.agent_name}
+                                      className="w-10 h-10 rounded-full object-cover border border-white/10"
+                                    />
+                                    <div>
+                                      <div className="text-white font-medium">{agent.agent_name}</div>
+                                      <div className="text-gray-400 text-sm">{agent.agent_email}</div>
+                                      <div className="text-gray-400 text-xs">{agent.agent_phone}</div>
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
+                                </td>
 
-                              <td className="p-4 text-white">
-                                {agent.wallet_address.slice(0, 20)}...
-                              </td>
+                                <td className="p-4 text-white">
+                                  {agent.wallet_address.slice(0, 20)}...
+                                </td>
 
-                              <td className="p-4 text-white">
-                                {agent.license_number || " N/A"}
-                              </td>
+                                <td className="p-4 text-white">
+                                  {agent.license_number || " N/A"}
+                                </td>
 
-                              <td className="p-4 text-white">
-                                {new Date(agent.associated_company.request_date).toLocaleString()}
-                              </td>
+                                <td className="p-4 text-white">
+                                  {new Date(agent.associated_company.request_date).toLocaleString()}
+                                </td>
 
-                              <td className="p-4">
-                                <Button
-                                  size="sm"
-                                  onClick={() => openAgentDetails(agent)}
-                                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
-                                >
-                                  <Eye className="w-3.5 h-3.5 mr-1.5" />
-                                  View Details
-                                </Button>
-                              </td>
-                            </tr>
-                          )))}
+                                <td className="p-4">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => openAgentDetails(agent)}
+                                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 mr-1.5" />
+                                    View Details
+                                  </Button>
+                                </td>
+                              </tr>
+                            )))}
                         </tbody>
                       </table>
                     </div>
@@ -240,7 +240,7 @@ const CompanyOverview = () => {
                         </thead>
 
                         <tbody>
-                          {agentRequests.length === 0 ? (
+                          {upcomingCustomers.length === 0 ? (
                             <tr>
                               <td colSpan="5" className="p-8 text-center">
                                 <div className="flex flex-col items-center gap-3 text-gray-400">
@@ -250,49 +250,49 @@ const CompanyOverview = () => {
                                 </div>
                               </td>
                             </tr>
-                          ) :(
-                          upcomingCustomers.map((policy) => (
-                            <tr
-                              key={policy._id}
-                              className="border-t border-white/5 hover:bg-white/5 transition-colors"
-                            >
-                              <td className="p-4">
-                                <div className="flex items-center gap-3">
-                                  <img
-                                    src={policy?.customer?.profile_photo_url || "/default-avatar.png"}
-                                    alt={policy?.customer?.customer_name || "User"}
-                                    className="w-10 h-10 rounded-full object-cover border border-white/10"
-                                  />
-                                  <span className="text-white font-medium">{policy.fullName}</span>
-                                </div>
-                              </td>
+                          ) : (
+                            upcomingCustomers.map((policy) => (
+                              <tr
+                                key={policy._id}
+                                className="border-t border-white/5 hover:bg-white/5 transition-colors"
+                              >
+                                <td className="p-4">
+                                  <div className="flex items-center gap-3">
+                                    <img
+                                      src={policy?.customer?.profile_photo_url || "/default-avatar.png"}
+                                      alt={policy?.customer?.customer_name || "User"}
+                                      className="w-10 h-10 rounded-full object-cover border border-white/10"
+                                    />
+                                    <span className="text-white font-medium">{policy.fullName}</span>
+                                  </div>
+                                </td>
 
-                              <td className="p-4 text-white">
-                                ₹ {policy.coverage_amount.toLocaleString()}
-                              </td>
+                                <td className="p-4 text-white">
+                                  ₹ {policy.coverage_amount.toLocaleString()}
+                                </td>
 
-                              <td className="p-4 text-gray-300">
-                                ₹ {policy.premium_amount.toLocaleString()} / {policy.premium_frequency}
-                              </td>
+                                <td className="p-4 text-gray-300">
+                                  ₹ {policy.premium_amount.toLocaleString()} / {policy.premium_frequency}
+                                </td>
 
-                              <td className="p-4">
-                                <Badge className={getStatusColor(policy.status)}>
-                                  {policy.status}
-                                </Badge>
-                              </td>
+                                <td className="p-4">
+                                  <Badge className={getStatusColor(policy.status)}>
+                                    {policy.status}
+                                  </Badge>
+                                </td>
 
-                              <td className="p-4">
-                                <Button
-                                  size="sm"
-                                  onClick={() => handlePolicyClick(policy)}
-                                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
-                                >
-                                  <Eye className="w-3.5 h-3.5 mr-1.5" />
-                                  View Details
-                                </Button>
-                              </td>
-                            </tr>
-                          )))}
+                                <td className="p-4">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => handlePolicyClick(policy)}
+                                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 mr-1.5" />
+                                    View Details
+                                  </Button>
+                                </td>
+                              </tr>
+                            )))}
                         </tbody>
                       </table>
                     </div>

@@ -63,7 +63,7 @@ const CustomerOverview = () => {
       });
 
       if (res.data && res.data.success) {
-        setAgents(res.data.data || []);
+        setAgents(res.data.agents || []);
         setShowAgents(true);
       } else {
         setAgents([]);

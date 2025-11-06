@@ -219,17 +219,18 @@ const PolicyRequestsCard = ({ policyRequests, loadingRequests, selectedRequest, 
 
 const AgentOverview = () => {
   const user = userStore((state) => state.user);
+  const blockchain = userStore((state) => state.blockchainInfo);
   const kycStatus = user?.agent?.kyc_status;
   const agentApproved = user?.agent?.is_approved;
-
+  console.log(user);
   const navigate = useNavigate();
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [policyRequests, setPolicyRequests] = useState([]);
   const [loadingRequests, setLoadingRequests] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  
+
+
   const handleAssociate = () => navigate("/agent/associate-company");
   const handleViewDetails = (request) => {
     setSelectedRequest(request);
@@ -331,6 +332,26 @@ const AgentOverview = () => {
               </Button>
             </CardContent>
           </Card>
+        )}
+        {user.role === "agent" && blockchain?.isOnChainRegistered && (
+          <div className="flex items-center gap-3 mt-4">
+            <div className="px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center gap-2">
+              <CheckCircle className="w-4 h-4" />
+              <span className="font-medium">On-Chain Verified</span>
+            </div>
+
+            {/* Clickable Etherscan Link */}
+            {blockchain.agentRegistrationTxHash && (
+              <a
+                href={`https://sepolia.etherscan.io/tx/${blockchain.agentRegistrationTxHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cyan-400 underline hover:text-cyan-300 text-sm"
+              >
+                View Blockchain Tx →
+              </a>
+            )}
+          </div>
         )}
 
         {/* Association Alert */}
@@ -437,7 +458,7 @@ const AgentOverview = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      
+
 
     </div>
   );
