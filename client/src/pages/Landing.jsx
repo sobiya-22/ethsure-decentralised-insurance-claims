@@ -18,8 +18,8 @@ const Landing = () => {
               Insurance on-chain
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              Build trustworthy
-              <span className="block gradient-text">decentralized claims</span>
+              <span className="block">Build trustworthy</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x">decentralized claims</span>
             </h1>
             <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto lg:mx-0">
               Transparent, secure, and efficient insurance claims powered by smart contracts.
@@ -128,7 +128,7 @@ const Landing = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">Ready to Get Started?</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x mb-4">Ready to Get Started?</h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">Join thousands of users already using EthSure</p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link to="/signup">

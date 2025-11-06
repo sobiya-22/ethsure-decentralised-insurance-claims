@@ -28,6 +28,7 @@ export default {
         'slideOutLeft': 'slideOutLeft 0.3s ease-in forwards',
         'fadeIn': 'fadeIn 0.6s ease-out forwards',
         'scaleIn': 'scaleIn 0.3s ease-out forwards',
+        'gradient-x': 'gradientX 6s ease-in-out infinite',
       },
       keyframes: {
         slideInLeft: {
@@ -45,6 +46,11 @@ export default {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        gradientX: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
         },
       },
     },

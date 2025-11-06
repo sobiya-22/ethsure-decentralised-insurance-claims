@@ -18,7 +18,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className={`text-center mb-8 sm:mb-12 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-            About <span className="gradient-text">EthSure</span>
+            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x">EthSure</span>
           </h1>
           <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 mb-8">
             We're revolutionizing the insurance industry by leveraging blockchain technology to create a more transparent, secure, and efficient claims processing system.
@@ -41,7 +41,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className={`transform transition-all duration-1000 ease-out ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-[-50px] opacity-0'}`} style={{ transitionDelay: '200ms' }}>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text mb-4 sm:mb-6">Our Mission</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x mb-4 sm:mb-6">Our Mission</h2>
             <p className="text-base sm:text-lg text-gray-300 mb-4 sm:mb-6">
               To democratize insurance by making it accessible, transparent, and fair for everyone. We believe that insurance should work for the people, not against them.
             </p>
@@ -84,7 +84,7 @@ const About = () => {
     }`}
     style={{ transitionDelay: '600ms' }}
   >
-    <h2 className="text-3xl sm:text-4xl font-bold gradient-text mb-4">
+    <h2 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x mb-4">
       Our Team
     </h2>
     <p className="text-lg sm:text-xl text-gray-300">
@@ -161,7 +161,7 @@ const About = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '1400ms' }}>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text mb-4">Our Values</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x mb-4">Our Values</h2>
           <p className="text-lg sm:text-xl text-gray-300">The principles that guide everything we do</p>
         </div>
         
@@ -218,7 +218,7 @@ const About = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className={`text-center transform transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`} style={{ transitionDelay: '2400ms' }}>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text mb-4">Ready to Join Us?</h2>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x mb-4">Ready to Join Us?</h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8">Be part of the future of insurance</p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Link to="/signup">
