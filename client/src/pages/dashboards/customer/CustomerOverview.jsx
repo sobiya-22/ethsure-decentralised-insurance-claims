@@ -109,7 +109,7 @@ const CustomerOverview = () => {
     },
     {
       title: "Premium Due",
-      value: "₹2,500",
+      value: "No due yet",
       icon: CreditCard,
       color: "from-emerald-500/20 to-green-400/20",
       iconColor: "text-emerald-400",
@@ -414,8 +414,8 @@ const CustomerOverview = () => {
   );
 
   return (
-    <div className="text-white w-full relative bg-transparent py-5">
-      <div className="space-y-6 px-4 sm:px-6 lg:px-8 py-6">
+    <div className="text-white w-full relative bg-transparent py-2">
+      <div className="px-1 sm:px-4 lg:px-6 pt-6 sm:pt-9">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">

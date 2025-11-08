@@ -56,8 +56,8 @@ const CompanyOverview = () => {
 
   const stats = [
     {
-      title: "Total Agents",
-      value: 0,
+      title: "Requesting Agents",
+      value: agentRequests.length.toString()||0,
       icon: Users,
       color: "from-blue-500/20 to-cyan-400/20",
       iconColor: "text-blue-400",
@@ -72,7 +72,7 @@ const CompanyOverview = () => {
       borderColor: "border-amber-500/30"
     },
     {
-      title: "Requesting Review",
+      title: "Requesting Policy Approvals",
       value: upcomingCustomers.length.toString() || 0,
       icon: FileText,
       color: "from-emerald-500/20 to-green-400/20",
@@ -90,7 +90,7 @@ const CompanyOverview = () => {
               <div className="p-3 rounded-xl glass"><Building2 className="w-8 h-8 text-cyan-400" /></div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                  Company <span className="gradient-text">Dashboard</span>
+                  Company <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Dashboard</span>
                 </h1>
                 <p className="text-xl text-gray-300">Welcome back, {user?.company?.company_name}</p>
               </div>

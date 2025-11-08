@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { 
-  X, User, MapPin, Shield, FileText, Wallet, 
-  CheckCircle, XCircle, Download 
+import {
+  X, User, MapPin, Shield, FileText, Wallet,
+  CheckCircle, XCircle, Download
 } from "lucide-react";
 import { userStore } from "@/context/userContext";
 import toast from "react-hot-toast";
@@ -17,45 +17,36 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
  * @param {boolean} isOpen - Controls modal visibility
  * @param {Function} onClose - Callback when modal is closed
  */
-const PolicyDetailsModal = ({ 
-  policy, 
-  isOpen, 
+const PolicyDetailsModal = ({
+  policy,
+  isOpen,
   onClose,
 }) => {
   const user = userStore((state) => state.user);
-  
+
   const userRole = user?.role;
 
   if (!isOpen || !policy) return null;
 
-  const handleDownload = async () => {
+  const handleClaimPolicy = async () => {
     try {
-      toast.loading("Preparing policy document...");
-      
+
       // API call to generate/download policy document
-      const response = await axios.get(
-        `${BASE_URL}/api/policy/download/${policy.id || policy._id}`,
+      const response = await axios.post(
+        `${BASE_URL}/api/policy/update-status/${policy._id}`,
         {
-          responseType: 'blob',
-          params: { customer_wallet_address: user.wallet_address }
+          wallet_address: user.wallet_address,
+          role: user?.role,
+          newStatus: 'claimed'
         }
       );
 
-      // Create blob link to download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Policy_${policy.policy_number || policy.id}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
       toast.dismiss();
-      toast.success("Policy document downloaded successfully!");
+      toast.success("Policy claimed successfully!");
     } catch (error) {
       toast.dismiss();
-      console.error("Error downloading policy:", error);
-      toast.error(error.response?.data?.message || "Failed to download policy document");
+      console.error("Error claiming policy:", error);
+      toast.error(error.response?.data?.message || "Failed to claim policy");
     }
   };
 
@@ -95,7 +86,7 @@ const PolicyDetailsModal = ({
       const response = await axios.post(
         `${BASE_URL}/api/policy/update-status/${policy._id}`,
         {
-          role:user.role,
+          role: user.role,
           wallet_address: user.wallet_address,
           newStatus: 'cancelled'
         }
@@ -123,7 +114,7 @@ const PolicyDetailsModal = ({
       const response = await axios.post(
         `${BASE_URL}/api/policy/update-status/${policy._id}`,
         {
-          role:user.role,
+          role: user.role,
           wallet_address: user.wallet_address,
           newStatus: 'cancelled'
         }
@@ -151,7 +142,7 @@ const PolicyDetailsModal = ({
       const response = await axios.post(
         `${BASE_URL}/api/policy/update-status/${policy._id}`,
         {
-          role:user.role,
+          role: user.role,
           wallet_address: user.wallet_address,
           newStatus: 'active'
         }
@@ -213,17 +204,16 @@ const PolicyDetailsModal = ({
                 </div>
                 <div className="flex justify-between items-start">
                   <span className="text-gray-400 text-sm">Status:</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    policy.status === 'active'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : policy.status === 'created'
-                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : policy.status === 'pending'
-                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${policy.status === 'active'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                    : policy.status === 'created'
+                      ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      : policy.status === 'pending'
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                         : policy.status === 'claimed'
                           ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
                           : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-                  }`}>
+                    }`}>
                     {policy.status || 'created'}
                   </span>
                 </div>
@@ -363,7 +353,7 @@ const PolicyDetailsModal = ({
                   <>
                     <div className="flex justify-between items-start">
                       <span className="text-gray-400 text-sm">Agent Name:</span>
-                      <span className="text-white text-sm font-medium">{policy.agentName || 'Unknown Agent'}</span>
+                      <span className="text-white text-sm font-medium">{policy.agent?.agent_name || 'Not Available'}</span>
                     </div>
                     <div className="flex justify-between items-start">
                       <span className="text-gray-400 text-sm">Agent Wallet:</span>
@@ -378,53 +368,89 @@ const PolicyDetailsModal = ({
           </div>
 
           {/* Nominee Information (if available) */}
-          {policy.nominee && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                <User className="w-5 h-5" />
-                Nominee Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="space-y-2">
+          {(policy.nominee || policy.policy_VC) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* Nominee Information */}
+              {policy.nominee && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    Nominee Information
+                  </h3>
+
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-3">
                     <div className="flex justify-between items-start">
                       <span className="text-gray-400 text-sm">Nominee Name:</span>
-                      <span className="text-white text-sm font-medium">{policy.nominee.nominee_name || 'N/A'}</span>
+                      <span className="text-white text-sm font-medium">
+                        {policy.nominee.nominee_name || 'N/A'}
+                      </span>
                     </div>
+
                     <div className="flex justify-between items-start">
                       <span className="text-gray-400 text-sm">Relationship:</span>
-                      <span className="text-white text-sm capitalize">{policy.nominee.relationship || 'N/A'}</span>
+                      <span className="text-white text-sm capitalize">
+                        {policy.nominee.nominee_relation || 'N/A'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-400 text-sm">Age:</span>
+                      <span className="text-white text-sm">
+                        {policy.nominee.nominee_age || 'N/A'}
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* On-chain Information */}
+              {policy.policy_VC && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    On-chain Policy Information
+                  </h3>
+
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-3">
+
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-400 text-sm">Blockchain Policy ID:</span>
+                      <span className="text-white text-sm font-medium">
+                        {policy.onchain_policyID || 'N/A'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-400 text-sm">Transaction Hash:</span>
+                      <a
+                        href={`https://sepolia.etherscan.io/tx/${policy.txn_hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cyan-400 underline font-mono text-xs break-all"
+                      >
+                        {policy.txn_hash || 'N/A'}
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
             </div>
           )}
-        </div>
 
-        {/* Footer with Action Buttons */}
-        <div className="sticky bottom-0 bg-gradient-to-r from-gray-900/95 to-gray-800/95 backdrop-blur-xl flex flex-col sm:flex-row justify-end gap-3 p-6 border-t border-white/10">
-          
-          {userRole === 'customer' && (
-            <Button 
-              onClick={handleDownload}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download Policy Document
-            </Button>
-          )}
-          
+
           {userRole === 'agent' && (
             <>
-              <Button 
+              <Button
                 onClick={handleReject}
                 className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30"
               >
                 <XCircle className="w-4 h-4 mr-2" />
                 Reject Request
               </Button>
-              <Button 
+              <Button
                 onClick={handleApprove}
                 className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/30"
               >
@@ -435,14 +461,14 @@ const PolicyDetailsModal = ({
           )}
           {userRole === 'company' && (
             <>
-              <Button 
+              <Button
                 onClick={handleDiscard}
                 className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/30"
               >
                 <XCircle className="w-4 h-4 mr-2" />
                 Discard Policy
               </Button>
-              <Button 
+              <Button
                 onClick={handleApproval}
                 className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/30"
               >

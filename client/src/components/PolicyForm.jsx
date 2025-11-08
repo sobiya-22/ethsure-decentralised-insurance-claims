@@ -39,6 +39,10 @@ const PolicyForm = () => {
     premium_amount: 50000,
     premium_frequency: "annual",
     policy_duration: 10,
+    nomineeName: "",
+    nomineeAge: "",
+    nomineeRelation: "",
+
   });
 
   const onClose = async () => {
@@ -78,79 +82,83 @@ const PolicyForm = () => {
   };
 
   const handleCreatePolicy = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  const requiredFields = {
-    fullName: formData.fullName,
-    dateOfBirth: formData.dateOfBirth,
-    gender: formData.gender,
-    phone: formData.phone,
-    email: formData.email,
-    address: formData.address,
-    aadharNumber: formData.aadharNumber,
-    panNumber: formData.panNumber,
-    annualIncome: formData.annualIncome,
-    occupation: formData.occupation
-  };
+    const requiredFields = {
+      fullName: formData.fullName,
+      dateOfBirth: formData.dateOfBirth,
+      gender: formData.gender,
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+      aadharNumber: formData.aadharNumber,
+      panNumber: formData.panNumber,
+      annualIncome: formData.annualIncome,
+      occupation: formData.occupation,
+      nomineeName: formData.nomineeName,
+      nomineeAge: formData.nomineeAge,
+      nomineeRelation: formData.nomineeRelation,
 
-  const emptyFields = Object.entries(requiredFields)
-    .filter(([key, value]) => !value || value.trim() === '')
-    .map(([key]) => key);
-
-  if (emptyFields.length > 0) {
-    toast.error(`Please fill in all required fields: ${emptyFields.join(', ')}`);
-    setLoading(false);
-    return;
-  }
-
-  if (!validateAadhar(formData.aadharNumber)) {
-    toast.error("Please enter a valid 12-digit Aadhar number");
-    setLoading(false);
-    return;
-  }
-
-  if (!validatePAN(formData.panNumber)) {
-    toast.error("Please enter a valid PAN number (Format: ABCDE1234F)");
-    setLoading(false);
-    return;
-  }
-
-  if (!selectedAgent) {
-    toast.error("No agent selected. Please go back and select an agent.");
-    setLoading(false);
-    return;
-  }
-
-  try {
-    const policyData = {
-      customer_wallet_address: user?.wallet_address || user?.wallet,
-      agent_wallet_address: selectedAgent.wallet_address,
-      ...formData,
-      status: "created"
     };
 
-    console.log("Sending policy data:", policyData);
+    const emptyFields = Object.entries(requiredFields)
+      .filter(([key, value]) => !value || value.trim() === '')
+      .map(([key]) => key);
 
-    const response = await axios.post(`${BASE_URL}/api/policy/create`, policyData, {
-      headers: { "Content-Type": "application/json" }
-    });
-
-    console.log("Policy creation response:", response.data);
-
-    if (response.data?.success) {
-      toast.success("Thank you for your policy request! Your agent will reach out to you soon.");
-      navigate('/customer/dashboard');
-    } else {
-      toast.error(response.data?.message || "Failed to create policy");
+    if (emptyFields.length > 0) {
+      toast.error(`Please fill in all required fields: ${emptyFields.join(', ')}`);
+      setLoading(false);
+      return;
     }
-  } catch (error) {
-    console.error("Error creating policy:", error);
-    toast.error(`Failed to create policy. Please try again.\n\nError: ${error.response?.data?.message || error.message}`);
-  } finally {
-    setLoading(false);
-  }
-};
+
+    if (!validateAadhar(formData.aadharNumber)) {
+      toast.error("Please enter a valid 12-digit Aadhar number");
+      setLoading(false);
+      return;
+    }
+
+    if (!validatePAN(formData.panNumber)) {
+      toast.error("Please enter a valid PAN number (Format: ABCDE1234F)");
+      setLoading(false);
+      return;
+    }
+
+    if (!selectedAgent) {
+      toast.error("No agent selected. Please go back and select an agent.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const policyData = {
+        customer_wallet_address: user?.wallet_address || user?.wallet,
+        agent_wallet_address: selectedAgent.wallet_address,
+        ...formData,
+        status: "created"
+      };
+
+      console.log("Sending policy data:", policyData);
+
+      const response = await axios.post(`${BASE_URL}/api/policy/create`, policyData, {
+        headers: { "Content-Type": "application/json" }
+      });
+
+      console.log("Policy creation response:", response.data);
+
+      if (response.data?.success) {
+        toast.success("Thank you for your policy request! Your agent will reach out to you soon.");
+        navigate('/customer/dashboard');
+      } else {
+        toast.error(response.data?.message || "Failed to create policy");
+      }
+    } catch (error) {
+      console.error("Error creating policy:", error);
+      toast.error(`Failed to create policy. Please try again.\n\nError: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const InlineLoader = () => (
     <div className="flex items-center gap-2">
@@ -535,6 +543,64 @@ const PolicyForm = () => {
                       }}
                     />
                   </div>
+                </div>
+              </div>
+            </div>
+            {/* Nominee Details */}
+            <div className="space-y-4 mt-8">
+              <h3 className="text-white font-semibold flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Nominee Details
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="nomineeName" className="text-gray-300">Nominee Name *</Label>
+                  <input
+                    id="nomineeName"
+                    type="text"
+                    value={formData.nomineeName || ""}
+                    onChange={(e) => handleInputChange("nomineeName", e.target.value)}
+                    required
+                    placeholder="Enter nominee full name"
+                    className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="nomineeAge" className="text-gray-300">Nominee Age *</Label>
+                  <input
+                    id="nomineeAge"
+                    type="number"
+                    value={formData.nomineeAge || ""}
+                    onChange={(e) => handleInputChange("nomineeAge", e.target.value)}
+                    required
+                    placeholder="Enter age"
+                    className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="nomineeRelation" className="text-gray-300">Relation with Nominee *</Label>
+                  <Select
+                    value={formData.nomineeRelation}
+                    onValueChange={(value) => handleInputChange("nomineeRelation", value)}
+                  >
+                    <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                      <SelectValue placeholder="Select relation" />
+                    </SelectTrigger>
+
+                    <SelectContent className="bg-gray-900 border-white/20">
+                      <SelectItem value="Father" className="text-white">Father</SelectItem>
+                      <SelectItem value="Mother" className="text-white">Mother</SelectItem>
+                      <SelectItem value="Spouse" className="text-white">Spouse</SelectItem>
+                      <SelectItem value="Son" className="text-white">Son</SelectItem>
+                      <SelectItem value="Daughter" className="text-white">Daughter</SelectItem>
+                      <SelectItem value="Brother" className="text-white">Brother</SelectItem>
+                      <SelectItem value="Sister" className="text-white">Sister</SelectItem>
+                      <SelectItem value="Other" className="text-white">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>

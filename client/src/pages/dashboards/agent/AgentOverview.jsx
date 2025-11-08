@@ -284,7 +284,7 @@ const AgentOverview = () => {
 
   return (
     <div className="text-white w-full relative bg-transparent">
-      <div className="space-y-3 px-4 sm:px-6 lg:px-8 pt-16">
+      <div className="space-y-3 px-1 sm:px-4 lg:px-6 pt-6 sm:pt-9">
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
@@ -294,7 +294,7 @@ const AgentOverview = () => {
               </div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
-                  Agent <span className="gradient-text">Dashboard</span>
+                  Agent <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Dashboard</span>
                 </h1>
                 <p className="text-xl text-gray-300">
                   Welcome back, {user?.agent?.agent_name}
