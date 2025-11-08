@@ -96,7 +96,8 @@ const UserKYCForm = () => {
     try {
       const res = await axios.post(`${BASE_URL}/api/kyc/verify-otp`, {
         wallet_address: user.wallet_address,
-        otp
+        otp,
+        phone_number : formData.phone
       });
       if (res.data.success) {
         setOtpVerified(true);
