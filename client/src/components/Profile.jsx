@@ -29,6 +29,8 @@ const Profile = () => {
       wallet: user?.wallet_address,
       licenseNumber: user?.agent?.license_number,
       isApproved: user?.agent?.is_approved || "",
+      agentRegistrationTxHash: user?.agent?.associated_company.tx_hash,
+
     });
     setLoading(false);
   }, []);
@@ -386,8 +388,24 @@ const Profile = () => {
                           )}
                         </button>
                       </div>
+                      {user.role === "agent" && (
+                        <div className="mt-4 flex items-center gap-3">
+                          {formData.agentRegistrationTxHash && (
+                            <a
+                              href={`https://sepolia.etherscan.io/tx/${formData.agentRegistrationTxHash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-cyan-400 underline hover:text-cyan-300 text-sm"
+                            >
+                              View Tx →
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
+
                   </div>
+
 
                   <div className="group">
                     <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">

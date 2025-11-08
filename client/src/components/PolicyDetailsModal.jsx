@@ -440,7 +440,6 @@ const PolicyDetailsModal = ({
             </div>
           )}
 
-
           {userRole === 'agent' && (
             <>
               <Button

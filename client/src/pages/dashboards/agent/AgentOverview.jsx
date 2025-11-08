@@ -333,26 +333,7 @@ const AgentOverview = () => {
             </CardContent>
           </Card>
         )}
-        {user.role === "agent" && blockchain?.isOnChainRegistered && (
-          <div className="flex items-center gap-3 mt-4">
-            <div className="px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
-              <span className="font-medium">On-Chain Verified</span>
-            </div>
-
-            {/* Clickable Etherscan Link */}
-            {blockchain.agentRegistrationTxHash && (
-              <a
-                href={`https://sepolia.etherscan.io/tx/${blockchain.agentRegistrationTxHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-cyan-400 underline hover:text-cyan-300 text-sm"
-              >
-                View Blockchain Tx →
-              </a>
-            )}
-          </div>
-        )}
+        
 
         {/* Association Alert */}
         {kycStatus === "verified" && !user?.agent?.is_approved && (
