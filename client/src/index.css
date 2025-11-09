@@ -6,6 +6,10 @@
   width: 100%;
   background: transparent;
 }
+html {
+  @apply hide-scrollbar; 
+}
+
 body {
   background: 
     repeating-linear-gradient(45deg, transparent, transparent 19px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.02) 21px),
@@ -18,22 +22,38 @@ body {
   width: 100%;
 }
 
-/* Hide scrollbars globally while keeping scroll functionality */
-html, body {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+/*  white scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* slim scrollbar */
 }
 
-/* Utility for optional scoped hiding (already used across pages) */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* no background track */
 }
-.no-scrollbar::-webkit-scrollbar {
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6); /* white but a bit transparent */
+  border-radius: 9999px; /* pill shape */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.9); /* brighter on hover */
+}
+
+/* Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+}
+
+/* Hide scrollbar for Chrome, Safari, Edge */
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE + Edge */
 }
 
