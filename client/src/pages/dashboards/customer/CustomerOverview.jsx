@@ -256,7 +256,7 @@ const CustomerOverview = () => {
 
   const renderMyPoliciesView = () => (
     <Card className="bg-gradient-to-br from-gray-900/80 via-gray-800/80 to-gray-900/80 border border-white/10 shadow-2xl rounded-2xl backdrop-blur-sm hover:border-cyan-400/30 hover:shadow-[0_0_40px_rgba(6,182,212,0.15)] transition-all duration-500">
-      <CardHeader className="pb-6 border-b border-white/10">
+      <CardHeader className="pb-4 border-b border-white/10">
         <CardTitle className="flex items-center gap-3 text-white text-2xl font-bold">
           <div className="p-2 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20">
             <Shield className="w-6 h-6 text-green-400" />
@@ -267,155 +267,118 @@ const CustomerOverview = () => {
           </span>
         </CardTitle>
       </CardHeader>
+
       <CardContent className="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-b border-white/10">
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Policy ID
-                </th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Agent
-                </th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Premium
-                </th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Coverage
-                </th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">
-                  Maturity
-                </th>
+          {/* Table Header */}
+          <table className="w-full border-b border-white/10">
+            <thead className="sticky top-0 bg-gray-900/90 z-10">
+              <tr className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10">
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Policy ID</th>
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Agent</th>
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Premium</th>
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Coverage</th>
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Maturity</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
-              {policies.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center space-y-3">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/10">
-                        <Shield className="w-8 h-8 text-gray-500" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-400 mb-1">No Policies Found</h3>
-                        <p className="text-gray-500 text-sm">You don't have any insurance policies yet.</p>
-                      </div>
-                      <Button
-                        onClick={() => setShowAgents(true)}
-                        className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 mt-2 px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105"
-                      >
-                        Get Your First Policy
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                policies.map((policy, idx) => (
-                  <tr
-                    key={policy.id || idx}
-                    onClick={() => handlePolicyClick(policy)}
-                    className="group hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-l-4 hover:border-l-cyan-400/50"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap duration-300">
-                      <div className="flex items-center space-x-3">
+          </table>
+
+          {/* Scrollable Table Body */}
+          <div className="max-h-64 overflow-y-auto hide-scrollbar">
+            <table className="w-full">
+              <tbody className="divide-y divide-white/5">
+                {policies.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/10">
+                          <Shield className="w-8 h-8 text-gray-500" />
+                        </div>
                         <div>
-                          <div className="text-white font-semibold text-sm font-mono group-hover:text-cyan-400 transition-colors duration-300">
-                            {policy.policy_number || `POL_${policy._id}`}
-                          </div>
-                          <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
-                            Created {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
-                          </div>
+                          <h3 className="text-lg font-semibold text-gray-400 mb-1">No Policies Found</h3>
+                          <p className="text-gray-500 text-sm">You don't have any insurance policies yet.</p>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 transition-transform duration-300">
-                      <div className="flex items-center space-x-3">
-                        <div>
-                          <div className="text-white font-medium text-sm group-hover:text-cyan-400 transition-colors duration-300">
-                            {policy.agent_wallet_address || 'Unknown Agent'}
-                          </div>
-                          <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
-                            {/* {policy.agent_wallet_address?.slice(0, 4)}...{policy.agent_wallet_address?.slice(-3)} */}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 transition-transform duration-300">
-                      <div className="space-y-1">
-                        <div className="text-white font-semibold text-sm group-hover:text-cyan-400 transition-colors duration-300">
-                          ₹{(policy.premium_amount || policy.premiumAmount)?.toLocaleString()}
-                        </div>
-                        <div className="text-gray-400 text-xs capitalize group-hover:text-gray-300 transition-colors duration-300">
-                          {policy.premium_frequency || 'annual'}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 transition-transform duration-300">
-                      <div className="text-white font-semibold text-sm group-hover:text-cyan-400 transition-colors duration-300">
-                        ₹{(policy.coverage_amount)?.toLocaleString() || "20 Lacs"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 transition-transform duration-300">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium group-hover:scale-105 transition-transform duration-300 ${policy.status === 'active'
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 group-hover:bg-emerald-500/30'
-                        : policy.status === 'created'
-                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30 group-hover:bg-blue-500/30'
-                          : policy.status === 'claimed'
-                            ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 group-hover:bg-amber-500/30'
-                            : 'bg-gray-500/20 text-gray-400 border border-gray-500/30 group-hover:bg-gray-500/30'
-                        }`}>
-                        {policy.status || 'created'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 transition-transform duration-300">
-                      <div className="space-y-1">
-                        <div className="text-white text-sm group-hover:text-cyan-400 transition-colors duration-300">
-                          {policy.expiryDate ? new Date(policy.expiryDate).toLocaleDateString() : policy.maturityDate || 'N/A'}
-                        </div>
-                        <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
-                          {policy.policy_duration || policy.duration || '10'} years
-                        </div>
+                        <Button
+                          onClick={() => setShowAgents(true)}
+                          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 mt-2 px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105"
+                        >
+                          Get Your First Policy
+                        </Button>
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination or Summary */}
-        {policies.length > 0 && (
-          <div className="border-t border-white/10 px-6 py-4 bg-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-gray-400">
-              Showing <span className="text-white font-medium">{policies.length}</span> policies
-            </div>
-            <div className="flex items-center gap-4 text-gray-400">
-              <span>Total Coverage: <span className="text-white font-medium">₹{policies.reduce((sum, policy) => sum + (policy.coverage_amount || 0), 0).toLocaleString()}</span></span>
-              <span>Annual Premium: <span className="text-white font-medium">₹{policies.reduce((sum, policy) => sum + (policy.premium_amount || 0), 0).toLocaleString()}</span></span>
-            </div>
-            {/* Create Policy Button */}
-            <Button
-              onClick={handleAgentList}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 mt-2 sm:mt-0 px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105"
-            >
-              Create Policy
-            </Button>
+                ) : (
+                  policies.map((policy, idx) => (
+                    <tr
+                      key={policy.id || idx}
+                      onClick={() => handlePolicyClick(policy)}
+                      className="group hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-l-4 hover:border-l-cyan-400/50"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap duration-300 text-white font-mono text-sm group-hover:text-cyan-400 transition-colors">
+                        {policy.policy_number || `POL_${policy._id}`}
+                        <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
+                          Created {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                        {policy.agent_wallet_address || 'Unknown Agent'}
+                      </td>
+                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                        ₹{(policy.premium_amount || policy.premiumAmount)?.toLocaleString()} ({policy.premium_frequency || 'annual'})
+                      </td>
+                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                        ₹{(policy.coverage_amount)?.toLocaleString() || "20 Lacs"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium group-hover:scale-105 transition-transform duration-300 ${policy.status === 'active'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 group-hover:bg-emerald-500/30'
+                          : policy.status === 'created'
+                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30 group-hover:bg-blue-500/30'
+                            : policy.status === 'claimed'
+                              ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 group-hover:bg-amber-500/30'
+                              : 'bg-gray-500/20 text-gray-400 border border-gray-500/30 group-hover:bg-gray-500/30'
+                          }`}>
+                          {policy.status || 'created'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                        {policy.expiryDate ? new Date(policy.expiryDate).toLocaleDateString() : policy.maturityDate || 'N/A'} ({policy.policy_duration || policy.duration || '10'} yrs)
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        )}
-      </CardContent>
 
-      
+          {/* Summary & Create Policy Button */}
+          {policies.length > 0 && (
+            <div className="border-t border-white/10 px-6 py-3 bg-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-gray-400">
+                Showing <span className="text-white font-medium">{policies.length}</span> policies
+              </div>
+              <div className="flex items-center gap-4 text-gray-400">
+                <span>Total Coverage: <span className="text-white font-medium">₹{policies.reduce((sum, policy) => sum + (policy.coverage_amount || 0), 0).toLocaleString()}</span></span>
+                <span>Annual Premium: <span className="text-white font-medium">₹{policies.reduce((sum, policy) => sum + (policy.premium_amount || 0), 0).toLocaleString()}</span></span>
+              </div>
+              <Button
+                onClick={handleAgentList}
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 mt-2 sm:mt-0 px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105"
+              >
+                Create Policy
+              </Button>
+            </div>
+          )}
+        </div>
+      </CardContent>
     </Card>
   );
 
+
   return (
-    <div className="text-white w-full relative bg-transparent py-2">
-      <div className="px-1 sm:px-4 lg:px-6 pt-6 sm:pt-9">
+    <div className="text-white w-full relative bg-transparent">
+      <div className="lg:px-6 pt-9 sm:pt-9">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -487,7 +450,7 @@ const CustomerOverview = () => {
         </div>
 
         {/* Main Content */}
-        <div className="mt-6">
+        <div className="mt-4">
           {showAgents ? (
             renderAgentListView()
           ) : policies.length === 0 ? (
