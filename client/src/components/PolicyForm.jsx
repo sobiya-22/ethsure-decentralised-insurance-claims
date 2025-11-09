@@ -110,7 +110,7 @@ const PolicyForm = () => {
       formDataUpload.append('folder', 'ethsure-policy-documents');
 
       const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`,
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raw/upload`,
         formDataUpload,
         {
           headers: {
