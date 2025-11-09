@@ -5,13 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { X, User, Calendar, Phone, Mail, MapPin, CreditCard, FileText, Users } from "lucide-react";
+import { X, User, Calendar, Phone, Mail, MapPin, CreditCard, FileText, Users, Upload, Check, Loader2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { userStore } from "@/context/userContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 const PolicyForm = () => {
   const [loading, setLoading] = useState(false);
@@ -29,10 +31,8 @@ const PolicyForm = () => {
     phone: user?.customer?.customer_phone || "",
     email: user?.customer?.customer_email || "",
     address: "",
-
     aadharNumber: "",
     panNumber: "",
-
     annualIncome: "",
     occupation: "",
     coverage_amount: 1000000,
@@ -42,7 +42,21 @@ const PolicyForm = () => {
     nomineeName: "",
     nomineeAge: "",
     nomineeRelation: "",
+    aadharcard_url: "",
+    pancard_url: "",
+    nominee_id_url: ""
+  });
 
+  const [uploadedFiles, setUploadedFiles] = useState({
+    aadhar_card: null,
+    pan_card: null,
+    nominee_id: null
+  });
+
+  const [uploadingStates, setUploadingStates] = useState({
+    aadhar_card: false,
+    pan_card: false,
+    nominee_id: false
   });
 
   const onClose = async () => {
@@ -73,6 +87,80 @@ const PolicyForm = () => {
     }));
   };
 
+  const uploadToCloudinary = async (file, fileType) => {
+    const toastId = toast.loading(`Uploading ${fileType.replace('_', ' ')}...`);
+    
+    try {
+      setUploadingStates(prev => ({ ...prev, [fileType]: true }));
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("File size should be less than 5MB");
+      }
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        throw new Error("Only JPG, PNG, and PDF files are allowed");
+      }
+
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formDataUpload.append('folder', 'ethsure-policy-documents');
+
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`,
+        formDataUpload,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+
+      const imageUrl = response.data.secure_url;
+      
+      // Update form data with the URL
+      setFormData(prev => ({
+        ...prev,
+        [`${fileType}_url`]: imageUrl
+      }));
+
+      setUploadedFiles(prev => ({
+        ...prev,
+        [fileType]: file
+      }));
+
+      toast.success(`${fileType.replace('_', ' ')} uploaded successfully!`, { id: toastId });
+      return imageUrl;
+
+    } catch (error) {
+      console.error(`Error uploading ${fileType}:`, error);
+      toast.error(error.message || `Failed to upload ${fileType.replace('_', ' ')}`, { id: toastId });
+      throw error;
+    } finally {
+      setUploadingStates(prev => ({ ...prev, [fileType]: false }));
+    }
+  };
+
+  const handleFileUpload = async (fileType, file) => {
+    if (!file) return;
+    await uploadToCloudinary(file, fileType);
+  };
+
+  const handleRemoveFile = (fileType) => {
+    setUploadedFiles(prev => ({
+      ...prev,
+      [fileType]: null
+    }));
+    setFormData(prev => ({
+      ...prev,
+      [`${fileType}_url`]: ""
+    }));
+    toast.success(`${fileType.replace('_', ' ')} removed`);
+  };
+
   const validateAadhar = (aadhar) => {
     return /^\d{12}$/.test(aadhar);
   };
@@ -83,6 +171,8 @@ const PolicyForm = () => {
 
   const handleCreatePolicy = async (e) => {
     e.preventDefault();
+    
+    const toastId = toast.loading("Creating policy request...");
     setLoading(true);
 
     const requiredFields = {
@@ -99,33 +189,50 @@ const PolicyForm = () => {
       nomineeName: formData.nomineeName,
       nomineeAge: formData.nomineeAge,
       nomineeRelation: formData.nomineeRelation,
-
     };
 
     const emptyFields = Object.entries(requiredFields)
-      .filter(([key, value]) => !value || value.trim() === '')
+      .filter(([key, value]) => !value || value.toString().trim() === '')
       .map(([key]) => key);
 
     if (emptyFields.length > 0) {
-      toast.error(`Please fill in all required fields: ${emptyFields.join(', ')}`);
+      toast.error(`Please fill in all required fields: ${emptyFields.join(', ')}`, { id: toastId });
       setLoading(false);
       return;
     }
 
     if (!validateAadhar(formData.aadharNumber)) {
-      toast.error("Please enter a valid 12-digit Aadhar number");
+      toast.error("Please enter a valid 12-digit Aadhar number", { id: toastId });
       setLoading(false);
       return;
     }
 
     if (!validatePAN(formData.panNumber)) {
-      toast.error("Please enter a valid PAN number (Format: ABCDE1234F)");
+      toast.error("Please enter a valid PAN number (Format: ABCDE1234F)", { id: toastId });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.aadharcard_url) {
+      toast.error("Please upload Aadhar card document", { id: toastId });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.pancard_url) {
+      toast.error("Please upload PAN card document", { id: toastId });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.nominee_id_url) {
+      toast.error("Please upload nominee ID document", { id: toastId });
       setLoading(false);
       return;
     }
 
     if (!selectedAgent) {
-      toast.error("No agent selected. Please go back and select an agent.");
+      toast.error("No agent selected. Please go back and select an agent.", { id: toastId });
       setLoading(false);
       return;
     }
@@ -134,7 +241,27 @@ const PolicyForm = () => {
       const policyData = {
         customer_wallet_address: user?.wallet_address || user?.wallet,
         agent_wallet_address: selectedAgent.wallet_address,
-        ...formData,
+        fullName: formData.fullName,
+        dateOfBirth: formData.dateOfBirth,
+        gender: formData.gender,
+        maritalStatus: formData.maritalStatus,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        aadharNumber: formData.aadharNumber,
+        panNumber: formData.panNumber,
+        annualIncome: parseFloat(formData.annualIncome),
+        occupation: formData.occupation,
+        coverage_amount: parseFloat(formData.coverage_amount),
+        premium_amount: parseFloat(formData.premium_amount),
+        premium_frequency: formData.premium_frequency,
+        policy_duration: parseInt(formData.policy_duration),
+        nomineeName: formData.nomineeName,
+        nomineeAge: parseInt(formData.nomineeAge),
+        nomineeRelation: formData.nomineeRelation,
+        aadharcard_url: formData.aadharcard_url,
+        pancard_url: formData.pancard_url,
+        nominee_id_url: formData.nominee_id_url,
         status: "created"
       };
 
@@ -147,25 +274,68 @@ const PolicyForm = () => {
       console.log("Policy creation response:", response.data);
 
       if (response.data?.success) {
-        toast.success("Thank you for your policy request! Your agent will reach out to you soon.");
+        toast.success("Policy request created successfully! Your agent will reach out soon.", { id: toastId });
         navigate('/customer/dashboard');
       } else {
-        toast.error(response.data?.message || "Failed to create policy");
+        toast.error(response.data?.message || "Failed to create policy", { id: toastId });
       }
     } catch (error) {
       console.error("Error creating policy:", error);
-      toast.error(`Failed to create policy. Please try again.\n\nError: ${error.response?.data?.message || error.message}`);
+      toast.error(error.response?.data?.message || "Failed to create policy. Please try again.", { id: toastId });
     } finally {
       setLoading(false);
     }
   };
 
-  const InlineLoader = () => (
-    <div className="flex items-center gap-2">
-      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-      <span>Creating Policy...</span>
-    </div>
-  );
+  const DocumentUploadBox = ({ fileType, label, accept = ".pdf,.jpg,.jpeg,.png" }) => {
+    const isUploading = uploadingStates[fileType];
+    const file = uploadedFiles[fileType];
+
+    return (
+      <div className="space-y-2">
+        <Label className="text-gray-300">{label} *</Label>
+        <div className="border-2 border-dashed border-white/20 rounded-xl p-4 text-center hover:border-blue-400/50 transition-all duration-300 relative bg-white/5">
+          {isUploading ? (
+            <div className="py-2">
+              <Loader2 className="w-8 h-8 text-blue-400 mx-auto mb-2 animate-spin" />
+              <p className="text-gray-400 text-sm">Uploading...</p>
+            </div>
+          ) : file ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-center gap-2 text-green-400">
+                <Check className="w-4 h-4" />
+                <span className="text-sm font-medium">Uploaded</span>
+              </div>
+              <p className="text-gray-400 text-xs truncate max-w-xs mx-auto">{file.name}</p>
+              <Button
+                type="button"
+                onClick={() => handleRemoveFile(fileType)}
+                className="bg-red-600 hover:bg-red-700 px-3 py-1 text-xs rounded-lg mt-2"
+              >
+                <X className="w-3 h-3 mr-1" />
+                Remove
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Input
+                type="file"
+                onChange={(e) => handleFileUpload(fileType, e.target.files[0])}
+                className="hidden"
+                id={`${fileType}-upload`}
+                accept={accept}
+              />
+              <label htmlFor={`${fileType}-upload`} className="cursor-pointer">
+                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-400 text-sm mb-1">Click to upload</p>
+                <p className="text-gray-500 text-xs">PDF, JPG, PNG (Max 5MB)</p>
+              </label>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="text-white w-full relative bg-transparent">
@@ -247,7 +417,6 @@ const PolicyForm = () => {
                 </div>
               )}
 
-              {/* Rest of the form remains the same */}
               {/* Personal Details */}
               <div className="space-y-4">
                 <h3 className="text-white font-semibold flex items-center gap-2">
@@ -263,18 +432,9 @@ const PolicyForm = () => {
                       type="text"
                       value={formData.fullName || ""}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      readOnly={false}
                       required
-                      autoComplete="name"
                       placeholder="Enter your full name"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)',
-                        pointerEvents: 'auto',
-                        zIndex: 10
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -286,13 +446,7 @@ const PolicyForm = () => {
                       value={formData.dateOfBirth || ""}
                       onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
                       required
-                      autoComplete="bday"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -303,9 +457,9 @@ const PolicyForm = () => {
                         <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-white/20">
-                        <SelectItem value="Male" className="text-white hover:bg-white/10 focus:bg-white/10">Male</SelectItem>
-                        <SelectItem value="Female" className="text-white hover:bg-white/10 focus:bg-white/10">Female</SelectItem>
-                        <SelectItem value="Other" className="text-white hover:bg-white/10 focus:bg-white/10">Other</SelectItem>
+                        <SelectItem value="Male" className="text-white">Male</SelectItem>
+                        <SelectItem value="Female" className="text-white">Female</SelectItem>
+                        <SelectItem value="Other" className="text-white">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -317,10 +471,10 @@ const PolicyForm = () => {
                         <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-white/20">
-                        <SelectItem value="Single" className="text-white hover:bg-white/10 focus:bg-white/10">Single</SelectItem>
-                        <SelectItem value="Married" className="text-white hover:bg-white/10 focus:bg-white/10">Married</SelectItem>
-                        <SelectItem value="Divorced" className="text-white hover:bg-white/10 focus:bg-white/10">Divorced</SelectItem>
-                        <SelectItem value="Widowed" className="text-white hover:bg-white/10 focus:bg-white/10">Widowed</SelectItem>
+                        <SelectItem value="Single" className="text-white">Single</SelectItem>
+                        <SelectItem value="Married" className="text-white">Married</SelectItem>
+                        <SelectItem value="Divorced" className="text-white">Divorced</SelectItem>
+                        <SelectItem value="Widowed" className="text-white">Widowed</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -333,14 +487,8 @@ const PolicyForm = () => {
                       value={formData.phone || ""}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                       required
-                      autoComplete="tel"
                       placeholder="Enter your phone number"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -352,14 +500,8 @@ const PolicyForm = () => {
                       value={formData.email || ""}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       required
-                      autoComplete="email"
                       placeholder="Enter your email"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
                 </div>
@@ -371,15 +513,9 @@ const PolicyForm = () => {
                     value={formData.address || ""}
                     onChange={(e) => handleInputChange("address", e.target.value)}
                     required
-                    autoComplete="street-address"
                     placeholder="Enter your full address"
-                    className="flex min-h-[60px] w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
+                    className="flex min-h-[60px] w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     rows={3}
-                    style={{
-                      color: 'white',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      borderColor: 'rgba(255, 255, 255, 0.2)'
-                    }}
                   />
                 </div>
               </div>
@@ -402,14 +538,9 @@ const PolicyForm = () => {
                       required
                       placeholder="123456789012"
                       maxLength={12}
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
-                    <p className="text-xs text-gray-400 mt-1">Enter 12 digits only (no spaces or special characters)</p>
+                    <p className="text-xs text-gray-400 mt-1">Enter 12 digits only</p>
                   </div>
 
                   <div>
@@ -422,15 +553,22 @@ const PolicyForm = () => {
                       required
                       placeholder="ABCDE1234F"
                       maxLength={10}
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
-                    <p className="text-xs text-gray-400 mt-1">Format: 5 letters + 4 digits + 1 letter (e.g., ABCDE1234F)</p>
+                    <p className="text-xs text-gray-400 mt-1">Format: ABCDE1234F</p>
                   </div>
+                </div>
+
+                {/* Document Uploads */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <DocumentUploadBox 
+                    fileType="aadharcard"
+                    label="Aadhar Card Document"
+                  />
+                  <DocumentUploadBox 
+                    fileType="pancard"
+                    label="PAN Card Document"
+                  />
                 </div>
               </div>
 
@@ -450,14 +588,8 @@ const PolicyForm = () => {
                       value={formData.annualIncome || ""}
                       onChange={(e) => handleInputChange("annualIncome", e.target.value)}
                       required
-                      autoComplete="off"
                       placeholder="500000"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -468,12 +600,12 @@ const PolicyForm = () => {
                         <SelectValue placeholder="Select occupation" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-white/20">
-                        <SelectItem value="Salaried" className="text-white hover:bg-white/10 focus:bg-white/10">Salaried</SelectItem>
-                        <SelectItem value="Self-Employed" className="text-white hover:bg-white/10 focus:bg-white/10">Self-Employed</SelectItem>
-                        <SelectItem value="Business" className="text-white hover:bg-white/10 focus:bg-white/10">Business</SelectItem>
-                        <SelectItem value="Student" className="text-white hover:bg-white/10 focus:bg-white/10">Student</SelectItem>
-                        <SelectItem value="Retired" className="text-white hover:bg-white/10 focus:bg-white/10">Retired</SelectItem>
-                        <SelectItem value="Other" className="text-white hover:bg-white/10 focus:bg-white/10">Other</SelectItem>
+                        <SelectItem value="Salaried" className="text-white">Salaried</SelectItem>
+                        <SelectItem value="Self-Employed" className="text-white">Self-Employed</SelectItem>
+                        <SelectItem value="Business" className="text-white">Business</SelectItem>
+                        <SelectItem value="Student" className="text-white">Student</SelectItem>
+                        <SelectItem value="Retired" className="text-white">Retired</SelectItem>
+                        <SelectItem value="Other" className="text-white">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -485,13 +617,7 @@ const PolicyForm = () => {
                       type="number"
                       value={formData.coverage_amount || ""}
                       onChange={(e) => handleInputChange("coverage_amount", e.target.value)}
-                      autoComplete="off"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -502,13 +628,7 @@ const PolicyForm = () => {
                       type="number"
                       value={formData.premium_amount || ""}
                       onChange={(e) => handleInputChange("premium_amount", e.target.value)}
-                      autoComplete="off"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
 
@@ -519,10 +639,10 @@ const PolicyForm = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-900 border-white/20">
-                        <SelectItem value="monthly" className="text-white hover:bg-white/10 focus:bg-white/10">Monthly</SelectItem>
-                        <SelectItem value="quarterly" className="text-white hover:bg-white/10 focus:bg-white/10">Quarterly</SelectItem>
-                        <SelectItem value="semi-annual" className="text-white hover:bg-white/10 focus:bg-white/10">Semi-Annual</SelectItem>
-                        <SelectItem value="annual" className="text-white hover:bg-white/10 focus:bg-white/10">Annual</SelectItem>
+                        <SelectItem value="monthly" className="text-white">Monthly</SelectItem>
+                        <SelectItem value="quarterly" className="text-white">Quarterly</SelectItem>
+                        <SelectItem value="semi-annual" className="text-white">Semi-Annual</SelectItem>
+                        <SelectItem value="annual" className="text-white">Annual</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -534,95 +654,104 @@ const PolicyForm = () => {
                       type="number"
                       value={formData.policy_duration || ""}
                       onChange={(e) => handleInputChange("policy_duration", e.target.value)}
-                      autoComplete="off"
-                      className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent focus:border-blue-400"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)'
-                      }}
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                   </div>
                 </div>
               </div>
-            </div>
-            {/* Nominee Details */}
-            <div className="space-y-4 mt-8">
-              <h3 className="text-white font-semibold flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                Nominee Details
-              </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="nomineeName" className="text-gray-300">Nominee Name *</Label>
-                  <input
-                    id="nomineeName"
-                    type="text"
-                    value={formData.nomineeName || ""}
-                    onChange={(e) => handleInputChange("nomineeName", e.target.value)}
-                    required
-                    placeholder="Enter nominee full name"
-                    className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent"
-                  />
+              {/* Nominee Details */}
+              <div className="space-y-4">
+                <h3 className="text-white font-semibold flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Nominee Details
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="nomineeName" className="text-gray-300">Nominee Name *</Label>
+                    <input
+                      id="nomineeName"
+                      type="text"
+                      value={formData.nomineeName || ""}
+                      onChange={(e) => handleInputChange("nomineeName", e.target.value)}
+                      required
+                      placeholder="Enter nominee full name"
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="nomineeAge" className="text-gray-300">Nominee Age *</Label>
+                    <input
+                      id="nomineeAge"
+                      type="number"
+                      value={formData.nomineeAge || ""}
+                      onChange={(e) => handleInputChange("nomineeAge", e.target.value)}
+                      required
+                      placeholder="Enter age"
+                      className="flex h-10 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="nomineeRelation" className="text-gray-300">Relation with Nominee *</Label>
+                    <Select
+                      value={formData.nomineeRelation}
+                      onValueChange={(value) => handleInputChange("nomineeRelation", value)}
+                    >
+                      <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                        <SelectValue placeholder="Select relation" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-900 border-white/20">
+                        <SelectItem value="Father" className="text-white">Father</SelectItem>
+                        <SelectItem value="Mother" className="text-white">Mother</SelectItem>
+                        <SelectItem value="Spouse" className="text-white">Spouse</SelectItem>
+                        <SelectItem value="Son" className="text-white">Son</SelectItem>
+                        <SelectItem value="Daughter" className="text-white">Daughter</SelectItem>
+                        <SelectItem value="Brother" className="text-white">Brother</SelectItem>
+                        <SelectItem value="Sister" className="text-white">Sister</SelectItem>
+                        <SelectItem value="Other" className="text-white">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="nomineeAge" className="text-gray-300">Nominee Age *</Label>
-                  <input
-                    id="nomineeAge"
-                    type="number"
-                    value={formData.nomineeAge || ""}
-                    onChange={(e) => handleInputChange("nomineeAge", e.target.value)}
-                    required
-                    placeholder="Enter age"
-                    className="flex h-9 xs:h-10 w-full rounded-md border border-white/20 bg-white/5 px-2 xs:px-3 py-1.5 xs:py-2 text-sm xs:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent"
+                {/* Nominee Document Upload */}
+                <div className="mt-4">
+                  <DocumentUploadBox 
+                    fileType="nominee_id"
+                    label="Nominee ID Document"
                   />
-                </div>
-
-                <div>
-                  <Label htmlFor="nomineeRelation" className="text-gray-300">Relation with Nominee *</Label>
-                  <Select
-                    value={formData.nomineeRelation}
-                    onValueChange={(value) => handleInputChange("nomineeRelation", value)}
-                  >
-                    <SelectTrigger className="bg-white/5 border-white/20 text-white">
-                      <SelectValue placeholder="Select relation" />
-                    </SelectTrigger>
-
-                    <SelectContent className="bg-gray-900 border-white/20">
-                      <SelectItem value="Father" className="text-white">Father</SelectItem>
-                      <SelectItem value="Mother" className="text-white">Mother</SelectItem>
-                      <SelectItem value="Spouse" className="text-white">Spouse</SelectItem>
-                      <SelectItem value="Son" className="text-white">Son</SelectItem>
-                      <SelectItem value="Daughter" className="text-white">Daughter</SelectItem>
-                      <SelectItem value="Brother" className="text-white">Brother</SelectItem>
-                      <SelectItem value="Sister" className="text-white">Sister</SelectItem>
-                      <SelectItem value="Other" className="text-white">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
-            </div>
 
-            {/* Submit Buttons */}
-            <div className="flex gap-4 pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="flex-1 border-white/20 text-white hover:bg-white/10"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                onClick={handleCreatePolicy}
-                disabled={loading}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-              >
-                {loading ? <InlineLoader /> : "Create Policy Request"}
-              </Button>
+              {/* Submit Buttons */}
+              <div className="flex gap-4 pt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  className="flex-1 border-white/20 text-white hover:bg-white/10"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleCreatePolicy}
+                  disabled={loading || Object.values(uploadingStates).some(state => state)}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Creating Policy...</span>
+                    </div>
+                  ) : (
+                    "Create Policy Request"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
