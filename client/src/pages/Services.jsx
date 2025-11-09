@@ -68,7 +68,7 @@ const Services = () => {
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6"
         >
           One Chain. One Policy. 
-          <span className="block gradient-text">Complete Trust.</span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-[length:200%_200%] animate-gradient-x">Complete Trust.</span>
         </motion.h1>
         <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
           EthSure simplifies the entire insurance journey — from registration to payout — into one unified, blockchain-verified flow.
