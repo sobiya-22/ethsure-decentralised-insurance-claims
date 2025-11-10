@@ -316,7 +316,7 @@ const CustomerOverview = () => {
                       className="group hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-l-4 hover:border-l-cyan-400/50"
                     >
                       <td className="px-6 py-4 whitespace-nowrap duration-300 text-white font-mono text-sm group-hover:text-cyan-400 transition-colors">
-                        {policy.policy_number || `POL_${policy.onchain_policyID}`}
+                        {policy.policy_number || `POL_${policy.onchain_policyID || policy._id.slice(0,12)}...`}
                         <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
                           Created {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
                         </div>
