@@ -274,12 +274,12 @@ const CustomerOverview = () => {
           <table className="w-full border-b border-white/10">
             <thead className="sticky top-0 bg-gray-900/90 z-10">
               <tr className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10">
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Policy ID</th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Agent</th>
+                <th className="px-9 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Policy ID</th>
+                <th className="px-7 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Agent</th>
                 <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Premium</th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Coverage</th>
+                <th className="px-7 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Coverage</th>
                 <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Maturity</th>
+                <th className="px-5 py-4 text-left text-cyan-400 font-semibold text-sm uppercase tracking-wider">Maturity</th>
               </tr>
             </thead>
           </table>
@@ -316,21 +316,24 @@ const CustomerOverview = () => {
                       className="group hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 transition-all duration-300 cursor-pointer hover:shadow-lg hover:border-l-4 hover:border-l-cyan-400/50"
                     >
                       <td className="px-6 py-4 whitespace-nowrap duration-300 text-white font-mono text-sm group-hover:text-cyan-400 transition-colors">
-                        {policy.policy_number || `POL_${policy._id}`}
+                        {policy.policy_number || `POL_${policy.onchain_policyID}`}
                         <div className="text-gray-400 text-xs group-hover:text-gray-300 transition-colors duration-300">
                           Created {policy.issueDate ? new Date(policy.issueDate).toLocaleDateString() : 'N/A'}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
-                        {policy.agent_wallet_address || 'Unknown Agent'}
+                        {policy.agent_wallet_address
+                          ? `${policy.agent_wallet_address.slice(0, 12)}...${policy.agent_wallet_address.slice(-4)}`
+                          : "Unknown Agent"}
                       </td>
-                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+
+                      <td className="px-4 py-4 text-white text-sm transition-colors duration-300">
                         ₹{(policy.premium_amount || policy.premiumAmount)?.toLocaleString()} ({policy.premium_frequency || 'annual'})
                       </td>
-                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                      <td className="px-12 py-4 text-white text-sm transition-colors duration-300">
                         ₹{(policy.coverage_amount)?.toLocaleString() || "20 Lacs"}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium group-hover:scale-105 transition-transform duration-300 ${policy.status === 'active'
                           ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 group-hover:bg-emerald-500/30'
                           : policy.status === 'created'
@@ -342,7 +345,7 @@ const CustomerOverview = () => {
                           {policy.status || 'created'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-white text-sm transition-colors duration-300">
+                      <td className="px-4 py-4 text-white text-sm transition-colors duration-300">
                         {policy.expiryDate ? new Date(policy.expiryDate).toLocaleDateString() : policy.maturityDate || 'N/A'} ({policy.policy_duration || policy.duration || '10'} yrs)
                       </td>
                     </tr>

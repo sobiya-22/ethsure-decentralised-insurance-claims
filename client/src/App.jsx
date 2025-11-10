@@ -23,7 +23,7 @@ import PayEMI from "./pages/dashboards/customer/PayEMI";
 import PaymentMethod from "./pages/dashboards/customer/PaymentMethod";
 import Policies from "./pages/dashboards/customer/Policies";
 import PolicyForm from "./components/PolicyForm";
-
+import ClaimPolicyForm from "./pages//dashboards/customer/ClaimPolicyForm"
 // Agent Pages
 import AgentOverview from "./pages/dashboards/agent/AgentOverview";
 import PolicyManagement from "./pages/dashboards/agent/PolicyManagement";
@@ -91,7 +91,8 @@ function App() {
         <Route path="payment-methods" element={<PaymentMethod />} />
         <Route path="docvault" element={<DocVault />} />
         <Route path="kyc" element={<UserKYCForm />} />
-        <Route path="buy-plan" element={<PolicyForm/>}/>
+        <Route path="buy-plan" element={<PolicyForm />} />
+        <Route path="/customer/claim-policy" element={<ClaimPolicyForm />} />
       </Route>
 
       {/* Agent Dashboard Group */}

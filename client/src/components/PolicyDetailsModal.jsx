@@ -7,7 +7,7 @@ import {
 import { userStore } from "@/context/userContext";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const DocumentViewer = ({ url, title, onClose }) => {
@@ -82,34 +82,36 @@ const PolicyDetailsModal = ({
 }) => {
   const user = userStore((state) => state.user);
   const [viewingDocument, setViewingDocument] = useState(null);
-
+  const navigate = useNavigate();
   const userRole = user?.role;
 
   if (!isOpen || !policy) return null;
 
   const handleClaimPolicy = async () => {
-    const toastId = toast.loading("Processing claim...");
+    navigate("/customer/claim-policy", { state: { policy } });
+    onClose();
+    // const toastId = toast.loading("Processing claim...");
     
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/policy/update-status/${policy._id}`,
-        {
-          wallet_address: user.wallet_address,
-          role: user?.role,
-          newStatus: 'claimed'
-        }
-      );
+    // try {
+    //   const response = await axios.post(
+    //     `${BASE_URL}/api/policy/update-status/${policy._id}`,
+    //     {
+    //       wallet_address: user.wallet_address,
+    //       role: user?.role,
+    //       newStatus: 'claimed'
+    //     }
+    //   );
 
-      if (response.data.success) {
-        toast.success("Policy claimed successfully!", { id: toastId });
-        onClose();
-      } else {
-        toast.error(response.data.message || "Failed to claim policy", { id: toastId });
-      }
-    } catch (error) {
-      console.error("Error claiming policy:", error);
-      toast.error(error.response?.data?.message || "Failed to claim policy", { id: toastId });
-    }
+    //   if (response.data.success) {
+    //     toast.success("Policy claimed successfully!", { id: toastId });
+    //     onClose();
+    //   } else {
+    //     toast.error(response.data.message || "Failed to claim policy", { id: toastId });
+    //   }
+    // } catch (error) {
+    //   console.error("Error claiming policy:", error);
+    //   toast.error(error.response?.data?.message || "Failed to claim policy", { id: toastId });
+    // }
   };
 
   const handleApprove = async () => {
@@ -267,7 +269,7 @@ const PolicyDetailsModal = ({
                 <div className="space-y-3 bg-white/5 rounded-xl p-4 border border-white/10">
                   <div className="flex justify-between items-start">
                     <span className="text-gray-400 text-sm">Policy ID:</span>
-                    <span className="text-white font-mono text-sm">{`POL_${policy._id}`}</span>
+                    <span className="text-white font-mono text-sm">{`POL_${policy.onchain_policyID}`}</span>
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="text-gray-400 text-sm">Status:</span>
@@ -553,6 +555,17 @@ const PolicyDetailsModal = ({
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-4">
+              {userRole === 'customer' && policy.status === 'active' && (
+                <>
+                  <Button
+                    onClick={handleClaimPolicy}
+                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/30"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Claim Policy
+                  </Button>
+                </>
+              )}
               {userRole === 'agent' && (
                 <>
                   <Button

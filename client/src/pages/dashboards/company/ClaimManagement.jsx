@@ -1,53 +1,136 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Folder, Eye, Shield, Search, X, Download, AlertCircle } from 'lucide-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
-// import { defaultCompanyUser, getCompanySidebarItems, getStatusColor, getTypeColor, defaultClaimsData, commonClasses } from '@/constants/companyConstants';
+import { AlertCircle, Search, X, Download, Eye, Shield, Clock, FileText } from 'lucide-react';
+import ClaimPolicyModal from '@/components/ClaimPolicyModal';
+import { userStore } from '@/context/userContext';
+import axios from 'axios';
 
-const ClaimManagement = ({ withLayout = false }) => {
-  const navigate = useNavigate();
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const getStatusColor = (status) => {
+  const colors = {
+    'pending': 'border-amber-500/30 text-amber-400 bg-amber-500/20',
+    'under_review': 'border-blue-500/30 text-blue-400 bg-blue-500/20',
+    'approved': 'border-emerald-500/30 text-emerald-400 bg-emerald-500/20',
+    'rejected': 'border-red-500/30 text-red-400 bg-red-500/20',
+    'paid': 'border-purple-500/30 text-purple-400 bg-purple-500/20'
+  };
+  return colors[status] || 'border-gray-500/30 text-gray-400 bg-gray-500/20';
+};
+
+const ClaimManagement = () => {
+  const user = userStore((state) => state.user);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [typeFilter, setTypeFilter] = useState('All');
+  const [claimingPolicies, setClaimingPolicies] = useState([]);
+  const [selectedPolicy, setSelectedPolicy] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const claimsData = defaultClaimsData;
-  const user = null;
-  const sidebarItems = getCompanySidebarItems(navigate);
+  useEffect(() => {
+    fetchClaimingPolicies();
+  }, [user]);
 
-  const uniqueTypes = useMemo(() => [...new Set(claimsData.map(claim => claim.type))].sort(), [claimsData]);
-  const uniqueStatuses = useMemo(() => [...new Set(claimsData.map(claim => claim.status))].sort(), [claimsData]);
+  const fetchClaimingPolicies = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BASE_URL}/api/policy/all-policies`, {
+        params: {
+          status: 'request-claim'
+        }
+      });
+      
+      if (response.data.success) {
+        setClaimingPolicies(response.data.policies);
+      }
+    } catch (error) {
+      console.error('Error fetching claiming policies:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const filteredClaims = useMemo(() => {
-    return claimsData.filter(claim => {
-      const matchesSearch = claim.claimNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           claim.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           claim.agent.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           claim.type.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'All' || claim.status === statusFilter;
-      const matchesType = typeFilter === 'All' || claim.type === typeFilter;
-      return matchesSearch && matchesStatus && matchesType;
-    });
-  }, [claimsData, searchTerm, statusFilter, typeFilter]);
+  const handlePolicyClick = (policy) => {
+    setSelectedPolicy(policy);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedPolicy(null);
+    fetchClaimingPolicies();
+  };
+
+  const uniqueStatuses = ['pending', 'under_review', 'approved', 'rejected', 'paid'];
+
+  const filteredClaims = claimingPolicies.filter(policy => {
+    const claimStatus = policy.claim_data?.claim_status || 'pending';
+    const matchesSearch = 
+      policy.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      policy._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      policy.claim_data?.claimant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      policy.claim_data?.claim_reason?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'All' || claimStatus === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const clearFilters = () => {
     setSearchTerm('');
     setStatusFilter('All');
-    setTypeFilter('All');
   };
 
-  const content = (
+  const stats = [
+    {
+      title: "Total Claims",
+      value: claimingPolicies.length,
+      icon: AlertCircle,
+      color: "from-cyan-500/20 to-blue-400/20",
+      iconColor: "text-cyan-400",
+      borderColor: "border-cyan-500/30"
+    },
+    {
+      title: "Pending Claims",
+      value: claimingPolicies.filter(p => p.claim_data?.claim_status === 'pending').length,
+      icon: Clock,
+      color: "from-amber-500/20 to-yellow-400/20",
+      iconColor: "text-amber-400",
+      borderColor: "border-amber-500/30"
+    },
+    {
+      title: "Approved Claims",
+      value: claimingPolicies.filter(p => p.claim_data?.claim_status === 'approved').length,
+      icon: Shield,
+      color: "from-emerald-500/20 to-green-400/20",
+      iconColor: "text-emerald-400",
+      borderColor: "border-emerald-500/30"
+    },
+    {
+      title: "Rejected Claims",
+      value: claimingPolicies.filter(p => p.claim_data?.claim_status === 'rejected').length,
+      icon: FileText,
+      color: "from-red-500/20 to-red-400/20",
+      iconColor: "text-red-300",
+      borderColor: "border-red-500/30"
+    }
+  ];
+
+  return (
     <div className="space-y-6 px-3 xs:px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg glass"><AlertCircle className="w-6 h-6 text-cyan-400" /></div>
+            <div className="p-2 rounded-lg glass">
+              <AlertCircle className="w-6 h-6 text-cyan-400" />
+            </div>
             <div>
-              <h1 className="text-3xl lg:text-4xl font-bold leading-tight"><span className="text-white">Claims</span> <span className="gradient-text">Management</span></h1>
+              <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                <span className="text-white">Claims</span>{' '}
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Management</span>
+              </h1>
               <p className="text-xl text-gray-300">Review and process insurance claims</p>
             </div>
           </div>
@@ -55,52 +138,29 @@ const ClaimManagement = ({ withLayout = false }) => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="glass border-white/10 hover:border-cyan-400/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Total Claims</p>
-                <p className="text-2xl font-bold text-white">{claimsData.length}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat, index) => (
+          <Card
+            key={index}
+            className={`backdrop-blur-xl glass shine hover:border-cyan-400/50 transition-all duration-300 group border rounded-2xl ${stat.borderColor}`}
+          >
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1.5">
+                  <p className="text-white/60 text-xs font-medium uppercase tracking-wide">
+                    {stat.title}
+                  </p>
+                  <p className="text-3xl font-bold text-white">{stat.value}</p>
+                </div>
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} border ${stat.borderColor} transition-all duration-300 shadow-lg`}>
+                  <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
+                </div>
               </div>
-              <AlertCircle className="w-8 h-8 text-cyan-400" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass border-white/10 hover:border-emerald-400/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Approved Claims</p>
-                <p className="text-2xl font-bold text-white">{claimsData.filter(c => c.status === 'Approved').length}</p>
-              </div>
-              <Shield className="w-8 h-8 text-emerald-400" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass border-white/10 hover:border-amber-400/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Pending Claims</p>
-                <p className="text-2xl font-bold text-white">{claimsData.filter(c => c.status === 'Pending').length}</p>
-              </div>
-              <Shield className="w-8 h-8 text-amber-400" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass border-white/10 hover:border-red-400/30 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Rejected Claims</p>
-                <p className="text-2xl font-bold text-white">{claimsData.filter(c => c.status === 'Rejected').length}</p>
-              </div>
-              <Shield className="w-8 h-8 text-red-300" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
       {/* Filter Section */}
       <Card className="glass border-white/10 hover:border-white/20 transition-all duration-300">
         <CardContent className="p-6">
@@ -110,116 +170,176 @@ const ClaimManagement = ({ withLayout = false }) => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
                   type="text"
-                  placeholder="Search claims by number, customer, agent, or type..."
+                  placeholder="Search by customer, policy ID, claimant..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={commonClasses.inputClass}
+                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400 focus:border-cyan-400/50 transition-all"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className={commonClasses.selectClass}
+                className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:border-cyan-400/50 focus:outline-none transition-all"
               >
                 <option value="All" className="bg-gray-800">All Statuses</option>
                 {uniqueStatuses.map(status => (
-                  <option key={status} value={status} className="bg-gray-800">{status}</option>
-                ))}
-              </select>
-              <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                className={commonClasses.selectClass}
-              >
-                <option value="All" className="bg-gray-800">All Types</option>
-                {uniqueTypes.map(type => (
-                  <option key={type} value={type} className="bg-gray-800">{type}</option>
+                  <option key={status} value={status} className="bg-gray-800 capitalize">
+                    {status.replace('_', ' ')}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-300 text-sm">{filteredClaims.length} of {claimsData.length} claims</span>
-              {(searchTerm || statusFilter !== 'All' || typeFilter !== 'All') && (
-                <Button variant="outline" size="sm" onClick={clearFilters} className={commonClasses.buttonClass}>
-                  <X className="w-4 h-4 mr-2" />Clear Filters
+              <span className="text-gray-300 text-sm">
+                {filteredClaims.length} of {claimingPolicies.length} claims
+              </span>
+              {(searchTerm || statusFilter !== 'All') && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Clear Filters
                 </Button>
               )}
-              <Button variant="outline" size="sm" className={commonClasses.buttonClass}>
-                <Download className="w-4 h-4 mr-2" />Export
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Claims List */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-white">
-            {filteredClaims.length === claimsData.length ? 'All Claims' : `Filtered Claims (${filteredClaims.length})`}
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredClaims.map((claim) => (
-            <Card key={claim.id} className="glass border-white/10 hover:border-cyan-400/50 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{claim.claimNumber}</h3>
-                    <p className="text-gray-400 text-sm">{claim.type}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Badge variant="outline" className={claim.verified ? "border-emerald-500/30 text-emerald-400" : "border-amber-500/30 text-amber-400"}>
-                      {claim.verified ? "Verified" : "Pending"}
-                    </Badge>
-                    <Badge variant="outline" className={getStatusColor(claim.status)}>
-                      {claim.status}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="space-y-2 text-gray-300 text-sm">
-                  <p>Customer: {claim.customer}</p>
-                  <p>Agent: {claim.agent}</p>
-                  <p>Policy: {claim.policy}</p>
-                  <p>Type: {claim.type}</p>
-                  <p>Amount: <span className="font-medium text-white">{claim.amount}</span></p>
-                  <p>Submitted: {claim.submittedDate}</p>
-                  {claim.processedDate && <p>Processed: {claim.processedDate}</p>}
-                </div>
-                <div className="mt-6 flex justify-end gap-3">
-                  <Button variant="outline" size="sm" className={commonClasses.buttonClass}>
-                    <Eye className="w-4 h-4 mr-2" />View Details
-                  </Button>
-                  {claim.status === 'Pending' && (
-                    <>
-                      <Button size="sm" className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30">
-                        Approve
-                      </Button>
-                      <Button size="sm" variant="outline" className="border-red-400/20 text-red-300 hover:bg-red-500/10 hover:border-red-400/30 hover:text-red-200 transition-all duration-200">
-                        Reject
-                      </Button>
-                    </>
+      {/* Claims Table */}
+      <Card className="glass border-white/10 hover:border-white/20 transition-all duration-300 py-3">
+        <CardContent>
+          <div className="rounded-lg border border-white/10 overflow-hidden">
+            <div className="max-h-[600px] overflow-y-auto hide-scrollbar">
+              <table className="w-full">
+                <thead className="bg-white/5 sticky top-0 z-10 backdrop-blur-2xl">
+                  <tr>
+                    <th className="text-left p-4 text-gray-400 font-medium">Policy ID</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Customer</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Claimant</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Claim Reason</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Claim Amount</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Request Date</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Status</th>
+                    <th className="text-left p-4 text-gray-400 font-medium">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="8" className="p-8 text-center">
+                        <div className="flex flex-col items-center gap-3 text-gray-400">
+                          <Clock className="w-12 h-12 opacity-50 animate-spin" />
+                          <p className="text-lg font-medium">Loading claims...</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : filteredClaims.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="p-8 text-center">
+                        <div className="flex flex-col items-center gap-3 text-gray-400">
+                          <AlertCircle className="w-12 h-12 opacity-50" />
+                          <p className="text-lg font-medium">No Claims Found</p>
+                          <p className="text-sm">
+                            {searchTerm || statusFilter !== 'All'
+                              ? 'No claims match your filters'
+                              : 'Claim requests will appear here when submitted'}
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredClaims.map((policy) => (
+                      <tr
+                        key={policy._id}
+                        className="border-t border-white/5 hover:bg-white/5 transition-colors"
+                      >
+                        <td className="p-4 text-white font-mono text-sm">
+                          POL_{policy.onchain_policyID || policy._id?.slice(-6)}
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={policy.customer?.profile_photo_url || '/default-avatar.png'}
+                              alt={policy.fullName}
+                              className="w-10 h-10 rounded-full object-cover border border-white/10"
+                            />
+                            <div>
+                              <div className="text-white font-medium">{policy.fullName}</div>
+                              <div className="text-gray-400 text-sm">{policy.email}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="p-4">
+                          <div className="text-white font-medium">
+                            {policy.claim_data?.claimant_name || 'N/A'}
+                          </div>
+                          <div className="text-gray-400 text-sm capitalize">
+                            {policy.claim_data?.claimant_type || 'N/A'}
+                          </div>
+                        </td>
+
+                        <td className="p-4 text-white capitalize">
+                          {policy.claim_data?.claim_reason?.replace('_', ' ') || 'N/A'}
+                        </td>
+
+                        <td className="p-4 text-emerald-400 font-semibold">
+                          ₹{(policy.claim_data?.claim_amount || 0).toLocaleString()}
+                        </td>
+
+                        <td className="p-4 text-white text-sm">
+                          {policy.claim_data?.claim_request_date
+                            ? new Date(policy.claim_data.claim_request_date).toLocaleDateString()
+                            : 'N/A'}
+                        </td>
+
+                        <td className="p-4">
+                          <Badge className={getStatusColor(policy.claim_data?.claim_status || 'pending')}>
+                            {(policy.claim_data?.claim_status || 'pending').replace('_', ' ')}
+                          </Badge>
+                        </td>
+
+                        <td className="p-4">
+                          <Button
+                            size="sm"
+                            onClick={() => handlePolicyClick(policy)}
+                            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
+                          >
+                            <Eye className="w-3.5 h-3.5 mr-1.5" />
+                            View Details
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
                   )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <ClaimPolicyModal
+        policy={selectedPolicy}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
     </div>
   );
-  if (withLayout) {
-    return (
-      <DashboardLayout
-        sidebarItems={sidebarItems}
-        user={user}
-        currentView="claims"
-        fullPageView={false}
-      >
-        {content}
-      </DashboardLayout>
-    );
-  }
-  return content;
 };
+
 export default ClaimManagement;
