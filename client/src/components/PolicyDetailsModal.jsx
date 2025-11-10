@@ -269,7 +269,7 @@ const PolicyDetailsModal = ({
                 <div className="space-y-3 bg-white/5 rounded-xl p-4 border border-white/10">
                   <div className="flex justify-between items-start">
                     <span className="text-gray-400 text-sm">Policy ID:</span>
-                    <span className="text-white font-mono text-sm">{`POL_${policy.onchain_policyID}`}</span>
+                    <span className="text-white font-mono text-sm">{`POL_${policy.onchain_policyID || policy._id}`}</span>
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="text-gray-400 text-sm">Status:</span>
