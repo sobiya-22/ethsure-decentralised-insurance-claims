@@ -539,7 +539,7 @@ const PolicyDetailsModal = ({
                       <div className="flex justify-between items-start">
                         <span className="text-gray-400 text-sm">Transaction Hash:</span>
                         <a
-                          href={`https://sepolia.etherscan.io/tx/${policy.txn_hash}`}
+                          href={`https://sepolia.etherscan.io/tx/${policy.claim_data || policy.txn_hash}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-cyan-400 underline font-mono text-xs break-all"
