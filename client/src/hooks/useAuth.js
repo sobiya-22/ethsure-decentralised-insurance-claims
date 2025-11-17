@@ -18,19 +18,37 @@ export const useAuth = () => {
     const connectWeb3 = async () => {
         if (!web3Auth) throw new Error("Web3Auth not initialized");
 
-        const provider = await connect();
-        const info = await web3Auth.getUserInfo();
-        const wallet_address = await getWalletAddress(provider);
-        const did = await createEthrDID(web3Auth);
-        console.log("info: ", info);
-        return {
-            wallet_address,
-            email: info?.email,
-            name: info?.name,
-            profile_url: info?.profileImage,
-            did,
-        };
+        try {
+            const provider = await connect();
+
+            if (!provider) {
+                throw new Error("Provider not returned. User may have closed popup.");
+            }
+
+            const info = await web3Auth.getUserInfo();
+            const wallet_address = await getWalletAddress(provider);
+            const did = await createEthrDID(web3Auth);
+
+            return {
+                wallet_address,
+                email: info?.email,
+                name: info?.name,
+                profile_url: info?.profileImage,
+                did,
+            };
+
+        } catch (err) {
+            if (err.code === 6001 || err.message?.includes("popup has been closed")) {
+                console.warn("User closed Web3Auth popup");
+                toast.error("Login cancelled");
+                return null;
+            }
+
+            console.error("Web3Auth connection failed:", err);
+            throw err;
+        }
     };
+
 
     const signupUser = async (role) => {
         try {
@@ -64,7 +82,7 @@ export const useAuth = () => {
     const loginUser = async () => {
         try {
             const userData = await connectWeb3();
-
+            if (!userData) return;
             const res = await axios.post(`${BASE_URL}/api/users/login`, {
                 wallet_address: userData.wallet_address,
             }, { withCredentials: true });
